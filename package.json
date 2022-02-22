@@ -1,0 +1,34 @@
+{
+  "name": "dream-canopy-2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "parcel src/index.html",
+    "build": "parcel build src/index.html"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/SurelyNotChase/dream-canopy.git"
+  },
+  "author": "Chase Lear, Kendrick Tay, and John Sniffen",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/SurelyNotChase/dream-canopy/issues"
+  },
+  "homepage": "https://github.com/SurelyNotChase/dream-canopy#readme",
+  "devDependencies": {
+    "parcel-bundler": "^1.12.5"
+  },
+  "dependencies": {
+    "@tensorflow-models/body-pix": "^2.2.0",
+    "@tensorflow/tfjs": "^3.13.0",
+    "@tensorflow/tfjs-core": "^3.13.0",
+    "main.js": "0.0.1",
+    "regenerator-runtime": "^0.13.9",
+    "three": "^0.137.5",
+    "three-csg": "^1.0.0",
+    "threebsp": "^1.0.4"
+  }
+}
