@@ -17,7 +17,9 @@ async function  getPredictions(video) {
 
     const segmentation =   net.segmentPerson(video, { maxDetections: 1 });
 
-    segmentation.then((result)=>console.log(result))
+    segmentation.then((result)=>{
+        return result
+    })
 
 }
 

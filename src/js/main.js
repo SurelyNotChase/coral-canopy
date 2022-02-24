@@ -4,7 +4,8 @@ import tracking from './tracking.js'
 
 let experience = {}; //scene, renderer, and camera
 let video = document.querySelector('#webcam');
-let prediction;
+let predictions = [];
+let gameObjects = [];
 
 const init = () => {
 
@@ -17,27 +18,9 @@ const init = () => {
     //debug
     console.log(experience)
     
-    //Mount to DOM
-    document.querySelector('body').appendChild(experience.renderer.domElement);  //mounted to DOM
-
-    window.addEventListener('resize', () => {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-    }) //resposive
-
+    setupDOM(experience)
 
     tracking.init();
-
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-                video.addEventListener('loadeddata', updatePrediction)
-            })
-    }
-
-    window.addEventListener('click',predictVideo)
 
 
 };
@@ -47,23 +30,58 @@ const predictVideo = () => {
     tracking.getPredictions(video)
 }
 
-let num = 0;
 
 const updatePrediction = () => {
-    requestAnimationFrame(updatePrediction)
+   
+    setInterval(()=>{
+        predictions = tracking.getPredictions(video)
+        console.log(predictions)
+    },200)
 
-    //prediction = tracking.getPredictions(video)
-    //tracking.logBackend();
     
 }
 
+const animationLoop = () => {
+    requestAnimationFrame(animationLoop)
+    
+
+}
+
 const populateScene = () => {
-    game.generateCharacters().forEach(object=>experience.scene.add(object))
+    game.generateCharacters().forEach(object=>{ 
+
+        gameObjects.push(object) 
+        gameObjects.forEach(object=>{experience.scene.add(object)})
+
+    })
 }
 
 
+const setupDOM = (experience) => {
 
-// >>> 
+    //renderer to canvas
+    document.querySelector('body').appendChild(experience.renderer.domElement); 
+
+    //responsive scaling 
+    window.addEventListener('resize', () => {
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        camera.aspect = window.innerWidth / window.innerHeight;
+        camera.updateProjectionMatrix();
+    })
+    
+    //webcam and video
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+                video.addEventListener('loadeddata', updatePrediction)
+            })
+    }
+
+    //testing listener
+    window.addEventListener('click',predictVideo)
+
+}
 
 
 
