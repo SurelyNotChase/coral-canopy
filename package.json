@@ -29,6 +29,7 @@
     "regenerator-runtime": "^0.13.9",
     "three": "^0.137.5",
     "three-csg": "^1.0.0",
+    "three-gltf-loader": "^1.111.0",
     "three-orbitcontrols": "^2.110.3",
     "threebsp": "^1.0.4",
     "utils.js": "^1.0.1"

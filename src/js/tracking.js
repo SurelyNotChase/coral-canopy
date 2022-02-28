@@ -19,6 +19,7 @@ async function  getPredictions(video) {
 
     return segmentation;
 
+
 }
 
 const logBackend = () => {

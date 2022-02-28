@@ -3,49 +3,20 @@ import utils from './utils.js'
 import tracking from './tracking.js'
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-
-let experience = {}; //scene, renderer, camera
+let experience = {}; //scene, renderer, and camera
+let controls;
 let video = document.querySelector('#webcam');
 let poses;
-let controls;
+let gameObjects = [];
+let masterAnimations = []; //array of animation arrays
+let portalVideos = [];
 
-const mount = () => {
-    //renderer
-    document.querySelector('body').appendChild(experience.renderer.domElement);  //mounted to DOM
-
-    //webcam
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-            })
-    }
-
-    //EVENT LISTENERS
-
-    //resize
-    window.addEventListener('resize', () => {
-        experience.renderer.setSize(window.innerWidth, window.innerHeight);
-        experience.camera.aspect = window.innerWidth / window.innerHeight;
-        experience.camera.updateProjectionMatrix();
-    }) 
-
-    //loadeddata
-    video.addEventListener('loadeddata', predictVideo)
-
-
-    //click
-    window.addEventListener('click',()=>{console.log(poses)})
-
-
-
-}
 
 const init = () => {
 
     experience = game.assembleScene()
     console.log('scene assembled...',experience)
-    
+    game.assemblePortal();
     populateScene();
 
     tracking.init();
@@ -73,6 +44,37 @@ const  predictVideo = () => {
         
     })
 
+const updatePrediction = () => {
+
+    setInterval(() => {
+        predictions = tracking.getPredictions(video)
+        console.log(predictions)
+    }, 200)
+
+
+}
+
+const animationLoop = () => {
+    requestAnimationFrame(animationLoop)
+
+
+}
+
+const populateScene = () => {
+    /*
+    //We can just throw assets into array as they're being loaded, then populate here
+    game.generateCharacters().forEach(object=>{ 
+
+        gameObjects.push(object) 
+        gameObjects.forEach(object=>{experience.scene.add(object)})
+
+    })
+    */
+    gameObjects.forEach(object => {
+        experience.scene.add(object);
+    });
+}
+
     prediction.catch((err)=>{console.log(err)})
 
 }
@@ -83,6 +85,31 @@ const animate = () => {
     experience.renderer.render(experience.scene,experience.camera);
 
 } 
+const mount = () => {
+
+    //renderer to canvas
+    document.querySelector('body').appendChild(experience.renderer.domElement);
+
+    //responsive scaling 
+    window.addEventListener('resize', () => {
+        experience.renderer.setSize(window.innerWidth, window.innerHeight);
+        experience.camera.aspect = window.innerWidth / window.innerHeight;
+        experience.camera.updateProjectionMatrix();
+    })
+
+    //webcam and video
+    if (navigator.mediaDevices.getUserMedia) {
+        navigator.mediaDevices.getUserMedia({ video: true })
+            .then(function (stream) {
+                video.srcObject = stream;
+                video.addEventListener('loadeddata', predictVideo)
+            })
+    }
+
+    //testing listener
+    window.addEventListener('click', ()=>{console.log(poses)})
+
+}
 
 const populateScene = () => {
     game.generateCharacters().forEach(object=>experience.scene.add(object))
@@ -90,4 +117,4 @@ const populateScene = () => {
 
 
 
-export default {init}
+export default { init, gameObjects, masterAnimations, portalVideos }
