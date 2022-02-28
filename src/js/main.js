@@ -1,70 +1,92 @@
 import game from './game.js'
 import utils from './utils.js'
 import tracking from './tracking.js'
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
 
-let experience = {}; //scene, renderer, and camera
+
+let experience = {}; //scene, renderer, camera
 let video = document.querySelector('#webcam');
-let prediction;
+let poses;
+let controls;
 
-const init = () => {
-
-    experience = game.assembleScene()
-
-    if(experience.scene && experience.camera && experience.renderer) console.log('scene assembled...')
-
-    populateScene();
-
-    //debug
-    console.log(experience)
-    
-    //Mount to DOM
+const mount = () => {
+    //renderer
     document.querySelector('body').appendChild(experience.renderer.domElement);  //mounted to DOM
 
-    window.addEventListener('resize', () => {
-        renderer.setSize(window.innerWidth, window.innerHeight);
-        camera.aspect = window.innerWidth / window.innerHeight;
-        camera.updateProjectionMatrix();
-    }) //resposive
-
-
-    tracking.init();
-
+    //webcam
     if (navigator.mediaDevices.getUserMedia) {
         navigator.mediaDevices.getUserMedia({ video: true })
             .then(function (stream) {
                 video.srcObject = stream;
-                video.addEventListener('loadeddata', updatePrediction)
             })
     }
 
-    window.addEventListener('click',predictVideo)
+    //EVENT LISTENERS
+
+    //resize
+    window.addEventListener('resize', () => {
+        experience.renderer.setSize(window.innerWidth, window.innerHeight);
+        experience.camera.aspect = window.innerWidth / window.innerHeight;
+        experience.camera.updateProjectionMatrix();
+    }) 
+
+    //loadeddata
+    video.addEventListener('loadeddata', predictVideo)
 
 
+    //click
+    window.addEventListener('click',()=>{console.log(poses)})
+
+
+
+}
+
+const init = () => {
+
+    experience = game.assembleScene()
+    console.log('scene assembled...',experience)
+    
+    populateScene();
+
+    tracking.init();
+
+    mount();
+
+    controls = new OrbitControls( experience.camera, experience.renderer.domElement );
+    experience.camera.position.set( 0, 20, 100 );
+
+    experience.renderer.render(experience.scene,experience.camera);
+
+    controls.update();
+
+    //predictVideo();
+    animate();
+    
 };
 
-const predictVideo = () => {
+const  predictVideo = () => {
+    const prediction = tracking.getPredictions(video)
 
-    tracking.getPredictions(video)
+    prediction.then((result)=>{
+        poses = result
+        setTimeout(predictVideo, 1500);
+        
+    })
+
+    prediction.catch((err)=>{console.log(err)})
+
 }
 
-let num = 0;
+const animate = () => {
+    requestAnimationFrame(animate)
+    controls.update();
+    experience.renderer.render(experience.scene,experience.camera);
 
-const updatePrediction = () => {
-    requestAnimationFrame(updatePrediction)
-
-    //prediction = tracking.getPredictions(video)
-    //tracking.logBackend();
-    
-}
+} 
 
 const populateScene = () => {
     game.generateCharacters().forEach(object=>experience.scene.add(object))
 }
-
-
-
-// >>> 
-
 
 
 

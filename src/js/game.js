@@ -1,4 +1,5 @@
 import * as THREE from 'three';
+import utils from './utils.js'
 //import * as ThreeBSP from 'threebsp';
 
 
@@ -25,7 +26,7 @@ const gameDefaults = {
 
 }
 
-//all loaded models, meshes, textures, and geometries
+// Data: all loaded models, meshes, textures, and geometries
 const modelData = {
     geometries: {
         cube: () => new THREE.BoxGeometry(1, 1, 1),
@@ -43,12 +44,6 @@ const modelData = {
         greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert())
     },
 
-    // csgs:{
-    //     wall: (w,h) => new ThreeBSP(modelData.geometries.wall(w,h,1)),
-    //     cylinder: () => new ThreeBSP(modelData.geometries.cylinder()),
-    //     wallSubCylinder: (w,h) => modelData.csgs.wall(w,h).subtract(modelData.csgs.cylinder())
-
-    // },
 
     lights:{
         whitePointLight: () => new THREE.PointLight('white', 1, 500)
@@ -83,7 +78,11 @@ const generateCharacters = (count = 5 ) => {
 
     for(let i=0;i<=count;i++){
 
-        array.push(modelData.meshes.greenBox())
+        let aMesh = modelData.meshes.greenBox()
+        aMesh.position.x = utils.random(0,10)
+        aMesh.position.y = utils.random(0,10)
+
+        array.push(aMesh)
 
     }
 
