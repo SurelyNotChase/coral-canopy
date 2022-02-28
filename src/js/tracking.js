@@ -7,7 +7,7 @@ import 'regenerator-runtime/runtime'
 
 const init = () => {
     tf.setBackend('webgl');
-    console.log('Using TensorFlow backend: ', tf.getBackend())
+
 }
 
 
@@ -22,10 +22,7 @@ async function  getPredictions(video) {
 
 }
 
-const logBackend = () => {
-    
-    console.log('backend: ', tf.getBackend());
-}
+const logBackend = () => tf.getBackend()
 
 
 

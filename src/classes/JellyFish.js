@@ -1,5 +1,10 @@
 import {Fish} from './Entity.js'
-//example final inherited Entity class file (only one class per file)
+
+/***
+ *** 
+ ***    Example final inherited Entity class file (only one class per file)
+ *** 
+ ***/
 
 class JellyFish extends Fish{
     
