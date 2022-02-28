@@ -10,20 +10,24 @@ import {JellyFish} from '../classes/JellyFish';
  *** 
  ***/
 
+
+//// ----- MUTABLES ----- ////
 let experience = {}; //scene, renderer, and camera
 let controls;
-let video = document.querySelector('#webcam');
 let poses;
+let aJellyFish = new JellyFish();
 let gameObjects = [];
 let masterAnimations = []; //array of animation arrays
 let portalVideos = [];
 
-let aJellyFish = new JellyFish();
 
+//// ----- IMMUTABLES ----- ////
+const video = document.querySelector('#webcam');
 const predictionDelay = 1500 //minimum time in ms between predictions (alter for benchmarking)
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
 
 
+//// ----- CORE ----- ////
 //Runs at document load
 const init = () => {
 
@@ -47,7 +51,6 @@ const init = () => {
     
     devMessages();
 };
-
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)
@@ -56,8 +59,11 @@ const animate = () => {
 
 }
 
-//Recursive Promise loop, runs as fast as the data is loaded, with a minimum set delay
-const  predictVideo = () => {
+
+//// ----- SIDE EFFECTS ----- ////
+
+//Updates poses object with recursive promise loop. (this should be refactored to a utility function so that we can use recursive promises for other things)
+const predictVideo = () => {
     const prediction = tracking.getPredictions(video)
 
     prediction.then((result)=>{
@@ -67,8 +73,7 @@ const  predictVideo = () => {
     })
     prediction.catch((err)=>{console.log(err)})
 }
-
-//Init ...
+//Puts the scene on the webpage
 const mount = () => {
 
     //renderer to canvas
@@ -94,13 +99,14 @@ const mount = () => {
     window.addEventListener('click', ()=>{console.log(poses)})
 
 }
+//Logs information to the console
 const devMessages = () => {
     console.log('Instructions: ',instructions)
     console.log('Backend: ', tracking.logBackend());
     console.log('Experience:',experience)
     console.log('Entity Sample:',aJellyFish)
 }
-
+//Puts entities in the scene
 const populateScene = () => {
     /*
     //We can just throw assets into array as they're being loaded, then populate here
@@ -115,7 +121,5 @@ const populateScene = () => {
     
 
 }
-
-
 
 export default { init, gameObjects, masterAnimations, portalVideos }
