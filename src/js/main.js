@@ -1,7 +1,8 @@
-import game from './game.js'
-import utils from './utils.js'
-import tracking from './tracking.js'
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls'
+import game from './game.js';
+import utils from './utils.js';
+import tracking from './tracking.js';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import {JellyFish} from '../classes/JellyFish';
 
 let experience = {}; //scene, renderer, and camera
 let controls;
@@ -113,6 +114,9 @@ const mount = () => {
 
 const populateScene = () => {
     game.generateCharacters().forEach(object=>experience.scene.add(object))
+    let aJellyFish = new JellyFish();
+    console.log(aJellyFish)
+    aJellyFish.loadMesh();
 }
 
 

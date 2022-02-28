@@ -39,7 +39,7 @@ const gameDefaults = {
 }
 
 // Data: all loaded models, meshes, textures, and geometries
-const modelData = {
+const modelData =  {
     geometries: {
         cube: () => new THREE.BoxGeometry(1, 1, 1),
         wall: (w, h) => new THREE.BoxGeometry(w, h, 1),
@@ -54,6 +54,7 @@ const modelData = {
 
     meshes: {
         greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert())
+        
     },
 
 
@@ -192,4 +193,4 @@ function blankPortal() {
 }
 
 
-export default { assembleScene, generateCharacters, assemblePortal }
+export default { assembleScene, generateCharacters, assemblePortal, modelData }
