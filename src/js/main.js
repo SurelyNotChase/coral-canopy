@@ -34,7 +34,7 @@ const init = () => {
     experience = game.assembleScene()
 
     controls = new OrbitControls( experience.camera, experience.renderer.domElement );
-    experience.camera.position.set( 0, 20, 100 );
+    
     
     game.assemblePortal();
     
@@ -55,7 +55,16 @@ const init = () => {
 const animate = () => {
     requestAnimationFrame(animate)
     controls.update();
+    experience.scene.children.forEach(object=>{
+        if(object.type==='mesh'){
+            object.rotation.x += 0.1
+            object.rotation.y += 0.1
+            object.rotation.z += 0.1
+        }
+
+    })
     experience.renderer.render(experience.scene,experience.camera);
+    
 
 }
 
