@@ -86,7 +86,7 @@ const assembleScene = (defaults = gameDefaults) => {
 }
 
 // >>> Array of game objects
-const generateCharacters = (count = 5) => {
+const generateCharacters = (count = 20) => {
 
     let array = [];
 

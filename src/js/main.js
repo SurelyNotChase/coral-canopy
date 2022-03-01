@@ -3,6 +3,7 @@ import utils from './utils.js';
 import tracking from './tracking.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import {JellyFish} from '../classes/JellyFish';
+import { util } from '@tensorflow/tfjs-core';
 
 /***
  *** 
@@ -54,12 +55,17 @@ const init = () => {
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)
-    controls.update();
+    //controls.update();
     experience.scene.children.forEach(object=>{
-        if(object.type==='Mesh'){
-            object.rotation.x += 0.1
-            object.rotation.y += 0.1
-            object.rotation.z += 0.1
+        if(object.type === 'Mesh'){
+            object.position.x += utils.random(-0.5,0.5)
+            object.position.y += utils.random(-0.5,0.5)
+            object.position.z += utils.random(-0.5,0.5)
+            
+            object.rotation.x += 0.01
+            object.rotation.y += 0.01
+            object.rotation.z += 0.01
+
         }
 
     })
