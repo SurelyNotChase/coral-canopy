@@ -24,7 +24,7 @@ const gameDefaults = {
         farPlane: 1000,
         x: 0,
         y: 0,
-        z: 5
+        z: 10
     },
     rendSettings: {
         backgroundColor: 'lightgrey',
@@ -93,8 +93,8 @@ const generateCharacters = (count = 5) => {
     for (let i = 0; i <= count; i++) {
 
         let aMesh = modelData.meshes.greenBox()
-        aMesh.position.x = utils.random(7)
-        aMesh.position.y = utils.random(7)
+        aMesh.position.x = utils.random(-7,7)
+        aMesh.position.y = utils.random(-7,7)
 
         array.push(aMesh)
 

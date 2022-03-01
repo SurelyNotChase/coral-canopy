@@ -54,14 +54,14 @@ const init = () => {
 const animate = () => {
     requestAnimationFrame(animate)
     controls.update();
-    experience.scene.children.forEach(object=>{
-        if(object.type==='mesh'){
-            object.rotation.x += 0.1
-            object.rotation.y += 0.1
-            object.rotation.z += 0.1
-        }
+    // experience.scene.children.forEach(object=>{
+    //     if(object.type==='mesh'){
+    //         object.rotation.x += 0.1
+    //         object.rotation.y += 0.1
+    //         object.rotation.z += 0.1
+    //     }
 
-    })
+    // })
     experience.renderer.render(experience.scene,experience.camera);
     
 
