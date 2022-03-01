@@ -105,10 +105,25 @@ function growPortal() {
 }
 
 // BODY TRACKING
+// if (navigator.mediaDevices.getUserMedia) {
+//     navigator.mediaDevices.getUserMedia({ video: true })
+//         .then(function (stream) {
+//             video.srcObject = stream;
+//             video.addEventListener('loadeddata', animate)
+//         })
+// }
+
 if (navigator.mediaDevices.getUserMedia) {
     navigator.mediaDevices.getUserMedia({ video: true })
         .then(function (stream) {
             video.srcObject = stream;
+            // video.addEventListener('loadeddata', animate)
+            // video.addEventListener('loadeddata', loadAndPredict)
+            
+            setInterval(() => {
+                loadAndPredict();
+            }, 100);
+
             video.addEventListener('loadeddata', animate)
         })
 }
@@ -118,17 +133,19 @@ async function loadAndPredict() {
 
     const segmentation = await net.segmentPerson(video, { maxDetections: 1 });
     // console.log(segmentation);
-    poses = await segmentation.allPoses;
+    poses = await segmentation.allPoses[0].keypoints;
     if (poses.length === 0) {
         active = false;
     }
     else {
         active = true;
-        
-        pose = poses[0];
-        keyPoints = pose.keypoints;
-        leftShoulder = keyPoints[5];
-        rightShoulder = keyPoints[6];
+
+        // pose = poses[0];
+        // keyPoints = pose.keypoints;
+        // leftShoulder = keyPoints[5];
+        // rightShoulder = keyPoints[6];
+        leftShoulder = poses[5];
+        rightShoulder = poses[6];
         leftShoulderX = scale(leftShoulder.position.x, 0, w, -7, 7);
         leftShoulderY = scale(leftShoulder.position.y, 0, h, -4, 4);
         rightShoulderX = scale(rightShoulder.position.x, 0, w, -7, 7);
@@ -142,10 +159,16 @@ async function loadAndPredict() {
 const animate = () => {
     requestAnimationFrame(animate);
 
-    
-    loadAndPredict();
+    // loadAndPredict();
 
     renderer.render(scene, camera) //render scene
+
+    if (x >= -4 && x <= 4) {
+        active = true;
+    }
+    else {
+        active = false;
+    }
 
     mesh.position.x = -x;
     mesh.position.y = -y;
