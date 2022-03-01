@@ -24,7 +24,7 @@ const gameDefaults = {
         farPlane: 1000,
         x: 0,
         y: 0,
-        z: 10
+        z: 5
     },
     rendSettings: {
         backgroundColor: 'lightgrey',

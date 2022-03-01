@@ -34,8 +34,7 @@ const init = () => {
     experience = game.assembleScene()
 
     controls = new OrbitControls( experience.camera, experience.renderer.domElement );
-    
-    
+        
     game.assemblePortal();
     
     populateScene();
