@@ -8,7 +8,7 @@ loader.setPath('../assets/models/');
 let clownfish1, clownfish2, clownfish3, angelfish, shark, maoriWrasse, tang;
 
 window.onload = () => {
-    loadModels();
+    //loadModels();
     main.init();
 }
 
