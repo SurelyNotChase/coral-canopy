@@ -34,7 +34,7 @@ const init = () => {
     experience = game.assembleScene()
 
     controls = new OrbitControls( experience.camera, experience.renderer.domElement );
-    experience.camera.position.set( 0, 20, 100 );
+    // experience.camera.position.set( 0, 20, 100 );
     
     game.assemblePortal();
     
