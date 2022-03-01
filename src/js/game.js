@@ -24,7 +24,7 @@ const gameDefaults = {
         farPlane: 1000,
         x: 0,
         y: 0,
-        z: 5
+        z: 10
     },
     rendSettings: {
         backgroundColor: 'lightgrey',
@@ -73,7 +73,8 @@ const assembleScene = (defaults = gameDefaults) => {
 
     const camera = new THREE.PerspectiveCamera(defaults.camSettings.fov, defaults.camSettings.aspectRatio, defaults.camSettings.nearPlane, defaults.camSettings.farPlane);
     camera.position.z = defaults.camSettings.z;
-
+    camera.position.x = defaults.camSettings.x;
+    camera.position.y = defaults.camSettings.y;
 
     const renderer = new THREE.WebGLRenderer({ antialias: true });
 
@@ -92,14 +93,16 @@ const generateCharacters = (count = 5) => {
     for (let i = 0; i <= count; i++) {
 
         let aMesh = modelData.meshes.greenBox()
-        aMesh.position.x = utils.random(0,10)
-        aMesh.position.y = utils.random(0,10)
+        aMesh.position.x = utils.random(-7,7)
+        aMesh.position.y = utils.random(-7,7)
 
         array.push(aMesh)
 
     }
 
-    array.push(modelData.lights.whitePointLight())
+    let aLight = modelData.lights.whitePointLight()
+    aLight.position.set(10, 0, 25)
+    array.push(aLight)
 
 
     return array
