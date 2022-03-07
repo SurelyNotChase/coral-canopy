@@ -16,6 +16,7 @@ import { util } from '@tensorflow/tfjs-core';
 let experience = {}; //scene, renderer, and camera
 let controls;
 let poses;
+let poses2;
 let aJellyFish = new JellyFish();
 let gameObjects = [];
 let masterAnimations = []; //array of animation arrays
@@ -24,6 +25,7 @@ let portalVideos = [];
 
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
+const video2 = document.querySelector('#webcam2');
 const predictionDelay = 1500 //minimum time in ms between predictions (alter for benchmarking)
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
 
@@ -73,20 +75,33 @@ const animate = () => {
     
 
 }
-
-
 //// ----- SIDE EFFECTS ----- ////
 
 //Updates poses object with recursive promise loop. (this should be refactored to a utility function so that we can use recursive promises for other things)
 const predictVideo = () => {
-    const prediction = tracking.getPredictions(video)
+    const prediction = tracking.getPredictions(video,video2)
+    
 
     prediction.then((result)=>{
-        poses = result
+
+        const segmentations = result
+
+        segmentations.segmentation.then((segmentResult)=>{
+            poses = segmentResult;
+        })
+
+        segmentations.segmentation2.then((segmentResult)=>{
+            poses2 = segmentResult;
+        })
+
         setTimeout(predictVideo, predictionDelay);
         
     })
     prediction.catch((err)=>{console.log(err)})
+
+
+
+    
 }
 //Puts the scene on the webpage
 const mount = () => {
@@ -102,16 +117,53 @@ const mount = () => {
     })
 
     //webcam and video
-    if (navigator.mediaDevices.getUserMedia) {
-        navigator.mediaDevices.getUserMedia({ video: true })
-            .then(function (stream) {
-                video.srcObject = stream;
-                video.addEventListener('loadeddata', predictVideo)
-            })
+    // if (navigator.mediaDevices.getUserMedia) {
+    //     navigator.mediaDevices.getUserMedia({ video: true })
+    //         .then(function (stream) {
+    //             video.srcObject = stream;
+    //             video.addEventListener('loadeddata', predictVideo)
+    //         })
+    // }
+
+    const cam1Constraints = {
+        'audio': {'echoCancellation': true},
+        'video': {
+            'deviceId': "3a5d61a1edc30ca4239a013f4aa933311acca61e8a30785126b43059be921f1b",
+
+            }
     }
 
+    const cam2Constraints = {
+        'audio': {'echoCancellation': true},
+        'video': {
+            'deviceId': "b96a6b7c2e2e27462fdd077124fbc45f1ddeb23bb03a266412d179281c65aec0",
+
+            }
+    }
+
+    navigator.mediaDevices.enumerateDevices()
+        .then(devices => {
+            const filtered = devices.filter(device => device.kind === 'videoinput');
+            console.log(filtered)
+        });
+
+        
+        navigator.mediaDevices.getUserMedia(cam1Constraints)
+            .then(function (stream) {
+                webcam.srcObject = stream;
+                webcam.addEventListener('loadeddata', predictVideo)
+            })
+
+            navigator.mediaDevices.getUserMedia(cam2Constraints)
+            .then(function (stream) {
+                webcam2.srcObject = stream;
+                webcam2.addEventListener('loadeddata', predictVideo)
+            })
+    
+    
+
     //testing listener
-    window.addEventListener('click', ()=>{console.log(poses)})
+    window.addEventListener('click', ()=>{console.log(poses.allPoses,poses2.allPoses)})
 
 }
 //Logs information to the console

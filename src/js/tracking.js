@@ -11,13 +11,15 @@ const init = () => {
 }
 
 
-async function  getPredictions(video) {
+async function  getPredictions(video,video2) {
     
     const net = await bodyPix.load();
+    
 
     const segmentation =   net.segmentPerson(video, { maxDetections: 1 });
-
-    return segmentation;
+    const segmentation2 =   net.segmentPerson(video2, { maxDetections: 1 });
+   
+    return {segmentation,segmentation2};
 
 
 }
