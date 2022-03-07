@@ -1,5 +1,5 @@
 import main from "./main.js";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { GLTFLoader } from '../imports/GLTFLoader.js';
 
 const loader = new GLTFLoader()
 
