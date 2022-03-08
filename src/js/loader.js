@@ -3,87 +3,33 @@ import { GLTFLoader } from '../imports/GLTFLoader.js';
 
 const loader = new GLTFLoader()
 
-loader.setPath('../assets/models/');
+loader.setPath('/assets/models/');  //The bundler will create this directory in the /dist folder for the browser to read. 
+                                    //If you want to add or change files in assets, go to ../staticFiles/assets
 
 let clownfish1, clownfish2, clownfish3, angelfish, shark, maoriWrasse, tang;
 
 window.onload = () => {
-    //loadModels();
+    loadModels();
     main.init();
+
 }
 
 const loadModels = () => {
 
+    
+
     //load any assets here
-    loader.load('cfish.gltf', function (gltf) {
+    loader.load('clownfish.gltf', function (gltf) {
+        
         gltf.scene.traverse(function (object) {
             if (object.isMesh) object.castShadow = true;
         });
-
+        console.log("GLTF Asset Sample Loaded:",gltf)
         clownfish1 = gltf.scene;
-        main.gameObjects.push(clownfish1);
-        main.masterAnimations.push(gltf.animations);
+        //main.gameObjects.push(clownfish1);
+        //main.masterAnimations.push(gltf.animations);
 
-        loader.load('cfish.gltf', function (gltf) {
-            gltf.scene.traverse(function (object) {
-                if (object.isMesh) object.castShadow = true;
-            });
-
-            clownfish2 = gltf.scene;
-            main.gameObjects.push(clownfish2);
-            main.masterAnimations.push(gltf.animations);
-
-            loader.load('cfish.gltf', function (gltf) {
-                gltf.scene.traverse(function (object) {
-                    if (object.isMesh) object.castShadow = true;
-                });
-
-                clownfish3 = gltf.scene;
-                main.gameObjects.push(clownfish3);
-                main.masterAnimations.push(gltf.animations);
-
-                loader.load('angelfish.gltf', function (gltf) {
-                    gltf.scene.traverse(function (object) {
-                        if (object.isMesh) object.castShadow = true;
-                    });
-
-                    angelfish = gltf.scene;
-                    main.gameObjects.push(angelfish);
-                    main.masterAnimations.push(gltf.animations);
-
-                    loader.load('shark.gltf', function (gltf) {
-                        gltf.scene.traverse(function (object) {
-                            if (object.isMesh) object.castShadow = true;
-                        });
-
-                        shark = gltf.scene;
-                        main.gameObjects.push(shark);
-                        main.masterAnimations.push(gltf.animations);
-
-                        loader.load('MaoriWrasse.gltf', function (gltf) {
-                            gltf.scene.traverse(function (object) {
-                                if (object.isMesh) object.castShadow = true;
-                            });
-
-                            maoriWrasse = gltf.scene;
-                            main.gameObjects.push(maoriWrasse);
-                            main.masterAnimations.push(gltf.animations);
-
-                            loader.load('YellowTang.gltf', function (gltf) {
-                                gltf.scene.traverse(function (object) {
-                                    if (object.isMesh) object.castShadow = true;
-                                });
-
-                                tang = gltf.scene;
-                                main.gameObjects.push(tang);
-                                main.masterAnimations.push(gltf.animations);
-                                loadPortalVideos();
-                            });
-                        });
-                    });
-                });
-            });
-        });
+        
     });
 
 }

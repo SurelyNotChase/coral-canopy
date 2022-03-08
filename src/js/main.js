@@ -144,7 +144,7 @@ const mount = () => {
     navigator.mediaDevices.enumerateDevices()
         .then(devices => {
             const filtered = devices.filter(device => device.kind === 'videoinput');
-            console.log(filtered)
+            console.log("Video Devices:",filtered)
         });
 
         

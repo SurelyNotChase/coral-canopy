@@ -2,7 +2,6 @@
   "name": "dream-canopy-2",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "parcel src/index.html",
@@ -19,7 +18,9 @@
   },
   "homepage": "https://github.com/SurelyNotChase/dream-canopy#readme",
   "devDependencies": {
-    "parcel-bundler": "^1.12.5"
+    "buffer": "^6.0.3",
+    "parcel": "^2.0.0",
+    "parcel-reporter-static-files-copy": "^1.3.4"
   },
   "dependencies": {
     "@tensorflow-models/body-pix": "^2.2.0",
@@ -33,5 +34,10 @@
     "three-orbitcontrols": "^2.110.3",
     "threebsp": "^1.0.4",
     "utils.js": "^1.0.1"
+  },
+  "staticFiles": {
+    "staticPath": "staticFiles",
+    "distDir": "dist"
   }
+  
 }
