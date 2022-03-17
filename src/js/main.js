@@ -2,7 +2,7 @@ import game from './game.js';
 import utils from './utils.js';
 import tracking from './tracking.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import {JellyFish} from '../classes/JellyFish';
+import {JellyFish,ClownFish} from '../classes/JellyFish';
 import { util } from '@tensorflow/tfjs-core';
 
 /***
@@ -38,7 +38,7 @@ const init = () => {
 
     controls = new OrbitControls( experience.camera, experience.renderer.domElement );
     
-    
+
     game.assemblePortal();
     
     populateScene();
@@ -54,6 +54,8 @@ const init = () => {
     
     devMessages();
 };
+
+
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)

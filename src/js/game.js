@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import utils from './utils.js'
 import main from "./main.js";
+import { util } from '@tensorflow/tfjs-core';
 //import * as ThreeBSP from 'threebsp';
 
 let portalParams = [];
@@ -53,7 +54,8 @@ const modelData =  {
     },
 
     meshes: {
-        greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert())
+        greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert()),
+        clownFish: () => utils.getModel('cfish.gltf') //returned the gltf.scene for clownfish
         
     },
 
@@ -93,8 +95,9 @@ const generateCharacters = (count = 20) => {
     for (let i = 0; i <= count; i++) {
 
         let aMesh = modelData.meshes.greenBox()
-        aMesh.position.x = utils.random(-7,7)
-        aMesh.position.y = utils.random(-7,7)
+
+        //aMesh.position.x = utils.random(-7,7)
+        //aMesh.position.y = utils.random(-7,7)
 
         array.push(aMesh)
 

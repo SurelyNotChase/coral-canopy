@@ -13,6 +13,7 @@ class Entity {
     constructor(){
         //load the models from game.js like thi:
         this.mesh =  meshes.greenBox();
+        this.type = "Entity"
 
         //other props
     }
@@ -26,6 +27,7 @@ class Entity {
 class Fish extends Entity{
     constructor(){
         super();
+        this.type = "Fish"
     }
     //methods unique to 'Fish', but not specific to any individual creature go here..
 }
@@ -34,6 +36,7 @@ class Fish extends Entity{
 class StaticEnvironment extends Entity{
     constructor(){
         super();
+        this.type = "StaticEnvironment"
     }  
 }
 
@@ -41,6 +44,7 @@ class StaticEnvironment extends Entity{
 class AnimatedEnvironment extends Entity{
     constructor(){
         super();
+        this.type = "AnimatedEnvironment"
     }  
 }
 

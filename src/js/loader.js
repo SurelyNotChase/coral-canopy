@@ -9,14 +9,12 @@ loader.setPath('/assets/models/');  //The bundler will create this directory in 
 let clownfish1, clownfish2, clownfish3, angelfish, shark, maoriWrasse, tang;
 
 window.onload = () => {
-    loadModels();
+    //loadModels();
     main.init();
 
 }
 
 const loadModels = () => {
-
-    
 
     //load any assets here
     loader.load('clownfish.gltf', function (gltf) {
@@ -33,6 +31,7 @@ const loadModels = () => {
     });
 
 }
+
 function loadPortalVideos() {
     main.portalVideos.push(document.getElementById('blankPortal'));
     main.portalVideos.push(document.getElementById('openingPortal'));
