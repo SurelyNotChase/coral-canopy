@@ -2,7 +2,7 @@ import game from './game.js';
 import utils from './utils.js';
 import tracking from './tracking.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
-import {JellyFish} from '../classes/JellyFish';
+import { JellyFish } from '../classes/JellyFish';
 import { util } from '@tensorflow/tfjs-core';
 
 /***
@@ -36,34 +36,34 @@ const init = () => {
 
     experience = game.assembleScene()
 
-    controls = new OrbitControls( experience.camera, experience.renderer.domElement );
-    
-    
+    controls = new OrbitControls(experience.camera, experience.renderer.domElement);
+
+
     game.assemblePortal();
-    
+
     populateScene();
 
     tracking.init();
 
     mount();
 
-    experience.renderer.render(experience.scene,experience.camera);
+    experience.renderer.render(experience.scene, experience.camera);
     controls.update();
 
     animate();
-    
+
     devMessages();
 };
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)
     //controls.update();
-    experience.scene.children.forEach(object=>{
-        if(object.type === 'Mesh'){
-            object.position.x += utils.random(-0.5,0.5)
-            object.position.y += utils.random(-0.5,0.5)
-            object.position.z += utils.random(-0.5,0.5)
-            
+    experience.scene.children.forEach(object => {
+        if (object.type === 'Mesh') {
+            object.position.x += utils.random(-0.5, 0.5)
+            object.position.y += utils.random(-0.5, 0.5)
+            object.position.z += utils.random(-0.5, 0.5)
+
             object.rotation.x += 0.01
             object.rotation.y += 0.01
             object.rotation.z += 0.01
@@ -71,38 +71,38 @@ const animate = () => {
         }
 
     })
-    experience.renderer.render(experience.scene,experience.camera);
-    
+    experience.renderer.render(experience.scene, experience.camera);
+
 
 }
 //// ----- SIDE EFFECTS ----- ////
 
 //Updates poses object with recursive promise loop. (this should be refactored to a utility function so that we can use recursive promises for other things)
 const predictVideo = () => {
-    const prediction = tracking.getPredictions(video,video2)
-    
+    const prediction = tracking.getPredictions(video, video2)
 
-    prediction.then((result)=>{
+
+    prediction.then((result) => {
 
         const segmentations = result
 
-        segmentations.segmentation.then((segmentResult)=>{
+        segmentations.segmentation.then((segmentResult) => {
             poses = segmentResult;
         })
 
-        segmentations.segmentation2.then((segmentResult)=>{
+        segmentations.segmentation2.then((segmentResult) => {
             poses2 = segmentResult;
         })
 
-        
+
         setTimeout(predictVideo, predictionDelay);
-        
+
     })
-    prediction.catch((err)=>{console.log(err)})
+    prediction.catch((err) => { console.log(err) })
 
 
 
-    
+
 }
 //Puts the scene on the webpage
 const mount = () => {
@@ -127,61 +127,63 @@ const mount = () => {
     // }
 
     const cam1Constraints = {
-        'audio': {'echoCancellation': true},
+        'audio': { 'echoCancellation': true },
         'video': {
             'deviceId': "9d1e62cd5f58748641cfead3b32713680b445fedfd6710d63f867cf56117a6ae",
 
-            }
+        }
     }
 
     const cam2Constraints = {
-        'audio': {'echoCancellation': true},
+        'audio': { 'echoCancellation': true },
         'video': {
             'deviceId': "5c9fcb83e7bbc6becb94fbafe7ba1669c034a9dbfb519234be01a2f49f82bce4",
 
-            }
+        }
     }
 
     navigator.mediaDevices.enumerateDevices()
         .then(devices => {
             const filtered = devices.filter(device => device.kind === 'videoinput');
-            console.log("Video Devices:",filtered)
+            console.log("Video Devices:", filtered)
         });
 
-        
-        navigator.mediaDevices.getUserMedia(cam1Constraints)
-            .then(function (stream) {
-                webcam.srcObject = stream;
-                webcam.addEventListener('loadeddata', predictVideo)
-            })
 
-            navigator.mediaDevices.getUserMedia(cam2Constraints)
-            .then(function (stream) {
-                webcam2.srcObject = stream;
-                webcam2.addEventListener('loadeddata', predictVideo)
-            })
-    
-    
+    navigator.mediaDevices.getUserMedia(cam1Constraints)
+        .then(function (stream) {
+            webcam.srcObject = stream;
+            webcam.addEventListener('loadeddata', predictVideo)
+        })
+
+    navigator.mediaDevices.getUserMedia(cam2Constraints)
+        .then(function (stream) {
+            webcam2.srcObject = stream;
+            webcam2.addEventListener('loadeddata', predictVideo)
+        })
+
+
 
     //testing listener
-    window.addEventListener('click', ()=>{console.log(poses,poses2)})
+    window.addEventListener('click', () => { console.log(poses, poses2) })
 
 }
 //Logs information to the console
 const devMessages = () => {
-    console.log('Instructions: ',instructions)
+    console.log('Instructions: ', instructions)
     console.log('Backend: ', tracking.logBackend());
-    console.log('Experience:',experience)
-    console.log('Entity Sample:',aJellyFish)
+    console.log('Experience:', experience)
+    console.log('Entity Sample:', aJellyFish)
 }
 //Puts entities in the scene
-const populateScene = () => {
-console.log(game.generateCharacters()) //seems to log out all the objects, but on a slight delay
-    game.generateCharacters().forEach(object=>{
-        experience.scene.add(object)
-    })
-    
+const populateScene = async () => {
+    console.log(3);
 
+    let generate = await game.generateCharacters();
+
+    generate.forEach(object=>{
+        experience.scene.add(object);
+    });
+    console.log(6);
 }
 
 export default { init, gameObjects, masterAnimations, portalVideos }

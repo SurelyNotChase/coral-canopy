@@ -11,6 +11,7 @@ let clownfish1, clownfish2, clownfish3, angelfish, shark, maoriWrasse, tang;
 
 window.onload = () => {
 
+    console.log(1);
     main.init();
 
 }

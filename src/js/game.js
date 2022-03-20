@@ -40,7 +40,7 @@ const gameDefaults = {
 }
 
 // Data: all loaded models, meshes, textures, and geometries
-const modelData =  {
+const modelData = {
     geometries: {
         cube: () => new THREE.BoxGeometry(1, 1, 1),
         wall: (w, h) => new THREE.BoxGeometry(w, h, 1),
@@ -81,43 +81,40 @@ const assembleScene = (defaults = gameDefaults) => {
 
     renderer.setClearColor(defaults.rendSettings.backgroundColor);
     renderer.setSize(defaults.rendSettings.width, defaults.rendSettings.height);
-
+    console.log(2);
     return { renderer, camera, scene }
 
 }
 
 // >>> Array of game objects
-const generateCharacters = (count = 20) => {
+const generateCharacters = async (count = 20) => {
 
     let array = [];
 
+    console.log(4);
+
+
     for (let i = 0; i <= count; i++) {
 
-        let whenReady = modelData.meshes.clownFish()
-        
-        whenReady.then((result)=>{
-            let group = result.scene
-     
-            group.position.x = utils.random(-7,7)
-            group.position.y = utils.random(-7,7)
-    
-            array.push(group)
+        let whenReady = await modelData.meshes.clownFish();
+        let group = whenReady.scene;
 
-        })
-
-
-        
-
+        group.position.x = utils.random(-7, 7);
+        group.position.y = utils.random(-7, 7);
+        array.push(group);
     }
 
-    let aLight = modelData.lights.whitePointLight()
-    aLight.position.set(10, 0, 25)
-    array.push(aLight)
 
+    let aLight = modelData.lights.whitePointLight();
+    aLight.position.set(10, 0, 25);
+    array.push(aLight);
 
-    return array
-
+    console.log("array:");
+    console.log(array);
+    return array;
 }
+
+
 
 const assemblePortal = () => {
 
