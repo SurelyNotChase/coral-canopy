@@ -101,6 +101,9 @@ const generateCharacters = async (count = 20) => {
 
         group.position.x = utils.random(-7, 7);
         group.position.y = utils.random(-7, 7);
+        group.scale.x = .01;
+        group.scale.y = .01;
+        group.scale.z = .01;
         array.push(group);
     }
 
