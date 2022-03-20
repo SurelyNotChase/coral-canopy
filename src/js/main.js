@@ -59,7 +59,7 @@ const animate = () => {
     requestAnimationFrame(animate)
     //controls.update();
     experience.scene.children.forEach(object => {
-        if (object.type === 'Mesh') {
+        if (object.type === 'Group') {
             object.position.x += utils.random(-0.5, 0.5)
             object.position.y += utils.random(-0.5, 0.5)
             object.position.z += utils.random(-0.5, 0.5)
@@ -67,8 +67,9 @@ const animate = () => {
             object.rotation.x += 0.01
             object.rotation.y += 0.01
             object.rotation.z += 0.01
-
+            console.log("yes");
         }
+        else console.log(object.animations);
 
     })
     experience.renderer.render(experience.scene, experience.camera);
