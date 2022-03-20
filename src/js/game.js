@@ -1,6 +1,7 @@
 import * as THREE from 'three';
 import utils from './utils.js'
 import main from "./main.js";
+import { async } from 'regenerator-runtime';
 //import * as ThreeBSP from 'threebsp';
 
 let portalParams = [];
@@ -53,8 +54,8 @@ const modelData =  {
     },
 
     meshes: {
-        greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert())
-        
+        greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert()),
+        clownFish: () => utils.loadModelAsync('cfish.gltf')
     },
 
 
@@ -92,11 +93,20 @@ const generateCharacters = (count = 20) => {
 
     for (let i = 0; i <= count; i++) {
 
-        let aMesh = modelData.meshes.greenBox()
-        aMesh.position.x = utils.random(-7,7)
-        aMesh.position.y = utils.random(-7,7)
+        let whenReady = modelData.meshes.clownFish()
+        
+        whenReady.then((result)=>{
+            let group = result.scene
+     
+            group.position.x = utils.random(-7,7)
+            group.position.y = utils.random(-7,7)
+    
+            array.push(group)
 
-        array.push(aMesh)
+        })
+
+
+        
 
     }
 

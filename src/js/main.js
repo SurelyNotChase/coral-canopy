@@ -26,7 +26,7 @@ let portalVideos = [];
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
-const predictionDelay = 1500 //minimum time in ms between predictions (alter for benchmarking)
+const predictionDelay = 200 //minimum time in ms between predictions (alter for benchmarking)
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
 
 
@@ -94,6 +94,7 @@ const predictVideo = () => {
             poses2 = segmentResult;
         })
 
+        
         setTimeout(predictVideo, predictionDelay);
         
     })
@@ -128,7 +129,7 @@ const mount = () => {
     const cam1Constraints = {
         'audio': {'echoCancellation': true},
         'video': {
-            'deviceId': "3a5d61a1edc30ca4239a013f4aa933311acca61e8a30785126b43059be921f1b",
+            'deviceId': "9d1e62cd5f58748641cfead3b32713680b445fedfd6710d63f867cf56117a6ae",
 
             }
     }
@@ -136,7 +137,7 @@ const mount = () => {
     const cam2Constraints = {
         'audio': {'echoCancellation': true},
         'video': {
-            'deviceId': "b96a6b7c2e2e27462fdd077124fbc45f1ddeb23bb03a266412d179281c65aec0",
+            'deviceId': "5c9fcb83e7bbc6becb94fbafe7ba1669c034a9dbfb519234be01a2f49f82bce4",
 
             }
     }
@@ -163,7 +164,7 @@ const mount = () => {
     
 
     //testing listener
-    window.addEventListener('click', ()=>{console.log(poses.allPoses,poses2.allPoses)})
+    window.addEventListener('click', ()=>{console.log(poses,poses2)})
 
 }
 //Logs information to the console
@@ -175,16 +176,10 @@ const devMessages = () => {
 }
 //Puts entities in the scene
 const populateScene = () => {
-    /*
-    //We can just throw assets into array as they're being loaded, then populate here
-    game.generateCharacters().forEach(object=>{ 
-
-        gameObjects.push(object) 
-        gameObjects.forEach(object=>{experience.scene.add(object)})
-
+console.log(game.generateCharacters()) //seems to log out all the objects, but on a slight delay
+    game.generateCharacters().forEach(object=>{
+        experience.scene.add(object)
     })
-    */
-    game.generateCharacters().forEach(object=>experience.scene.add(object))
     
 
 }
