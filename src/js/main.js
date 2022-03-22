@@ -4,6 +4,7 @@ import tracking from './tracking.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { JellyFish } from '../classes/JellyFish';
 import { util } from '@tensorflow/tfjs-core';
+// import { lerp } from 'three/src/math/mathutils';
 
 /***
  *** 
@@ -26,7 +27,7 @@ let portalVideos = [];
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
-const predictionDelay = 200 //minimum time in ms between predictions (alter for benchmarking)
+const predictionDelay = 500 //minimum time in ms between predictions (alter for benchmarking)
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
 
 
@@ -58,16 +59,28 @@ const init = () => {
 const animate = () => {
     requestAnimationFrame(animate)
     //controls.update();
-    experience.scene.children.forEach(object => {
-        if (object.type === 'Group') {
-            object.position.x += utils.random(-0.5, 0.5)
-            object.position.y += utils.random(-0.5, 0.5)
-            object.position.z += utils.random(-0.5, 0.5)
+    experience.scene.children.forEach((object, index) => {
+        if (object.type === 'Group' && poses.allPoses.length > 0) {
+            // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
+            // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
+            // object.position.z += utils.random(-0.2, 0.2)
 
-            object.rotation.x += 0.01
-            object.rotation.y += 0.01
-            object.rotation.z += 0.01
-            console.log("yes");
+            // object.rotation.x += 0.01
+            // object.rotation.y += 0.01
+            // object.rotation.z += 0.01
+
+            // NOSE TEST keypoints[0] WRIST 9
+            let poseX = -utils.scale(poses.allPoses[0].keypoints[0].position.x, 0, 650, -7, 7);
+            let poseY = -utils.scale(poses.allPoses[0].keypoints[0].position.y, 0, 480, -4, 4);
+                // object.position.x -= (utils.lerp(0, poseX, 0.01))
+                // object.position.y -= (utils.lerp(0, poseY, 0.01))
+            // if (utils.random(0, 1) > 0.99) {
+                object.position.x = utils.lerp(object.position.x, poseX, 0.01)
+                object.position.y = utils.lerp(object.position.y, poseY, 0.01)
+            // }
+            
+            
+
         }
         else console.log(object.animations);
 
@@ -128,7 +141,7 @@ const mount = () => {
     // }
 
     const cam1Constraints = {
-        'audio': { 'echoCancellation': true },
+        // 'audio': { 'echoCancellation': true },
         'video': {
             'deviceId': "9d1e62cd5f58748641cfead3b32713680b445fedfd6710d63f867cf56117a6ae",
 
@@ -136,7 +149,7 @@ const mount = () => {
     }
 
     const cam2Constraints = {
-        'audio': { 'echoCancellation': true },
+        // 'audio': { 'echoCancellation': true },
         'video': {
             'deviceId': "5c9fcb83e7bbc6becb94fbafe7ba1669c034a9dbfb519234be01a2f49f82bce4",
 

@@ -94,7 +94,7 @@ const generateCharacters = async (count = 20) => {
     console.log(4);
 
 
-    for (let i = 0; i <= count; i++) {
+    for (let i = 0; i < count; i++) {
 
         let whenReady = await modelData.meshes.clownFish();
         let group = whenReady.scene;
