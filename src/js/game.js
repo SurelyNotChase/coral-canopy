@@ -97,6 +97,10 @@ const generateCharacters = async (count = 20) => {
     for (let i = 0; i < count; i++) {
 
         let whenReady = await modelData.meshes.clownFish();
+
+        let model = whenReady;
+        array.push(model);
+        /*
         let group = whenReady.scene;
 
         group.position.x = utils.random(-7, 7);
@@ -105,12 +109,56 @@ const generateCharacters = async (count = 20) => {
         group.scale.y = .01;
         group.scale.z = .01;
         array.push(group);
+        */
     }
 
-
+    /*
     let aLight = modelData.lights.whitePointLight();
     aLight.position.set(10, 0, 25);
     array.push(aLight);
+    */
+
+    console.log("array:");
+    console.log(array);
+    return array;
+}
+
+const getGroups = async (characters, count = 20) => {
+    let array = [];
+
+    for (let i = 0; i < count; i++) {
+
+
+        let group = characters[i].scene;
+        
+        group.position.x = utils.random(-7, 7);
+        group.position.y = utils.random(-7, 7);
+        group.scale.x = .01;
+        group.scale.y = .01;
+        group.scale.z = .01;
+        array.push(group);
+    }
+
+    
+    let aLight = modelData.lights.whitePointLight();
+    aLight.position.set(10, 0, 25);
+    array.push(aLight);
+    
+
+    console.log("array:");
+    console.log(array);
+    return array;
+}
+
+const getAnimations = async (characters, count = 20) => {
+
+    let array = [];
+
+    for (let i = 0; i < count; i++) {
+
+        let animations = characters[i].animations;
+        array.push(animations);
+    }
 
     console.log("array:");
     console.log(array);
@@ -206,4 +254,4 @@ function blankPortal() {
 }
 
 
-export default { assembleScene, generateCharacters, assemblePortal, modelData }
+export default { assembleScene, generateCharacters, getGroups, getAnimations, assemblePortal, modelData }

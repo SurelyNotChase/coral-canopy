@@ -27,7 +27,7 @@ let portalVideos = [];
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
-const predictionDelay = 500 //minimum time in ms between predictions (alter for benchmarking)
+const predictionDelay = 1000 //minimum time in ms between predictions (alter for benchmarking)
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
 
 
@@ -82,7 +82,6 @@ const animate = () => {
             
 
         }
-        else console.log(object.animations);
 
     })
     experience.renderer.render(experience.scene, experience.camera);
@@ -193,8 +192,10 @@ const populateScene = async () => {
     console.log(3);
 
     let generate = await game.generateCharacters();
+    let getGroups = await game.getGroups(generate);
+    let getAnimations = await game.getAnimations(generate);
 
-    generate.forEach(object=>{
+    getGroups.forEach(object=>{
         experience.scene.add(object);
     });
     console.log(6);
