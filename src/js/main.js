@@ -1,3 +1,4 @@
+import * as THREE from 'three';
 import game from './game.js';
 import utils from './utils.js';
 import tracking from './tracking.js';
@@ -22,6 +23,8 @@ let aJellyFish = new JellyFish();
 let gameObjects = [];
 let masterAnimations = []; //array of animation arrays
 let portalVideos = [];
+let clock = new THREE.Clock();
+let mixers;
 
 
 //// ----- IMMUTABLES ----- ////
@@ -35,7 +38,7 @@ const instructions = 'Orbit Controls are enabled. Click to log current pose pred
 //Runs at document load
 const init = () => {
 
-    experience = game.assembleScene()
+    experience = game.assembleScene();
 
     controls = new OrbitControls(experience.camera, experience.renderer.domElement);
 
@@ -72,14 +75,14 @@ const animate = () => {
             // NOSE TEST keypoints[0] WRIST 9
             let poseX = -utils.scale(poses.allPoses[0].keypoints[0].position.x, 0, 650, -7, 7);
             let poseY = -utils.scale(poses.allPoses[0].keypoints[0].position.y, 0, 480, -4, 4);
-                // object.position.x -= (utils.lerp(0, poseX, 0.01))
-                // object.position.y -= (utils.lerp(0, poseY, 0.01))
+            // object.position.x -= (utils.lerp(0, poseX, 0.01))
+            // object.position.y -= (utils.lerp(0, poseY, 0.01))
             // if (utils.random(0, 1) > 0.99) {
-                object.position.x = utils.lerp(object.position.x, poseX, 0.01)
-                object.position.y = utils.lerp(object.position.y, poseY, 0.01)
+            object.position.x = utils.lerp(object.position.x, poseX, 0.01)
+            object.position.y = utils.lerp(object.position.y, poseY, 0.01)
             // }
-            
-            
+
+
 
         }
 
@@ -193,9 +196,9 @@ const populateScene = async () => {
 
     let generate = await game.generateCharacters();
     let getGroups = await game.getGroups(generate);
-    
 
-    getGroups.forEach(object=>{
+
+    getGroups.forEach(object => {
         experience.scene.add(object);
     });
     await animateModels(generate);
@@ -204,12 +207,28 @@ const populateScene = async () => {
 
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations
 const animateModels = async (models) => {
-    let animations = await game.getAnimations(models);
+    mixers = await game.getMixers(models);
+    let animations = await game.getAnimations(models, mixers);
 
-    animations.forEach(object=>{
-        console.log("animation set up");
+    animations.forEach(object => {
+        object.play();
     });
-    
+
+    runAnimation();
 }
 
+const runAnimation = () => {
+    const dt = clock.getDelta();
+    for (const mixer of mixers) {
+        mixer.update(dt);
+    }
+    experience.renderer.render(experience.scene, experience.camera);
+    requestAnimationFrame(runAnimation);
+    controls.update();
+    //render();
+}
+
+const render = () => {
+    experience.renderer.render(experience.scene, experience.camera);
+}
 export default { init, gameObjects, masterAnimations, portalVideos }

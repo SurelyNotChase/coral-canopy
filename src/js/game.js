@@ -129,18 +129,31 @@ const getGroups = async (characters, count = 20) => {
     return array;
 }
 
-const getAnimations = async (characters, count = 20) => {
+const getMixers = async (characters, count = 20) => {
+
+    let array = [];
+
+    for (let i = 0; i < count; i++) {
+        let mixer = new THREE.AnimationMixer(characters[i].scene);
+        array.push(mixer);
+    }
+
+    return array;
+
+}
+
+const getAnimations = async (characters, mixers, count = 20) => {
 
     let array = [];
 
     for (let i = 0; i < count; i++) {
         let animations = characters[i].animations;
-        let mixer = new THREE.AnimationMixer(characters[i].scene);
+        let mixer = mixers[i];
         const clip = animations[0];
         const action = mixer.clipAction(clip);
         array.push(action);
     }
-
+    
     return array;
 }
 
@@ -232,4 +245,4 @@ function blankPortal() {
 }
 
 
-export default { assembleScene, generateCharacters, getGroups, getAnimations, assemblePortal, modelData }
+export default { assembleScene, generateCharacters, getGroups, getMixers, getAnimations, assemblePortal, modelData }
