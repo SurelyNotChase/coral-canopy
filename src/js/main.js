@@ -193,12 +193,23 @@ const populateScene = async () => {
 
     let generate = await game.generateCharacters();
     let getGroups = await game.getGroups(generate);
-    let getAnimations = await game.getAnimations(generate);
+    
 
     getGroups.forEach(object=>{
         experience.scene.add(object);
     });
+    await animateModels(generate);
     console.log(6);
+}
+
+//Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations
+const animateModels = async (models) => {
+    let animations = await game.getAnimations(models);
+
+    animations.forEach(object=>{
+        console.log("animation set up");
+    });
+    
 }
 
 export default { init, gameObjects, masterAnimations, portalVideos }
