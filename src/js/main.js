@@ -1,5 +1,6 @@
 import * as THREE from 'three';
 import game from './game.js';
+import loader from './loader.js';
 import utils from './utils.js';
 import tracking from './tracking.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
@@ -23,9 +24,11 @@ let colorTrack;
 let aJellyFish = new JellyFish();
 let gameObjects = [];
 let masterAnimations = []; //array of animation arrays
-let portalVideos = [];
 let clock = new THREE.Clock();
 let mixers;
+let keyP = false;   //bool for spacebar being pressed
+let portalVideos = [];
+let videoTextures = [];
 
 
 //// ----- IMMUTABLES ----- ////
@@ -37,14 +40,20 @@ const instructions = 'Orbit Controls are enabled. Click to log current pose pred
 
 //// ----- CORE ----- ////
 //Runs at document load
-const init = () => {
+const init = async () => {
 
     experience = game.assembleScene();
 
     controls = new OrbitControls(experience.camera, experience.renderer.domElement);
 
+    portalVideos = loader.loadPortalVideos();
+    videoTextures = await game.assemblePortal();
 
-    game.assemblePortal();
+    experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
+    console.log(experience.scene);
+    //Set up event functions for opening and closing portal, currently based on pressing spacebar
+    window.addEventListener("keypress", openPortal);
+    window.addEventListener("keyup", closePortal);
 
     populateScene();
 
@@ -59,6 +68,64 @@ const init = () => {
 
     devMessages();
 };
+
+
+//Swap portal texture to opening texture
+function openPortal(e) {
+    e.preventDefault();
+    if (e.keyCode == 32 && !keyP) {
+        console.log("heyo");
+        console.log(portalVideos);
+        console.log(game.portalParam);
+        console.log(game.portalTextures[1]);
+        console.log(game.portalMaterials[1]);
+        portalVideos[1].currentTime = 0;
+        keyP = true;
+        game.portalParam = { color: 0x000000, alphaMap: game.portalTextures[1] };
+        game.portalMaterials[1] = new THREE.MeshBasicMaterial(game.portalParam);
+        game.portalMaterials[1].alphaTest = 0;
+        game.portalMaterials[1].transparent = true;
+        videoTextures.portalCube.material = game.portalMaterials[1];
+        setTimeout(spinPortal, 4000);
+    }
+}
+
+//Swap portal texture to spinning texture
+function spinPortal() {
+    portalVideos[2].currentTime = 0;
+    game.portalParam = { color: 0x000000, alphaMap: game.portalTextures[2] };
+    game.portalMaterials[2] = new THREE.MeshBasicMaterial(game.portalParam);
+    game.portalMaterials[2].alphaTest = 0;
+    game.portalMaterials[2].transparent = true;
+    videoTextures.portalCube.material = game.portalMaterials[2];
+}
+
+//Swap portal texture to closing texture
+function closePortal(e) {
+    e.preventDefault();
+    if (e.keyCode == 32 && keyP) {
+        portalVideos[3].currentTime = 0;
+        keyP = false;
+        game.portalParam = { color: 0x000000, alphaMap: game.portalTextures[3] };
+        game.portalMaterials[3] = new THREE.MeshBasicMaterial(game.portalParam);
+        game.portalMaterials[3].alphaTest = 0;
+        game.portalMaterials[3].transparent = true;
+        videoTextures.portalCube.material = game.portalMaterials[3];
+
+        setTimeout(blankPortal, 4000);
+    }
+}
+
+//Swap portal texture to blank texture
+function blankPortal() {
+    portalVideos[0].currentTime = 0;
+    game.portalParam = { color: 0x000000, alphaMap: game.portalTextures[0] };
+    game.portalMaterials[0] = new THREE.MeshBasicMaterial(game.portalParam);
+    game.portalMaterials[0].alphaTest = 0;
+    game.portalMaterials[0].transparent = true;
+    videoTextures.portalCube.material = game.portalMaterials[0];
+}
+
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)
@@ -233,12 +300,8 @@ const runAnimation = () => {
         mixer.update(dt);
     }
     experience.renderer.render(experience.scene, experience.camera);
-    requestAnimationFrame(runAnimation);
     controls.update();
-    //render();
+    requestAnimationFrame(runAnimation);
 }
 
-const render = () => {
-    experience.renderer.render(experience.scene, experience.camera);
-}
 export default { init, gameObjects, masterAnimations, portalVideos }
