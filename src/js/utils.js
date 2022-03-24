@@ -9,7 +9,7 @@ const loadModelAsync = async (filename) => {
     const loader = new GLTFLoader()
     loader.setPath('/assets/models/');
     const loadedData = await loader.loadAsync(filename);
-    console.log(5);
+
     return loadedData;
 
 }

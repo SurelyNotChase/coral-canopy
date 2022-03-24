@@ -19,6 +19,7 @@ let experience = {}; //scene, renderer, and camera
 let controls;
 let poses;
 let poses2;
+let colorTrack;
 let aJellyFish = new JellyFish();
 let gameObjects = [];
 let masterAnimations = []; //array of animation arrays
@@ -63,7 +64,7 @@ const animate = () => {
     requestAnimationFrame(animate)
     //controls.update();
     experience.scene.children.forEach((object, index) => {
-        if (object.type === 'Group' && poses.allPoses.length > 0) {
+        if (object.type === 'Group') {
             // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
             // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
             // object.position.z += utils.random(-0.2, 0.2)
@@ -73,15 +74,18 @@ const animate = () => {
             // object.rotation.z += 0.01
 
             // NOSE TEST keypoints[0] WRIST 9
-            let poseX = -utils.scale(poses.allPoses[0].keypoints[0].position.x, 0, 650, -7, 7);
-            let poseY = -utils.scale(poses.allPoses[0].keypoints[0].position.y, 0, 480, -4, 4);
+            //let poseX = -utils.scale(poses.allPoses[0].keypoints[10].position.x, 0, 640, -12, 12);
+            // let poseY = -utils.scale(poses2.allPoses[0].keypoints[6].position.y, 0, 480, -4, 4);
+            // let poseZ = -utils.scale(poses2.allPoses[0].keypoints[6].position.x, 0, 650, 0, 1000);
+            //let poseZ = -utils.scale(poses2.allPoses[0].keypoints[10].position.x, 0, 640, -10, 10);
             // object.position.x -= (utils.lerp(0, poseX, 0.01))
             // object.position.y -= (utils.lerp(0, poseY, 0.01))
             // if (utils.random(0, 1) > 0.99) {
-            object.position.x = utils.lerp(object.position.x, poseX, 0.01)
-            object.position.y = utils.lerp(object.position.y, poseY, 0.01)
+           //object.position.x = utils.lerp(object.position.x, poseX, 0.01)
+            //object.position.y = utils.lerp(object.position.y, poseY, 0.01)
+             //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
             // }
-
+        
 
 
         }
@@ -95,8 +99,8 @@ const animate = () => {
 
 //Updates poses object with recursive promise loop. (this should be refactored to a utility function so that we can use recursive promises for other things)
 const predictVideo = () => {
+    
     const prediction = tracking.getPredictions(video, video2)
-
 
     prediction.then((result) => {
 
@@ -110,7 +114,6 @@ const predictVideo = () => {
             poses2 = segmentResult;
         })
 
-
         setTimeout(predictVideo, predictionDelay);
 
     })
@@ -118,6 +121,12 @@ const predictVideo = () => {
 
 
 
+
+}
+const predictColors = () => {
+    const prediction = tracking.getColorPredictions(video, video2);
+    //console.log(prediction)
+    colorTrack = prediction
 
 }
 //Puts the scene on the webpage
@@ -153,7 +162,7 @@ const mount = () => {
     const cam2Constraints = {
         // 'audio': { 'echoCancellation': true },
         'video': {
-            'deviceId': "5c9fcb83e7bbc6becb94fbafe7ba1669c034a9dbfb519234be01a2f49f82bce4",
+            'deviceId': "056c0fb78420392d280f976844e2e53a37bc5a051b834280e136b1e69e5904b8",
 
         }
     }
@@ -168,13 +177,13 @@ const mount = () => {
     navigator.mediaDevices.getUserMedia(cam1Constraints)
         .then(function (stream) {
             webcam.srcObject = stream;
-            webcam.addEventListener('loadeddata', predictVideo)
+            webcam.addEventListener('loadeddata', predictColors)
         })
 
     navigator.mediaDevices.getUserMedia(cam2Constraints)
         .then(function (stream) {
             webcam2.srcObject = stream;
-            webcam2.addEventListener('loadeddata', predictVideo)
+            webcam2.addEventListener('loadeddata', predictColors)
         })
 
 
@@ -189,10 +198,11 @@ const devMessages = () => {
     console.log('Backend: ', tracking.logBackend());
     console.log('Experience:', experience)
     console.log('Entity Sample:', aJellyFish)
+    console.log(webcam)
 }
 //Puts entities in the scene
 const populateScene = async () => {
-    console.log(3);
+
 
     let generate = await game.generateCharacters();
     let getGroups = await game.getGroups(generate);
@@ -202,7 +212,7 @@ const populateScene = async () => {
         experience.scene.add(object);
     });
     await animateModels(generate);
-    console.log(6);
+
 }
 
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations
