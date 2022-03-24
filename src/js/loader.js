@@ -17,10 +17,17 @@ window.onload = () => {
 }
 
 
-function loadPortalVideos() {
-    main.portalVideos.push(document.getElementById('blankPortal'));
-    main.portalVideos.push(document.getElementById('openingPortal'));
-    main.portalVideos.push(document.getElementById('spinningPortal'));
-    main.portalVideos.push(document.getElementById('closingPortal'));
+const loadPortalVideos = () => {
+    let array = [];
 
+    array.push(document.getElementById('blankPortal'));
+    array.push(document.getElementById('openingPortal'));
+    array.push(document.getElementById('spinningPortal'));
+    array.push(document.getElementById('closingPortal'));
+
+    console.log(array);
+    
+    return array;
 }
+
+export default { loadPortalVideos }

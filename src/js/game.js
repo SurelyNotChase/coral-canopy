@@ -1,19 +1,19 @@
 import * as THREE from 'three';
 import utils from './utils.js'
 import main from "./main.js";
+import loader from './loader.js';
 import { async } from 'regenerator-runtime';
 //import * as ThreeBSP from 'threebsp';
 
-let portalParams = [];
+let portalVideos;
 let portalParam = {};
 let portalTextures = [];
 let portalMaterials = [];
 let portalGeo, backgroundGeo;
 let portalCube, backgroundCube;
-let backgroundVideo = document.querySelector('#background');
+let backgroundVideo = document.getElementById('background');
 let backgroundTexture, backgroundMaterial;
 let backgroundParam = {};
-let keyP = false;   //bool for spacebar being pressed
 
 
 const gameDefaults = {
@@ -86,6 +86,60 @@ const assembleScene = (defaults = gameDefaults) => {
 
 }
 
+const assemblePortal = async () => {
+
+    portalVideos = await loader.loadPortalVideos();
+
+    //Make sure all videos are playing before adding as textures
+    portalVideos.forEach(pVideo => {
+        pVideo.play();
+        pVideo.addEventListener('play', function () {
+            this.currentTime = 0;
+        });
+        portalTextures.push(new THREE.VideoTexture(pVideo));
+    });
+    backgroundVideo.play();
+    backgroundVideo.addEventListener('play', function () {
+        this.currentTime = 0;
+    });
+    backgroundTexture = new THREE.VideoTexture(backgroundVideo);
+
+    //Set up array of portal materials based on different textures
+    portalTextures.forEach(texture => {
+        portalParam = { color: 0x000000, alphaMap: texture };
+        portalMaterials.push(new THREE.MeshBasicMaterial(portalParam));
+    });
+
+    //Set each portal material to have an alpha of .5, this allows transparency
+    portalMaterials.forEach(material => {
+        material.alpaTest = .5;
+    });
+
+    //Set up inital texture mapping params to make cubes, start with blankPortal texture
+    portalParam = { color: 0x000000, alphaMap: portalTextures[0] };
+    backgroundParam = { color: 0xFFFFFF, map: backgroundTexture };
+
+    //Set up geometry to make cubes, current size based on John's original scene
+    portalGeo = new THREE.BoxGeometry(40, 20);
+    backgroundGeo = new THREE.BoxGeometry(60, 40);
+    backgroundMaterial = new THREE.MeshBasicMaterial(backgroundParam);
+
+    //Set up cubes to add to scene for portal and background, (portal initially blank)
+    let material = new THREE.MeshBasicMaterial(portalParam);
+    material.alphaTest = 0;
+    material.transparent = true;
+    portalCube = new THREE.Mesh(portalGeo, material);
+    portalCube.position.y = -10;
+    portalCube.rotation.x = (-90 * Math.PI) / 180;
+
+    backgroundCube = new THREE.Mesh(backgroundGeo, backgroundMaterial);
+
+    backgroundCube.position.y = 10;    
+    backgroundCube.rotation.x = (-90 * Math.PI) / 180;
+
+    return {portalCube, backgroundCube};
+}
+
 // >>> Array of game objects
 const generateCharacters = async (count = 20) => {
 
@@ -153,96 +207,11 @@ const getAnimations = async (characters, mixers, count = 20) => {
         const action = mixer.clipAction(clip);
         array.push(action);
     }
-    
+
     return array;
 }
 
 
-const assemblePortal = () => {
-
-    //Make sure all videos are playing before adding as textures
-    main.portalVideos.forEach(pVideo => {
-        pVideo.play();
-        pVideo.addEventListener('play', function () {
-            this.currentTime = 0;
-        });
-        portalTextures.push(new THREE.VideoTexture(pVideo));
-    });
-    backgroundVideo.play();
-    backgroundVideo.addEventListener('play', function () {
-        this.currentTime = 0;
-    });
-    backgroundTexture = new THREE.VideoTexture(backgroundVideo);
-
-    //Set up array of portal materials based on different textures
-    portalTextures.forEach(texture => {
-        portalParam = { color: 0x000000, alphaMap: texture };
-        portalMaterials.push(new THREE.MeshBasicMaterial(portalParam));
-    });
-
-    //Set each portal material to have an alpha of .5, this allows transparency
-    portalMaterials.forEach(material => {
-        material.alpaTest = .5;
-    });
-
-    //Set up inital texture mapping params to make cubes, start with blankPortal texture
-    portalParam = { color: 0x000000, alphaMap: portalTextures[0] };
-    backgroundParam = { color: 0xFFFFFF, map: backgroundTexture };
-
-    //Set up geometry to make cubes, current size based on John's original scene
-    portalGeo = new THREE.BoxGeometry(40, 20);
-    backgroundGeo = new THREE.BoxGeometry(60, 40);
-
-    //Set up cubes to add to scene for portal and background, (portal initially blank)
-    portalCube = new THREE.Mesh(portalGeo, portalMaterials[0]);
-    backgroundCube = new THREE.Mesh(backgroundGeo, backgroundMaterial);
-
-    backgroundCube.position.z = -12;    //Set background behind portal, current coord based on John's scene
-
-    //Set up event functions for opening and closing portal, currently based on pressing spacebar
-    window.addEventListener("keypress", openPortal);
-    window.addEventListener("keyup", closePortal);
-}
-
-//Swap portal texture to opening texture
-function openPortal(e) {
-    e.preventDefault();
-    if (e.keyCode == 32 && !keyP) {
-        portalVideos[1].currentTime = 0;
-        keyP = true;
-        portalParam = { color: 0x000000, alphaMap: portalTextures[1] };
-        portalCube.material = portalMaterials[1];
-
-        setTimeout(spinPortal, 4000);
-    }
-}
-
-//Swap portal texture to spinning texture
-function spinPortal() {
-    portalVideos[2].currentTime = 0;
-    portalParam = { color: 0x000000, alphaMap: portalTextures[2] };
-    portalCube.material = portalMaterials[2];
-}
-
-//Swap portal texture to closing texture
-function closePortal(e) {
-    e.preventDefault();
-    if (e.keyCode == 32 && keyP) {
-        portalVideos[3].currentTime = 0;
-        keyP = false;
-        portalParam = { color: 0x000000, alphaMap: portalTextures[3] };
-        portalCube.material = portalMaterials[3];
-
-        setTimeout(blankPortal, 4000);
-    }
-}
-
-//Swap portal texture to blank texture
-function blankPortal() {
-    portalVideos[0].currentTime = 0;
-    portalParam = { color: 0x000000, alphaMap: portalTextures[0] };
-    portalCube.material = portalMaterials[0];
-}
 
 
-export default { assembleScene, generateCharacters, getGroups, getMixers, getAnimations, assemblePortal, modelData }
+export default { assembleScene, generateCharacters, getGroups, getMixers, getAnimations, assemblePortal, modelData, portalVideos, portalParam, portalTextures, portalMaterials }
