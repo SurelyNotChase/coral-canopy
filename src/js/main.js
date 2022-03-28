@@ -74,7 +74,6 @@ const init = async () => {
 function openPortal(e) {
     e.preventDefault();
     if (e.keyCode == 32 && !keyP) {
-        console.log("heyo");
         console.log(portalVideos);
         console.log(game.portalParam);
         console.log(game.portalTextures[1]);
@@ -130,8 +129,32 @@ function blankPortal() {
 const animate = () => {
     requestAnimationFrame(animate)
     //controls.update();
+    
+    let sharkCount = 0;
     experience.scene.children.forEach((object, index) => {
         if (object.type === 'Group') {
+            let fishType = object.name;
+            
+            if (fishType == "clownfish"){
+                object.position.x += .4;
+                if (object.position.x > 12) object.position.x = -12;
+            }
+            else if (fishType == "angelfish" || fishType == "maoriWrasse" || fishType == "yellowTang") {
+                if (fishType == "yellowTang") object.position.z += utils.random(.3,.6);
+                else object.position.z -= utils.random(.3,.6);
+
+                if (object.position.z < -14) object.position.z = 14;
+                else if (object.position.z > 14) object.position.z = -14;
+            }
+            else if (fishType == "shark"){
+                if (sharkCount == 0) object.position.z += utils.random(0,1.5);
+                else object.position.x += utils.random(.2,.6);
+                sharkCount++;
+                if (object.position.z > 16) object.position.z = -16;
+                if (object.position.x > 20) object.position.x = -20;
+            }
+            
+            
             // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
             // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
             // object.position.z += utils.random(-0.2, 0.2)
