@@ -25,6 +25,7 @@
   },
   "dependencies": {
     "@tensorflow-models/body-pix": "^2.2.0",
+    "@tensorflow-models/coco-ssd": "^2.2.2",
     "@tensorflow/tfjs": "^3.13.0",
     "@tensorflow/tfjs-core": "^3.13.0",
     "main.js": "0.0.1",

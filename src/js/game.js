@@ -85,7 +85,7 @@ const assembleScene = (defaults = gameDefaults) => {
 
     renderer.setClearColor(defaults.rendSettings.backgroundColor);
     renderer.setSize(defaults.rendSettings.width, defaults.rendSettings.height);
-    console.log(2);
+   
     return { renderer, camera, scene }
 
 }
@@ -233,8 +233,8 @@ const getGroups = async (characters, count = 20) => {
                 group.scale.x = .004;
                 group.scale.y = .004;
                 group.scale.z = .004;
-                console.log("cfish:");
-                console.log(group.position);
+                // console.log("cfish:");
+                // console.log(group.position);
                 break;
             case "yellowTang":
                 group.position.x = utils.random(-2, 2);
@@ -256,8 +256,8 @@ const getGroups = async (characters, count = 20) => {
                     group.position.z = -5;
                     group.position.y = -13;
                     group.rotation.y = (90 * Math.PI) / 180;
-                    console.log("sharks:");
-                    console.log(group.position);
+                    // console.log("sharks:");
+                    // console.log(group.position);
                 }
                 group.scale.x = .023;
                 group.scale.y = .023;

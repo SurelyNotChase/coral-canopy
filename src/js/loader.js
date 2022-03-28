@@ -11,7 +11,6 @@ let clownfish1, clownfish2, clownfish3, angelfish, shark, maoriWrasse, tang;
 
 window.onload = () => {
 
-    console.log(1);
     main.init();
 
 }
@@ -25,7 +24,7 @@ const loadPortalVideos = () => {
     array.push(document.getElementById('spinningPortal'));
     array.push(document.getElementById('closingPortal'));
 
-    console.log(array);
+    //console.log(array);
     
     return array;
 }

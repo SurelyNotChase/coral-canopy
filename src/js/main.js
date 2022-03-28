@@ -2,10 +2,15 @@ import * as THREE from 'three';
 import game from './game.js';
 import loader from './loader.js';
 import utils from './utils.js';
-import tracking from './tracking.js';
+import tracker from './tracker.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { JellyFish } from '../classes/JellyFish';
 import { util } from '@tensorflow/tfjs-core';
+
+require('@tensorflow/tfjs-backend-cpu');
+require('@tensorflow/tfjs-backend-webgl');
+const cocoSsd = require('@tensorflow-models/coco-ssd');
+
 // import { lerp } from 'three/src/math/mathutils';
 
 /***
@@ -51,15 +56,14 @@ const init = async () => {
 
     experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
     console.log(experience.scene);
-    //Set up event functions for opening and closing portal, currently based on pressing spacebar
-    window.addEventListener("keypress", openPortal);
-    window.addEventListener("keyup", closePortal);
+ 
 
     populateScene();
 
-    tracking.init();
+    tracker.init();
 
     mount();
+
 
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
@@ -123,6 +127,14 @@ function blankPortal() {
     game.portalMaterials[0].alphaTest = 0;
     game.portalMaterials[0].transparent = true;
     videoTextures.portalCube.material = game.portalMaterials[0];
+}
+
+const trackColors = () => {
+
+    let myColorTracker = tracker.getColorTracker();
+    tracking.track(myColorTracker,video)
+    console.log(myColorTracker)
+
 }
 
 //Runs every frame
@@ -190,33 +202,37 @@ const animate = () => {
 //Updates poses object with recursive promise loop. (this should be refactored to a utility function so that we can use recursive promises for other things)
 const predictVideo = () => {
     
-    const prediction = tracking.getPredictions(video, video2)
+    const prediction = tracker.getPredictions(video, video2)
 
-    prediction.then((result) => {
+    // prediction.then((result) => {
 
-        const segmentations = result
+    //     const segmentations = result
 
-        segmentations.segmentation.then((segmentResult) => {
-            poses = segmentResult;
-        })
+    //     segmentations.segmentation.then((segmentResult) => {
+    //         poses = segmentResult;
+    //     })
 
-        segmentations.segmentation2.then((segmentResult) => {
-            poses2 = segmentResult;
-        })
+    //     segmentations.segmentation2.then((segmentResult) => {
+    //         poses2 = segmentResult;
+    //     })
 
-        setTimeout(predictVideo, predictionDelay);
+    //     setTimeout(predictVideo, predictionDelay);
 
-    })
-    prediction.catch((err) => { console.log(err) })
+    // })
+    // prediction.catch((err) => { console.log(err) })
+
+    console.log(prediction)
 
 
 
 
 }
 const predictColors = () => {
-    const prediction = tracking.getColorPredictions(video, video2);
-    //console.log(prediction)
-    colorTrack = prediction
+    // const prediction = tracking.getColorPredictions(video, video2);
+    // //console.log(prediction)
+    // colorTrack = prediction
+
+    console.log('cam ready')
 
 }
 //Puts the scene on the webpage
@@ -231,6 +247,10 @@ const mount = () => {
         experience.camera.aspect = window.innerWidth / window.innerHeight;
         experience.camera.updateProjectionMatrix();
     })
+
+       //Set up event functions for opening and closing portal, currently based on pressing spacebar
+       window.addEventListener("keypress", openPortal);
+       window.addEventListener("keyup", closePortal);
 
     //webcam and video
     // if (navigator.mediaDevices.getUserMedia) {
@@ -267,13 +287,13 @@ const mount = () => {
     navigator.mediaDevices.getUserMedia(cam1Constraints)
         .then(function (stream) {
             webcam.srcObject = stream;
-            webcam.addEventListener('loadeddata', predictColors)
+            webcam.addEventListener('loadeddata', predictVideo)
         })
 
     navigator.mediaDevices.getUserMedia(cam2Constraints)
         .then(function (stream) {
             webcam2.srcObject = stream;
-            webcam2.addEventListener('loadeddata', predictColors)
+            webcam2.addEventListener('loadeddata', predictVideo)
         })
 
 
@@ -285,7 +305,7 @@ const mount = () => {
 //Logs information to the console
 const devMessages = () => {
     console.log('Instructions: ', instructions)
-    console.log('Backend: ', tracking.logBackend());
+    console.log('Backend: ', tracker.logBackend());
     console.log('Experience:', experience)
     console.log('Entity Sample:', aJellyFish)
     console.log(webcam)
