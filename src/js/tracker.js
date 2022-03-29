@@ -28,10 +28,10 @@ async function  getPredictions(video,video2) {
   const model = await cocoSsd.load();
 
   // Classify the image.
-  const predictions = await model.detect(video);
-
+  const prediction1 = await model.detect(video);
+  const prediction2 = await model.detect(video2);
    
-    return {predictions,predictions};
+    return {prediction1,prediction2};
 
 
 }

@@ -35,6 +35,9 @@ let keyP = false;   //bool for spacebar being pressed
 let portalVideos = [];
 let videoTextures = [];
 
+let cam1Isready = false;
+let cam2Isready = false;
+
 
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
@@ -63,6 +66,8 @@ const init = async () => {
     tracker.init();
 
     mount();
+
+    predictVideo()
 
 
     experience.renderer.render(experience.scene, experience.camera);
@@ -202,7 +207,27 @@ const animate = () => {
 //Updates poses object with recursive promise loop. (this should be refactored to a utility function so that we can use recursive promises for other things)
 const predictVideo = () => {
     
-    const prediction = tracker.getPredictions(video, video2)
+    const predictions = tracker.getPredictions(video,video2)
+
+    console.log(prediction)
+
+    predictions.prediction1.then((result) => {
+        console.log(result)
+
+        done1 = true;
+
+    })
+
+    predictions.prediction2.then((result) => {
+        console.log(result)
+
+        done2 = true;
+
+    })
+
+  
+        setTimeout(predictVideo, predictionDelay);
+    
 
     // prediction.then((result) => {
 
@@ -219,9 +244,10 @@ const predictVideo = () => {
     //     setTimeout(predictVideo, predictionDelay);
 
     // })
-    // prediction.catch((err) => { console.log(err) })
+    
+    predictions.prediction1.catch((err) => { console.log(err) })
+    predictions.prediction2.catch((err) => { console.log(err) })
 
-    console.log(prediction)
 
 
 
@@ -252,19 +278,11 @@ const mount = () => {
        window.addEventListener("keypress", openPortal);
        window.addEventListener("keyup", closePortal);
 
-    //webcam and video
-    // if (navigator.mediaDevices.getUserMedia) {
-    //     navigator.mediaDevices.getUserMedia({ video: true })
-    //         .then(function (stream) {
-    //             video.srcObject = stream;
-    //             video.addEventListener('loadeddata', predictVideo)
-    //         })
-    // }
 
     const cam1Constraints = {
         // 'audio': { 'echoCancellation': true },
         'video': {
-            'deviceId': "9d1e62cd5f58748641cfead3b32713680b445fedfd6710d63f867cf56117a6ae",
+            'deviceId': "def272f22344671423eb09c1a1cfcd6c00ceb0b887e687a43ec0d8b3b78fc3e2",
 
         }
     }
@@ -272,7 +290,7 @@ const mount = () => {
     const cam2Constraints = {
         // 'audio': { 'echoCancellation': true },
         'video': {
-            'deviceId': "056c0fb78420392d280f976844e2e53a37bc5a051b834280e136b1e69e5904b8",
+            'deviceId': "93da1da75d8fb24d797e3082bce89c2976db055d868323d2ac849bea2756d9de",
 
         }
     }
@@ -287,13 +305,13 @@ const mount = () => {
     navigator.mediaDevices.getUserMedia(cam1Constraints)
         .then(function (stream) {
             webcam.srcObject = stream;
-            webcam.addEventListener('loadeddata', predictVideo)
+            webcam.addEventListener('loadeddata', ()=>{cam1Isready = true})
         })
 
     navigator.mediaDevices.getUserMedia(cam2Constraints)
         .then(function (stream) {
             webcam2.srcObject = stream;
-            webcam2.addEventListener('loadeddata', predictVideo)
+            webcam2.addEventListener('loadeddata', ()=>{cam2Isready = true})
         })
 
 
