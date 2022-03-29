@@ -5,7 +5,7 @@ import * as cocoSsd from '@tensorflow-models/coco-ssd';
 import 'regenerator-runtime/runtime'
 
 
-
+let x;
 
 const init = () => {
     tf.setBackend('webgl');
@@ -77,9 +77,11 @@ const getColorTracker = (colors = ['magenta','yellow','cyan']) => {
             console.log('nothing')
 
         } else {
-            console.log(event.data)
+            // console.log(event.data)
             event.data.forEach(function (rect) {
-                console.log(rect)
+                // console.log(utils.scale(rect.x, 0, 640, -10, 10))
+                x = utils.scale(rect.x, 0, 640, -10, 10)
+                console.log(x)
                 
 
             });
@@ -87,6 +89,7 @@ const getColorTracker = (colors = ['magenta','yellow','cyan']) => {
     });
 
     return colorTracker;
+    // return x;
 }
 
 
@@ -96,5 +99,5 @@ const logBackend = () => tf.getBackend()
 
 
 export default {
-    getPredictions,logBackend,init,getColorPredictions,getColorTracker
+    getPredictions,logBackend,init,getColorPredictions,getColorTracker,x
 }

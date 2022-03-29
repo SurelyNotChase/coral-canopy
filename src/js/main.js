@@ -137,8 +137,8 @@ function blankPortal() {
 const trackColors = () => {
 
     let myColorTracker = tracker.getColorTracker();
-    tracking.track(myColorTracker,video)
-    console.log(myColorTracker)
+    tracking.track(video, myColorTracker)
+    // console.log(myColorTracker)
 
 }
 
@@ -363,6 +363,11 @@ const runAnimation = () => {
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
     requestAnimationFrame(runAnimation);
+
+    trackColors();
+
+    // let testX = tracker.x;
+    // console.log(tracker.x);
 }
 
 export default { init, gameObjects, masterAnimations, portalVideos }
