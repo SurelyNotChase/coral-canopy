@@ -170,7 +170,7 @@ const setupColorTracker = () => {
         }
     });
 
-    tracking.track(myColorTracker,video)
+    tracking.track(video, myColorTracker)
 
     
 
