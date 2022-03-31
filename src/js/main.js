@@ -5,7 +5,7 @@ import utils from './utils.js';
 import tracker from './tracker.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { JellyFish } from '../classes/JellyFish';
-import { util } from '@tensorflow/tfjs-core';
+import { exp, util } from '@tensorflow/tfjs-core';
 
 require('@tensorflow/tfjs-backend-cpu');
 require('@tensorflow/tfjs-backend-webgl');
@@ -22,13 +22,9 @@ const cocoSsd = require('@tensorflow-models/coco-ssd');
 
 //// ----- MUTABLES ----- ////
 let experience = {}; //scene, renderer, and camera
-let controls;
+let controls; //ordbit controls
 
-let poses;
-let poses2;
-
-let colorTrack;
-let aJellyFish = new JellyFish();
+let aJellyFish = new JellyFish(); //testing object
 
 let gameObjects = [];
 let masterAnimations = []; //array of animation arrays
@@ -40,15 +36,28 @@ let keyP = false;   //bool for spacebar being pressed
 let portalVideos = [];
 let videoTextures = [];
 
-let cam1Isready = false;
-let cam2Isready = false;
-
 
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
 const predictionDelay = 1000 //minimum time in ms between predictions (alter for benchmarking)
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
+
+
+const participant1 = {
+
+    x: 0,
+    y: 0,
+    z: 0
+
+}
+
+const participant2 = {
+    x: 0,
+    y: 0,
+    z: 0
+
+}
 
 
 //// ----- CORE ----- ////
@@ -73,7 +82,8 @@ const init = async () => {
 
     mount();
 
-    setupColorTracker();
+    setupColorTracker(video,1);
+    setupColorTracker(video2,2);
 
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
@@ -140,98 +150,133 @@ function blankPortal() {
 }
 
 //returns color tracker
-const setupColorTracker = () => {
+const setupColorTracker = (videoSource,index) => {
 
     const myColors = ['magenta','yellow','cyan'];
     const myColorTracker = tracker.getColorTracker(myColors);
 
     //mount color events
     myColorTracker.on('track', function (event) {
-        if (event.data.length === 0) {
-           // if no colors are detected
-           console.log('nothing detected')
+ 
+            let detectedColors = event.data;
 
-        } else {
-            
-            if(event.data.color === 'magenta'){
-                console.log('magenta detected');
-            }
-            
-            if(event.data.color === 'yellow'){
-                console.log('yellow detected');
+           // if (detectedColors.length === 0) return
 
-            }
-            
-            if(event.data.color === "cyan") {
-                console.log('cyan detected');
+            detectedColors.forEach((detection)=>{
+                
+                //console.log(detection)
+                colorEvent(detection,index);
 
-            }
 
-        }
+            })
     });
 
-    tracking.track(video, myColorTracker)
+    tracking.track(videoSource, myColorTracker)
 
     
+
+}
+
+const colorEvent = (detection,index) => {
+
+
+if(detection.color === "magenta"){
+
+ 
+    //update participant 1 x,y,z
+
+   if(index === 1) participant1.z = utils.scale(detection.x,0, 640, -20, 20)
+   if(index === 1) participant1.y = utils.scale(detection.y,0, 640, -10, 10)
+   if(index === 2) participant1.x = utils.scale(detection.x,0, 640, -20, 20)
+   console.log(participant1)
+   
+   
+}
+
+if(detection.color === "cyan"){
+    
+    //console.log('cyan detected',detection)
+
+}
+
+if(detection.color === "yellow"){
+
+
+    
+    if(index === 1) participant2.x = utils.scale(detection.x,0, 640, -10, 10)
+    if(index === 1) participant2.y = utils.scale(detection.y,0, 640, -10, 10)
+    if(index === 2) participant2.z = utils.scale(detection.x,0, 640, -10, 10)
+    console.log(participant2)
+}
+
 
 }
 
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)
-    //controls.update();
+
+
+    controls.update();
     
     let sharkCount = 0;
-    experience.scene.children.forEach((object, index) => {
+     experience.scene.children.forEach((object, index) => {
+
+        // object.position.x = participant1.x
+        // object.position.y = participant1.y
+        // object.position.z = participant1.z
         if (object.type === 'Group') {
             let fishType = object.name;
             
             if (fishType == "clownfish"){
-                object.position.x += .4;
-                if (object.position.x > 12) object.position.x = -12;
+                // object.position.x += .4;
+                object.position.x = participant1.x;
+                object.position.y = participant1.y;
+                object.position.z = participant1.z;
+                // if (object.position.x > 12) object.position.x = -12;
             }
-            else if (fishType == "angelfish" || fishType == "maoriWrasse" || fishType == "yellowTang") {
-                if (fishType == "yellowTang") object.position.z += utils.random(.3,.6);
-                else object.position.z -= utils.random(.3,.6);
+            // else if (fishType == "angelfish" || fishType == "maoriWrasse" || fishType == "yellowTang") {
+            //     if (fishType == "yellowTang") object.position.z += utils.random(.3,.6);
+            //     else object.position.z -= utils.random(.3,.6);
 
-                if (object.position.z < -14) object.position.z = 14;
-                else if (object.position.z > 14) object.position.z = -14;
-            }
-            else if (fishType == "shark"){
-                if (sharkCount == 0) object.position.z += utils.random(0,1.5);
-                else object.position.x += utils.random(.2,.6);
-                sharkCount++;
-                if (object.position.z > 16) object.position.z = -16;
-                if (object.position.x > 20) object.position.x = -20;
-            }
-            
-            
-            // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
-            // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
-            // object.position.z += utils.random(-0.2, 0.2)
-
-            // object.rotation.x += 0.01
-            // object.rotation.y += 0.01
-            // object.rotation.z += 0.01
-
-            // NOSE TEST keypoints[0] WRIST 9
-            //let poseX = -utils.scale(poses.allPoses[0].keypoints[10].position.x, 0, 640, -12, 12);
-            // let poseY = -utils.scale(poses2.allPoses[0].keypoints[6].position.y, 0, 480, -4, 4);
-            // let poseZ = -utils.scale(poses2.allPoses[0].keypoints[6].position.x, 0, 650, 0, 1000);
-            //let poseZ = -utils.scale(poses2.allPoses[0].keypoints[10].position.x, 0, 640, -10, 10);
-            // object.position.x -= (utils.lerp(0, poseX, 0.01))
-            // object.position.y -= (utils.lerp(0, poseY, 0.01))
-            // if (utils.random(0, 1) > 0.99) {
-           //object.position.x = utils.lerp(object.position.x, poseX, 0.01)
-            //object.position.y = utils.lerp(object.position.y, poseY, 0.01)
-             //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
+            //     if (object.position.z < -14) object.position.z = 14;
+            //     else if (object.position.z > 14) object.position.z = -14;
             // }
+            // else if (fishType == "shark"){
+            //     if (sharkCount == 0) object.position.z += utils.random(0,1.5);
+            //     else object.position.x += utils.random(.2,.6);
+            //     sharkCount++;
+            //     if (object.position.z > 16) object.position.z = -16;
+            //     if (object.position.x > 20) object.position.x = -20;
+            // }
+            
+            
+    //         // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
+    //         // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
+    //         // object.position.z += utils.random(-0.2, 0.2)
+
+    //         // object.rotation.x += 0.01
+    //         // object.rotation.y += 0.01
+    //         // object.rotation.z += 0.01
+
+    //         // NOSE TEST keypoints[0] WRIST 9
+    //         //let poseX = -utils.scale(poses.allPoses[0].keypoints[10].position.x, 0, 640, -12, 12);
+    //         // let poseY = -utils.scale(poses2.allPoses[0].keypoints[6].position.y, 0, 480, -4, 4);
+    //         // let poseZ = -utils.scale(poses2.allPoses[0].keypoints[6].position.x, 0, 650, 0, 1000);
+    //         //let poseZ = -utils.scale(poses2.allPoses[0].keypoints[10].position.x, 0, 640, -10, 10);
+    //         // object.position.x -= (utils.lerp(0, poseX, 0.01))
+    //         // object.position.y -= (utils.lerp(0, poseY, 0.01))
+    //         // if (utils.random(0, 1) > 0.99) {
+    //        //object.position.x = utils.lerp(object.position.x, poseX, 0.01)
+    //         //object.position.y = utils.lerp(object.position.y, poseY, 0.01)
+    //          //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
+    //         // }
         
 
 
         }
 
-    })
+     })
     experience.renderer.render(experience.scene, experience.camera);
 
 
@@ -318,7 +363,7 @@ const mount = () => {
     const cam2Constraints = {
         // 'audio': { 'echoCancellation': true },
         'video': {
-            'deviceId': "93da1da75d8fb24d797e3082bce89c2976db055d868323d2ac849bea2756d9de",
+            'deviceId': "9d1e62cd5f58748641cfead3b32713680b445fedfd6710d63f867cf56117a6ae",
 
         }
     }
@@ -359,6 +404,7 @@ const devMessages = () => {
 //Puts entities in the scene
 const populateScene = async () => {
 
+    //experience.scene.add(game.modelData.meshes.greenBox())
 
     let generate = await game.generateCharacters();
     let getGroups = await game.getGroups(generate);
@@ -367,6 +413,7 @@ const populateScene = async () => {
     getGroups.forEach(object => {
         experience.scene.add(object);
     });
+
     await animateModels(generate);
 
 }
