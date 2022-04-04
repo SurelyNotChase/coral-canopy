@@ -29,49 +29,12 @@ class Fish {
         this.bboxOriginal = {};
         this.loadModelObject;
 
-        /*
-
-        this.modelObject = utils.loadModelAsync('cfish.gltf').then(() => {
-            this.meshObject = this.modelObject.scene;
-
-
-
-
-        });
-           
-      
-        
-
-        
-        */
-    }
-
-    loadModelAsync = async (filename) => {
-        console.log("hi");
-        const loader = new GLTFLoader()
-        loader.setPath('../../staticFiles/assets/models/');
-        const loadedData = await loader.loadAsync(filename);
-
-        return loadedData;
-
     }
 
     getModel() {
-        const func = async () => {
-            const loader = new GLTFLoader();
-            loader.setPath('../../staticFiles/assets/models/');
-            const loadedData = await loader.loadAsync(this.filename);
-
-            return loadedData;
-        }
-        //const p = new Promise.loadModelAsync(this.filename)
         this.loadModelObject = utils.loadModelAsync(this.filename);
         this.loadModelObject.then(value => { this.modelObject = value;
         this.meshObject = value.scene;})
-    }
-
-    getMesh() {
-        //this.meshObject = this.modelObject.scene;
     }
 
     getAnimationClipData() {
