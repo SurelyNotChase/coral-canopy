@@ -5,6 +5,7 @@ import utils from './utils.js';
 import tracker from './tracker.js';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { JellyFish } from '../classes/JellyFish';
+import { Fish } from '../classes/Fish.js'
 import { exp, util } from '@tensorflow/tfjs-core';
 
 require('@tensorflow/tfjs-backend-cpu');
@@ -69,21 +70,41 @@ const init = async () => {
     controls = new OrbitControls(experience.camera, experience.renderer.domElement);
 
     portalVideos = loader.loadPortalVideos();
-   
+
     videoTextures = await game.assemblePortal();
 
+    let fishTest = new Fish("testfish", 1, 'cfish.gltf');
+
+    /*
+    fishTest.getModel().then(() => {
+        fishTest.getMesh();
+        fishTest.getAnimationClipData();
+        fishTest.getBoundingBox();
+    });
+    */
+
+    fishTest.getModel();
+
+
+
     experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
-    
+
     console.log(experience.scene);
- 
-    populateScene();
+
+    await populateScene();
+
+    //fishTest.getMesh();
+    fishTest.getAnimationClipData();
+    fishTest.getBoundingBox();
+
+    console.log(fishTest);
 
     tracker.init();
 
     mount();
 
-    setupColorTracker(video,1);
-    setupColorTracker(video2,2);
+    setupColorTracker(video, 1);
+    setupColorTracker(video2, 2);
 
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
@@ -150,64 +171,64 @@ function blankPortal() {
 }
 
 //returns color tracker
-const setupColorTracker = (videoSource,index) => {
+const setupColorTracker = (videoSource, index) => {
 
-    const myColors = ['magenta','yellow','cyan'];
+    const myColors = ['magenta', 'yellow', 'cyan'];
     const myColorTracker = tracker.getColorTracker(myColors);
 
     //mount color events
     myColorTracker.on('track', function (event) {
- 
-            let detectedColors = event.data;
 
-           // if (detectedColors.length === 0) return
+        let detectedColors = event.data;
 
-            detectedColors.forEach((detection)=>{
-                
-                //console.log(detection)
-                colorEvent(detection,index);
+        // if (detectedColors.length === 0) return
+
+        detectedColors.forEach((detection) => {
+
+            //console.log(detection)
+            colorEvent(detection, index);
 
 
-            })
+        })
     });
 
     tracking.track(videoSource, myColorTracker)
 
-    
+
 
 }
 
-const colorEvent = (detection,index) => {
+const colorEvent = (detection, index) => {
 
 
-if(detection.color === "magenta"){
-
- 
-    //update participant 1 x,y,z
-
-   if(index === 1) participant1.z = utils.scale(detection.x,0, 640, -20, 20)
-   if(index === 1) participant1.y = utils.scale(detection.y,0, 640, -10, 10)
-   if(index === 2) participant1.x = utils.scale(detection.x,0, 640, -20, 20)
-   console.log(participant1)
-   
-   
-}
-
-if(detection.color === "cyan"){
-    
-    //console.log('cyan detected',detection)
-
-}
-
-if(detection.color === "yellow"){
+    if (detection.color === "magenta") {
 
 
-    
-    if(index === 1) participant2.x = utils.scale(detection.x,0, 640, -10, 10)
-    if(index === 1) participant2.y = utils.scale(detection.y,0, 640, -10, 10)
-    if(index === 2) participant2.z = utils.scale(detection.x,0, 640, -10, 10)
-    console.log(participant2)
-}
+        //update participant 1 x,y,z
+
+        if (index === 1) participant1.z = utils.scale(detection.x, 0, 640, -20, 20)
+        if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -10, 10)
+        if (index === 2) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
+        console.log(participant1)
+
+
+    }
+
+    if (detection.color === "cyan") {
+
+        //console.log('cyan detected',detection)
+
+    }
+
+    if (detection.color === "yellow") {
+
+
+
+        if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -10, 10)
+        if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -10, 10)
+        if (index === 2) participant2.z = utils.scale(detection.x, 0, 640, -10, 10)
+        console.log(participant2)
+    }
 
 
 }
@@ -218,17 +239,17 @@ const animate = () => {
 
 
     controls.update();
-    
+
     let sharkCount = 0;
-     experience.scene.children.forEach((object, index) => {
+    experience.scene.children.forEach((object, index) => {
 
         // object.position.x = participant1.x
         // object.position.y = participant1.y
         // object.position.z = participant1.z
         if (object.type === 'Group') {
             let fishType = object.name;
-            
-            if (fishType == "clownfish"){
+
+            if (fishType == "clownfish") {
                 // object.position.x += .4;
                 object.position.x = participant1.x;
                 object.position.y = participant1.y;
@@ -249,34 +270,34 @@ const animate = () => {
             //     if (object.position.z > 16) object.position.z = -16;
             //     if (object.position.x > 20) object.position.x = -20;
             // }
-            
-            
-    //         // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
-    //         // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
-    //         // object.position.z += utils.random(-0.2, 0.2)
 
-    //         // object.rotation.x += 0.01
-    //         // object.rotation.y += 0.01
-    //         // object.rotation.z += 0.01
 
-    //         // NOSE TEST keypoints[0] WRIST 9
-    //         //let poseX = -utils.scale(poses.allPoses[0].keypoints[10].position.x, 0, 640, -12, 12);
-    //         // let poseY = -utils.scale(poses2.allPoses[0].keypoints[6].position.y, 0, 480, -4, 4);
-    //         // let poseZ = -utils.scale(poses2.allPoses[0].keypoints[6].position.x, 0, 650, 0, 1000);
-    //         //let poseZ = -utils.scale(poses2.allPoses[0].keypoints[10].position.x, 0, 640, -10, 10);
-    //         // object.position.x -= (utils.lerp(0, poseX, 0.01))
-    //         // object.position.y -= (utils.lerp(0, poseY, 0.01))
-    //         // if (utils.random(0, 1) > 0.99) {
-    //        //object.position.x = utils.lerp(object.position.x, poseX, 0.01)
-    //         //object.position.y = utils.lerp(object.position.y, poseY, 0.01)
-    //          //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
-    //         // }
-        
+            //         // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
+            //         // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
+            //         // object.position.z += utils.random(-0.2, 0.2)
+
+            //         // object.rotation.x += 0.01
+            //         // object.rotation.y += 0.01
+            //         // object.rotation.z += 0.01
+
+            //         // NOSE TEST keypoints[0] WRIST 9
+            //         //let poseX = -utils.scale(poses.allPoses[0].keypoints[10].position.x, 0, 640, -12, 12);
+            //         // let poseY = -utils.scale(poses2.allPoses[0].keypoints[6].position.y, 0, 480, -4, 4);
+            //         // let poseZ = -utils.scale(poses2.allPoses[0].keypoints[6].position.x, 0, 650, 0, 1000);
+            //         //let poseZ = -utils.scale(poses2.allPoses[0].keypoints[10].position.x, 0, 640, -10, 10);
+            //         // object.position.x -= (utils.lerp(0, poseX, 0.01))
+            //         // object.position.y -= (utils.lerp(0, poseY, 0.01))
+            //         // if (utils.random(0, 1) > 0.99) {
+            //        //object.position.x = utils.lerp(object.position.x, poseX, 0.01)
+            //         //object.position.y = utils.lerp(object.position.y, poseY, 0.01)
+            //          //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
+            //         // }
+
 
 
         }
 
-     })
+    })
     experience.renderer.render(experience.scene, experience.camera);
 
 
@@ -285,7 +306,7 @@ const animate = () => {
 
 //Updates poses object with recursive promise loop. (this should be refactored to a utility function so that we can use recursive promises for other things)
 const predictVideo = () => {
-    
+
 
     // const predictions = tracker.getPredictions(video,video2)
 
@@ -305,9 +326,9 @@ const predictVideo = () => {
 
     // })
 
-  
-        setTimeout(predictVideo, predictionDelay);
-    
+
+    setTimeout(predictVideo, predictionDelay);
+
 
     // prediction.then((result) => {
 
@@ -324,9 +345,9 @@ const predictVideo = () => {
     //     setTimeout(predictVideo, predictionDelay);
 
     // })
-    
-//    predictions.prediction1.catch((err) => { console.log(err) })
-//     predictions.prediction2.catch((err) => { console.log(err) }) 
+
+    //    predictions.prediction1.catch((err) => { console.log(err) })
+    //     predictions.prediction2.catch((err) => { console.log(err) }) 
 
 
 
@@ -347,9 +368,9 @@ const mount = () => {
         experience.camera.updateProjectionMatrix();
     })
 
-       //Set up event functions for opening and closing portal, currently based on pressing spacebar
-       window.addEventListener("keypress", openPortal);
-       window.addEventListener("keyup", closePortal);
+    //Set up event functions for opening and closing portal, currently based on pressing spacebar
+    window.addEventListener("keypress", openPortal);
+    window.addEventListener("keyup", closePortal);
 
 
     const cam1Constraints = {
@@ -378,13 +399,13 @@ const mount = () => {
     navigator.mediaDevices.getUserMedia(cam1Constraints)
         .then(function (stream) {
             webcam.srcObject = stream;
-            webcam.addEventListener('loadeddata', ()=>{cam1Isready = true})
+            webcam.addEventListener('loadeddata', () => { cam1Isready = true })
         })
 
     navigator.mediaDevices.getUserMedia(cam2Constraints)
         .then(function (stream) {
             webcam2.srcObject = stream;
-            webcam2.addEventListener('loadeddata', ()=>{cam2Isready = true})
+            webcam2.addEventListener('loadeddata', () => { cam2Isready = true })
         })
 
 
@@ -439,7 +460,7 @@ const runAnimation = () => {
     controls.update();
     requestAnimationFrame(runAnimation);
 
-    
+
 
     // let testX = tracker.x;
     // console.log(tracker.x);
