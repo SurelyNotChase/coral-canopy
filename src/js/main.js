@@ -104,7 +104,8 @@ const init = async () => {
     mount();
 
     setupColorTracker(video, 1);
-    setupColorTracker(video2, 2);
+    // setupColorTracker(video2, 2);
+    setupColorTracker2(video2, 2);
 
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
@@ -172,6 +173,33 @@ function blankPortal() {
 
 //returns color tracker
 const setupColorTracker = (videoSource, index) => {
+
+    const myColors = ['magenta', 'yellow', 'cyan'];
+    const myColorTracker = tracker.getColorTracker(myColors);
+
+    //mount color events
+    myColorTracker.on('track', function (event) {
+
+        let detectedColors = event.data;
+
+        // if (detectedColors.length === 0) return
+
+        detectedColors.forEach((detection) => {
+
+            //console.log(detection)
+            colorEvent(detection, index);
+
+
+        })
+    });
+
+    tracking.track(videoSource, myColorTracker)
+
+
+
+}
+
+const setupColorTracker2 = (videoSource, index) => {
 
     const myColors = ['magenta', 'yellow', 'cyan'];
     const myColorTracker = tracker.getColorTracker(myColors);

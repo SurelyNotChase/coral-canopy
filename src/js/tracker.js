@@ -59,6 +59,7 @@ const getColorPredictions = (video,video2) => {
 
     // tracking.track('#myVideo', colors);
     tracking.track(video, colors)
+    tracking.track(video2, colors)
 
     //const segmentation2 =   net.segmentPerson(video2, { maxDetections: 1 });
 
@@ -69,6 +70,16 @@ const getColorPredictions = (video,video2) => {
 
 //returns color tracking object 
 const getColorTracker = (colors = ['magenta','yellow','cyan']) => {
+
+    const colorTracker = new tracking.ColorTracker(colors);
+
+    
+
+    return colorTracker;
+    // return x;
+}
+
+const getColorTracker2 = (colors = ['magenta','yellow','cyan']) => {
 
     const colorTracker = new tracking.ColorTracker(colors);
 
