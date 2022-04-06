@@ -31,17 +31,27 @@ class Fish {
 
     }
 
-    getModel() {
-        this.loadModelObject = utils.loadModelAsync(this.filename);
-        this.loadModelObject.then(value => { this.modelObject = value;
-        this.meshObject = value.scene;})
+    async getModel() {
+        this.modelObject = await utils.loadModelAsync(this.filename);
+        this.meshObject = this.modelObject.scene;
+        this.getAnimationClipData();
+        this.getBoundingBox();
+        /*
+        this.loadModelObject.then(value => {
+            this.modelObject = value;
+            this.meshObject = value.scene;
+            console.log(this.meshObject);
+            this.getAnimationClipData();
+            this.getBoundingBox();
+        });*/
     }
 
     getAnimationClipData() {
         //Condensed all the clips, mixers, etc into just two components, only ever need to use animationClip
         this.mixer = new THREE.AnimationMixer(this.modelObject.scene);
         let animations = this.modelObject.animations;
-        this.animationClip = this.mixer.clipAction(animations[0]);
+        const clip = animations[0];
+        this.animationClip = this.mixer.clipAction(clip);
     }
 
     getBoundingBox() {

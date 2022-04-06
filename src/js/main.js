@@ -94,8 +94,8 @@ const init = async () => {
     await populateScene();
 
     //fishTest.getMesh();
-    fishTest.getAnimationClipData();
-    fishTest.getBoundingBox();
+    //fishTest.getAnimationClipData();
+    //fishTest.getBoundingBox();
 
     console.log(fishTest);
 
