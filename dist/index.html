@@ -10,20 +10,23 @@
     <script src="/index.ce16d0ee.js" defer=""></script>
     
 </head>
+<style>
+    *{
+        margin:0px
 
-<body>
+    }
+    body {
+        overflow: hidden; /* Hide scrollbars */
+        
+    }
+    #cams {
+        position: absolute; 
+        z-index: -99;
+    }
 
-    <style>
 
-        #cams {
-            position: absolute; 
-            /* z-index: -99; */
-        }
-
-    
 </style>
-    <!-- <video id="webcam" autoplay width="640" height="480" ></video> -->
-    <!-- <video id="webcam2" autoplay width="640" height="480" ></video> -->
+<body>
 
     <div id="cams">
     <video id="webcam" autoplay="" width="640" height="480"></video>
@@ -31,10 +34,6 @@
 
     </div>
 
-    <div id="cover"></div>
-    <div id="currentData"> </div>
-    <!-- <video id="webcam" autoplay ></video>
-    <video id="webcam2" autoplay ></video> -->
     <video id="blankPortal" loop="" crossorigin="anonymous" playsinline="" style="display:none" muted="">
         <source src="/scene1_blankPortal.f7856c68.webm" type="video/webm">
     </video>

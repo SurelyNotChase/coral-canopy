@@ -206,10 +206,13 @@ const colorEvent = (detection, index) => {
 
         //update participant 1 x,y,z
 
-        if (index === 1) participant1.z = utils.scale(detection.x, 0, 640, -20, 20)
-        if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -10, 10)
-        if (index === 2) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
-        console.log(participant1)
+        // if (index === 1) participant1.z = utils.scale(detection.x, 0, 640, -20, 20)
+        // if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -10, 10)
+        // if (index === 2) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
+        if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
+        if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -20, 20)
+        // if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
+       // console.log("magenta",participant1)
 
 
     }
@@ -224,10 +227,13 @@ const colorEvent = (detection, index) => {
 
 
 
-        if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -10, 10)
-        if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -10, 10)
-        if (index === 2) participant2.z = utils.scale(detection.x, 0, 640, -10, 10)
-        console.log(participant2)
+        // if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -10, 10)
+        // if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -10, 10)
+        // if (index === 2) participant2.z = utils.scale(detection.x, 0, 640, -10, 10)
+        if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -20, 20)
+        if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -20, 20)
+        // if (index === 1) participant2.z = utils.scale(detection.x, 0, 640, -10, 10)
+        //console.log("yellow",participant2)
     }
 
 
@@ -241,21 +247,39 @@ const animate = () => {
     controls.update();
 
     let sharkCount = 0;
-    experience.scene.children.forEach((object, index) => {
 
-        // object.position.x = participant1.x
-        // object.position.y = participant1.y
-        // object.position.z = participant1.z
-        if (object.type === 'Group') {
-            let fishType = object.name;
+    // console.log("1",participant1)
+    // console.log("2",participant2)
+    
+    experience.scene.children.filter((item)=>item.type ==="Group").forEach((object, index) => {
 
-            if (fishType == "clownfish") {
-                // object.position.x += .4;
-                object.position.x = participant1.x;
-                object.position.y = participant1.y;
-                object.position.z = participant1.z;
-                // if (object.position.x > 12) object.position.x = -12;
-            }
+
+                if(index === 0){
+
+                    // object.position.x = -(utils.lerp(object.position.x, participant1.x, 0.01));
+                    // object.position.y = -(utils.lerp(object.position.y, participant1.y, 0.01));
+                    // object.position.z = -(utils.lerp(object.position.z, participant1.z, 0.01));
+                    object.position.x = utils.lerp(object.position.x, -participant1.x, 0.01);
+                    // object.position.y = utils.lerp(object.position.y, -participant1.y, 0.01);
+                    object.position.y = -4;
+                    object.position.z = utils.lerp(object.position.z, -participant1.y, 0.01);
+
+                    object.lookAt(participant1.x, participant1.z, participant1.y)
+                }
+                else{
+
+                    // object.position.x = -(utils.lerp(object.position.x, participant2.x, 0.01));
+                    // object.position.y = -(utils.lerp(object.position.y, participant2.y, 0.01));
+                    // object.position.z = -(utils.lerp(object.position.z, participant2.z, 0.01));
+                    object.position.x = utils.lerp(object.position.x, -participant2.x, 0.01);
+                    // object.position.y = utils.lerp(object.position.y, -participant2.y, 0.01);
+                    object.position.y = -4;
+                    object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
+
+                    object.lookAt(participant2.x, participant2.z, participant2.y)
+                }
+              // if (object.position.x > 12) object.position.x = -12;
+            
             // else if (fishType == "angelfish" || fishType == "maoriWrasse" || fishType == "yellowTang") {
             //     if (fishType == "yellowTang") object.position.z += utils.random(.3,.6);
             //     else object.position.z -= utils.random(.3,.6);
@@ -295,7 +319,7 @@ const animate = () => {
 
 
 
-        }
+        
 
     })
     experience.renderer.render(experience.scene, experience.camera);
@@ -384,7 +408,7 @@ const mount = () => {
     const cam2Constraints = {
         // 'audio': { 'echoCancellation': true },
         'video': {
-            'deviceId': "9d1e62cd5f58748641cfead3b32713680b445fedfd6710d63f867cf56117a6ae",
+            'deviceId': "c87a60835c52aa448d4998f7f0c92dba0de0f473dbcc854cd1a4d1f405d4b7aa",
 
         }
     }

@@ -213,7 +213,7 @@ const generateCharacters = async (count = 25) => {
     return array;
 }
 
-const getGroups = async (characters, count = 20) => {
+const getGroups = async (characters, count = 2) => {
     let array = [];
     let sharkCount = 0;
     let maoriCount = 0;
@@ -230,9 +230,9 @@ const getGroups = async (characters, count = 20) => {
                 group.position.x = utils.random(-10, -7);
                 group.position.z = utils.random(-2, 2);
                 group.position.y = utils.random(-9, -6);
-                group.scale.x = .004;
-                group.scale.y = .004;
-                group.scale.z = .004;
+                group.scale.x = .008;
+                group.scale.y = .008;
+                group.scale.z = .008;
                 // console.log("cfish:");
                 // console.log(group.position);
                 break;
@@ -273,9 +273,9 @@ const getGroups = async (characters, count = 20) => {
                     group.position.z = utils.random(-10, -7);
                 }
                 group.position.y = utils.random(-9, 7);
-                group.scale.x = .015;
-                group.scale.y = .015;
-                group.scale.z = .015;
+                group.scale.x = .03;
+                group.scale.y = .03;
+                group.scale.z = .03;
                 break;
             case "angelfish":
                 if (angelCount%2 == 0) {
