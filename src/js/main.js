@@ -24,6 +24,7 @@ const cocoSsd = require('@tensorflow-models/coco-ssd');
 //// ----- MUTABLES ----- ////
 let experience = {}; //scene, renderer, and camera
 let controls; //ordbit controls
+let generate;
 
 let aJellyFish = new JellyFish(); //testing object
 
@@ -264,7 +265,7 @@ const animate = () => {
                     object.position.y = -4;
                     object.position.z = utils.lerp(object.position.z, -participant1.y, 0.01);
 
-                    object.lookAt(participant1.x, participant1.z, participant1.y)
+                    //object.lookAt(participant1.x, participant1.z, participant1.y)
                 }
                 else{
 
@@ -273,10 +274,10 @@ const animate = () => {
                     // object.position.z = -(utils.lerp(object.position.z, participant2.z, 0.01));
                     object.position.x = utils.lerp(object.position.x, -participant2.x, 0.01);
                     // object.position.y = utils.lerp(object.position.y, -participant2.y, 0.01);
-                    object.position.y = -4;
+                    object.position.y = -6;
                     object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
 
-                    object.lookAt(participant2.x, participant2.z, participant2.y)
+                    //object.lookAt(participant2.x, participant2.z, participant2.y)
                 }
               // if (object.position.x > 12) object.position.x = -12;
             
@@ -448,7 +449,7 @@ const devMessages = () => {
 }
 //Puts entities in the scene
 const populateScene = async () => {
-
+    /*
     //experience.scene.add(game.modelData.meshes.greenBox())
 
     let generate = await game.generateCharacters();
@@ -460,12 +461,33 @@ const populateScene = async () => {
     });
 
     await animateModels(generate);
+    */
+   //experience.scene.add(game.modelData.meshes.greenBox())
 
+   generate = await game.generateCharacters(); //this used to get array of gltfs which were then used to get meshes and animations,
+   //now it returns array of Fish objects with all that completed.
+   console.log("generate finishd");
+   //let getGroups = await game.getGroups(generate);
+
+
+   generate.forEach(object => {
+       //experience.scene.add(object.meshObject);
+       let objectMesh = object.meshObject;
+       console.log(objectMesh);
+       experience.scene.add(objectMesh);
+   });
+
+   let light = new THREE.PointLight('white', 1, 500);
+   const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+   dirLight.position.set(4, 0, 12);
+   experience.scene.add(light, dirLight);
+
+   await animateModels(generate);
 }
 
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations
 const animateModels = async (models) => {
-    mixers = await game.getMixers(models);
+    //mixers = await game.getMixers(models);
     let animations = await game.getAnimations(models, mixers);
 
     animations.forEach(object => {
@@ -477,8 +499,12 @@ const animateModels = async (models) => {
 
 const runAnimation = () => {
     const dt = clock.getDelta();
+    /*
     for (const mixer of mixers) {
         mixer.update(dt);
+    }*/
+    for (let i = 0; i < generate.length; i++) {
+        generate[i].mixer.update(dt);
     }
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
