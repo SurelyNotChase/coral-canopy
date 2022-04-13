@@ -133,6 +133,14 @@ function openPortal(e) {
         videoTextures.portalCube.material = game.portalMaterials[1];
         setTimeout(spinPortal, 4000);
     }
+    else if (e.keyCode == 102) {
+        console.log("press");
+        const geometry = new THREE.SphereGeometry(.1, 6, 6);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.y = -4;
+        experience.scene.add(sphere);
+    }
 }
 
 //Swap portal texture to spinning texture
@@ -213,7 +221,7 @@ const colorEvent = (detection, index) => {
         if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
         if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -20, 20)
         // if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
-       // console.log("magenta",participant1)
+        // console.log("magenta",participant1)
 
 
     }
@@ -251,85 +259,85 @@ const animate = () => {
 
     // console.log("1",participant1)
     // console.log("2",participant2)
-    
-    experience.scene.children.filter((item)=>item.type ==="Group").forEach((object, index) => {
+
+    experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
 
 
-                if(index === 0){
+        if (index === 0) {
 
-                    // object.position.x = -(utils.lerp(object.position.x, participant1.x, 0.01));
-                    // object.position.y = -(utils.lerp(object.position.y, participant1.y, 0.01));
-                    // object.position.z = -(utils.lerp(object.position.z, participant1.z, 0.01));
-                    //object.position.x = utils.lerp(object.position.x, -participant1.x, 0.01);
-                    // object.position.y = utils.lerp(object.position.y, -participant1.y, 0.01);
-                    //object.position.y = -4;
-                    //object.position.z = utils.lerp(object.position.z, -participant1.y, 0.01);
+            // object.position.x = -(utils.lerp(object.position.x, participant1.x, 0.01));
+            // object.position.y = -(utils.lerp(object.position.y, participant1.y, 0.01));
+            // object.position.z = -(utils.lerp(object.position.z, participant1.z, 0.01));
+            //object.position.x = utils.lerp(object.position.x, -participant1.x, 0.01);
+            // object.position.y = utils.lerp(object.position.y, -participant1.y, 0.01);
+            //object.position.y = -4;
+            //object.position.z = utils.lerp(object.position.z, -participant1.y, 0.01);
 
-                    object.lookAt(0,0,0);
-                    object.position.z = utils.lerp(object.position.z, 0, 0.01);
-                    object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
-                    //object.rotation.x += (90 * Math.PI) / 180;
-                    //object.position.x += .06;
-                    //object.lookAt(participant1.x, participant1.z, participant1.y)
-                }
-                else{
+            object.lookAt(0, 0, 0);
+            object.position.z = utils.lerp(object.position.z, 0, 0.01);
+            object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
+            //object.rotation.x += (90 * Math.PI) / 180;
+            //object.position.x += .06;
+            //object.lookAt(participant1.x, participant1.z, participant1.y)
+        }
+        else {
 
-                    // object.position.x = -(utils.lerp(object.position.x, participant2.x, 0.01));
-                    // object.position.y = -(utils.lerp(object.position.y, participant2.y, 0.01));
-                    // object.position.z = -(utils.lerp(object.position.z, participant2.z, 0.01));
-                    //object.position.x = utils.lerp(object.position.x, -participant2.x, 0.01);
-                    // object.position.y = utils.lerp(object.position.y, -participant2.y, 0.01);
-                    //object.position.y = -6;
-                    //object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
+            // object.position.x = -(utils.lerp(object.position.x, participant2.x, 0.01));
+            // object.position.y = -(utils.lerp(object.position.y, participant2.y, 0.01));
+            // object.position.z = -(utils.lerp(object.position.z, participant2.z, 0.01));
+            //object.position.x = utils.lerp(object.position.x, -participant2.x, 0.01);
+            // object.position.y = utils.lerp(object.position.y, -participant2.y, 0.01);
+            //object.position.y = -6;
+            //object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
 
-                    object.lookAt(0,0,0);
-                    object.position.z = utils.lerp(object.position.z, 0, 0.01);
-                    object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
-                    //object.rotation.x += (90 * Math.PI) / 180;
-                    //object.lookAt(participant2.x, participant2.z, participant2.y)
-                }
-              // if (object.position.x > 12) object.position.x = -12;
-            
-            // else if (fishType == "angelfish" || fishType == "maoriWrasse" || fishType == "yellowTang") {
-            //     if (fishType == "yellowTang") object.position.z += utils.random(.3,.6);
-            //     else object.position.z -= utils.random(.3,.6);
+            object.lookAt(0, 0, 0);
+            object.position.z = utils.lerp(object.position.z, 0, 0.01);
+            object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
+            //object.rotation.x += (90 * Math.PI) / 180;
+            //object.lookAt(participant2.x, participant2.z, participant2.y)
+        }
+        // if (object.position.x > 12) object.position.x = -12;
 
-            //     if (object.position.z < -14) object.position.z = 14;
-            //     else if (object.position.z > 14) object.position.z = -14;
-            // }
-            // else if (fishType == "shark"){
-            //     if (sharkCount == 0) object.position.z += utils.random(0,1.5);
-            //     else object.position.x += utils.random(.2,.6);
-            //     sharkCount++;
-            //     if (object.position.z > 16) object.position.z = -16;
-            //     if (object.position.x > 20) object.position.x = -20;
-            // }
+        // else if (fishType == "angelfish" || fishType == "maoriWrasse" || fishType == "yellowTang") {
+        //     if (fishType == "yellowTang") object.position.z += utils.random(.3,.6);
+        //     else object.position.z -= utils.random(.3,.6);
 
-
-            //         // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
-            //         // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
-            //         // object.position.z += utils.random(-0.2, 0.2)
-
-            //         // object.rotation.x += 0.01
-            //         // object.rotation.y += 0.01
-            //         // object.rotation.z += 0.01
-
-            //         // NOSE TEST keypoints[0] WRIST 9
-            //         //let poseX = -utils.scale(poses.allPoses[0].keypoints[10].position.x, 0, 640, -12, 12);
-            //         // let poseY = -utils.scale(poses2.allPoses[0].keypoints[6].position.y, 0, 480, -4, 4);
-            //         // let poseZ = -utils.scale(poses2.allPoses[0].keypoints[6].position.x, 0, 650, 0, 1000);
-            //         //let poseZ = -utils.scale(poses2.allPoses[0].keypoints[10].position.x, 0, 640, -10, 10);
-            //         // object.position.x -= (utils.lerp(0, poseX, 0.01))
-            //         // object.position.y -= (utils.lerp(0, poseY, 0.01))
-            //         // if (utils.random(0, 1) > 0.99) {
-            //        //object.position.x = utils.lerp(object.position.x, poseX, 0.01)
-            //         //object.position.y = utils.lerp(object.position.y, poseY, 0.01)
-            //          //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
-            //         // }
+        //     if (object.position.z < -14) object.position.z = 14;
+        //     else if (object.position.z > 14) object.position.z = -14;
+        // }
+        // else if (fishType == "shark"){
+        //     if (sharkCount == 0) object.position.z += utils.random(0,1.5);
+        //     else object.position.x += utils.random(.2,.6);
+        //     sharkCount++;
+        //     if (object.position.z > 16) object.position.z = -16;
+        //     if (object.position.x > 20) object.position.x = -20;
+        // }
 
 
+        //         // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
+        //         // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
+        //         // object.position.z += utils.random(-0.2, 0.2)
 
-        
+        //         // object.rotation.x += 0.01
+        //         // object.rotation.y += 0.01
+        //         // object.rotation.z += 0.01
+
+        //         // NOSE TEST keypoints[0] WRIST 9
+        //         //let poseX = -utils.scale(poses.allPoses[0].keypoints[10].position.x, 0, 640, -12, 12);
+        //         // let poseY = -utils.scale(poses2.allPoses[0].keypoints[6].position.y, 0, 480, -4, 4);
+        //         // let poseZ = -utils.scale(poses2.allPoses[0].keypoints[6].position.x, 0, 650, 0, 1000);
+        //         //let poseZ = -utils.scale(poses2.allPoses[0].keypoints[10].position.x, 0, 640, -10, 10);
+        //         // object.position.x -= (utils.lerp(0, poseX, 0.01))
+        //         // object.position.y -= (utils.lerp(0, poseY, 0.01))
+        //         // if (utils.random(0, 1) > 0.99) {
+        //        //object.position.x = utils.lerp(object.position.x, poseX, 0.01)
+        //         //object.position.y = utils.lerp(object.position.y, poseY, 0.01)
+        //          //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
+        //         // }
+
+
+
+
 
     })
     experience.renderer.render(experience.scene, experience.camera);
@@ -471,29 +479,29 @@ const populateScene = async () => {
 
     await animateModels(generate);
     */
-   //experience.scene.add(game.modelData.meshes.greenBox())
+    //experience.scene.add(game.modelData.meshes.greenBox())
 
-   generate = await game.generateCharacters(); //this used to get array of gltfs which were then used to get meshes and animations,
-   //now it returns array of Fish objects with all that completed.
-   console.log("generate finishd");
+    generate = await game.generateCharacters(); //this used to get array of gltfs which were then used to get meshes and animations,
+    //now it returns array of Fish objects with all that completed.
+    console.log("generate finishd");
 
 
-   generate.forEach(object => {
-       //experience.scene.add(object.meshObject);
-       let objectMesh = object.meshObject;
-       console.log(objectMesh);
-       experience.scene.add(objectMesh);
-   });
+    generate.forEach(object => {
+        //experience.scene.add(object.meshObject);
+        let objectMesh = object.meshObject;
+        console.log(objectMesh);
+        experience.scene.add(objectMesh);
+    });
 
-   
-   let getGroups = await game.getGroups(generate);
 
-   let light = new THREE.PointLight('white', 1, 500);
-   const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-   dirLight.position.set(4, 0, 12);
-   experience.scene.add(light, dirLight);
+    let getGroups = await game.getGroups(generate);
 
-   await animateModels(generate);
+    let light = new THREE.PointLight('white', 1, 500);
+    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
+    dirLight.position.set(4, 0, 12);
+    experience.scene.add(light, dirLight);
+
+    await animateModels(generate);
 }
 
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations

@@ -264,7 +264,7 @@ const getGroups = async (characters, count = 3) => {
                 group.position.x = 0;
                 group.position.z = -7;
                }
-               group.position.y = utils.random(-6, -4);
+               group.position.y = utils.random(-4.5, -4);
                 break;
             case "yellowTang":
                 group.position.x = utils.random(-2, 2);
