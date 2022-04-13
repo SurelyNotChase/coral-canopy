@@ -10,20 +10,17 @@ import { exp, util } from '@tensorflow/tfjs-core';
 
 require('@tensorflow/tfjs-backend-cpu');
 require('@tensorflow/tfjs-backend-webgl');
-const cocoSsd = require('@tensorflow-models/coco-ssd');
-
-// import { lerp } from 'three/src/math/mathutils';
 
 /***
- *** 
+ *** ----------------------------------------------------------------------------------------
  ***    Main script - all side-effects are managed here, move any utilities to separate files
- *** 
+ *** ---------------------------------------------------------------------------------------- /
  ***/
 
 
 //// ----- MUTABLES ----- ////
 let experience = {}; //scene, renderer, and camera
-let controls; //ordbit controls
+let controls; //orbit controls
 
 let aJellyFish = new JellyFish(); //testing object
 
@@ -43,8 +40,6 @@ const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
 const predictionDelay = 1000 //minimum time in ms between predictions (alter for benchmarking)
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
-
-
 const participant1 = {
 
     x: 0,
@@ -52,14 +47,12 @@ const participant1 = {
     z: 0
 
 }
-
 const participant2 = {
     x: 0,
     y: 0,
     z: 0
 
 }
-
 
 //// ----- CORE ----- ////
 //Runs at document load
@@ -75,17 +68,7 @@ const init = async () => {
 
     let fishTest = new Fish("testfish", 1, 'cfish.gltf');
 
-    /*
-    fishTest.getModel().then(() => {
-        fishTest.getMesh();
-        fishTest.getAnimationClipData();
-        fishTest.getBoundingBox();
-    });
-    */
-
     fishTest.getModel();
-
-
 
     experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
 
@@ -113,7 +96,6 @@ const init = async () => {
 
     devMessages();
 };
-
 
 //Swap portal texture to opening texture
 function openPortal(e) {
@@ -376,7 +358,7 @@ const mount = () => {
     const cam1Constraints = {
         // 'audio': { 'echoCancellation': true },
         'video': {
-            'deviceId': "def272f22344671423eb09c1a1cfcd6c00ceb0b887e687a43ec0d8b3b78fc3e2",
+            'deviceId': "4d5d35147ed1c2aaf3cb86a7c3684c7c1160c9110d901e7f62a87c20f2ab61a6",
 
         }
     }
@@ -384,7 +366,7 @@ const mount = () => {
     const cam2Constraints = {
         // 'audio': { 'echoCancellation': true },
         'video': {
-            'deviceId': "9d1e62cd5f58748641cfead3b32713680b445fedfd6710d63f867cf56117a6ae",
+            'deviceId': "0d5e508ec959eabc5e19bacfa8f00fcdb0a3c75eeb0601f7838d51bb088d5913",
 
         }
     }
