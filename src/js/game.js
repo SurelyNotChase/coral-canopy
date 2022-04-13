@@ -3,9 +3,10 @@ import utils from './utils.js'
 import main from "./main.js";
 import loader from './loader.js';
 import { async } from 'regenerator-runtime';
+import { Fish } from '../classes/Fish.js';
 //import * as ThreeBSP from 'threebsp';
 
-let portalVideos;
+let portalVideos=[];
 let portalParam = {};
 let portalTextures = [];
 let portalMaterials = [];
@@ -14,6 +15,14 @@ let portalCube, backgroundCube;
 let backgroundVideo = document.getElementById('background');
 let backgroundTexture, backgroundMaterial;
 let backgroundParam = {};
+
+let clownfishCount = 1;
+let angelfishCount = 1;
+let sharkCount = 1;
+let maoriCount = 1;
+let yellowtangCount = 1;
+
+let keyP = false;   //bool for spacebar being pressed
 
 
 const gameDefaults = {
@@ -55,7 +64,7 @@ const modelData = {
 
     meshes: {
         greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert()),
-        clownFish: () => utils.loadModelAsync('cfish.gltf'),
+        clownFish: () => new Fish("clownfish", clownfishCount, 'clownTest.gltf'),   //utils.loadModelAsync('cfish.gltf'),
         angelfish: () => utils.loadModelAsync('angelfish.gltf'),
         shark: () => utils.loadModelAsync('shark.gltf'),
         maoriWrasse: () => utils.loadModelAsync('MaoriWrasse.gltf'),
@@ -92,7 +101,7 @@ const assembleScene = (defaults = gameDefaults) => {
 
 const assemblePortal = async () => {
 
-    portalVideos = await loader.loadPortalVideos();
+    portalVideos = loadPortalVideos();
 
     //Make sure all videos are playing before adding as textures
     portalVideos.forEach(pVideo => {
@@ -102,10 +111,13 @@ const assemblePortal = async () => {
         });
         portalTextures.push(new THREE.VideoTexture(pVideo));
     });
+
     backgroundVideo.play();
+
     backgroundVideo.addEventListener('play', function () {
         this.currentTime = 0;
     });
+
     backgroundTexture = new THREE.VideoTexture(backgroundVideo);
 
     //Set up array of portal materials based on different textures
@@ -141,68 +153,84 @@ const assemblePortal = async () => {
     backgroundCube.position.y = 10;
     backgroundCube.rotation.x = (-90 * Math.PI) / 180;
 
-    return { portalCube, backgroundCube };
-}
+    videoTextures = { portalCube, backgroundCube };
 
+}
 // >>> Array of game objects
-const generateCharacters = async (count = 25) => {
+const generateCharacters = async (count = 3) => {
 
     let array = [];
-    let sharkCount = 0;
-    let maoriCount = 0;
-    let angelCount = 0;
+    //let sharkCount = 0;
+    //let maoriCount = 0;
+    //let angelCount = 0;
 
     for (let i = 0; i < count; i++) {
 
-        let rng = Math.floor(Math.random() * 10);
+        //let rng = Math.floor(Math.random() * 10);
+        let rng = 1;
         let whenReady;
         switch (rng) {
             case 0:
             case 1:
             case 2:
                 whenReady = await modelData.meshes.clownFish();
-                whenReady.scene.name = "clownfish";
+                await whenReady.getModel();
+                clownfishCount++;
+                whenReady.name = "clownfish";
                 break;
             case 3:
             case 4:
-                if (angelCount < 4) {
-                    angelCount++;
+                if (angelfishCount < 5) {
                     whenReady = await modelData.meshes.angelfish();
-                    whenReady.scene.name = "angelfish";
+                    await whenReady.getModel();
+                    angelfishCount++;
+                    //whenReady.scene.name = "angelfish";
                 } else {
                     whenReady = await modelData.meshes.clownFish();
-                    whenReady.scene.name = "clownfish";
+                    await whenReady.getModel();
+                    clownfishCount++;
+                    //whenReady.scene.name = "clownfish";
                 }
                 break;
             case 5:
-                if (sharkCount < 2) {
-                    sharkCount++;
+                if (sharkCount < 3) {
                     whenReady = await modelData.meshes.shark();
-                    whenReady.scene.name = "shark";
+                    await whenReady.getModel();
+                    sharkCount++;
+                    //whenReady.scene.name = "shark";
                 } else {
                     whenReady = await modelData.meshes.clownFish();
-                    whenReady.scene.name = "clownfish";
+                    await whenReady.getModel();
+                    clownfishCount++;
+                    //whenReady.scene.name = "clownfish";
                 }
                 break;
             case 6:
-                if (maoriCount < 2) {
-                    maoriCount++;
+                if (maoriCount < 3) {
                     whenReady = await modelData.meshes.maoriWrasse();
-                    whenReady.scene.name = "maoriWrasse";
+                    await whenReady.getModel();
+                    maoriCount++;
+                    //whenReady.scene.name = "maoriWrasse";
                 } else {
                     whenReady = await modelData.meshes.clownFish();
-                    whenReady.scene.name = "clownfish";
+                    await whenReady.getModel();
+                    clownfishCount++;
+                    //whenReady.scene.name = "clownfish";
                 }
                 break;
             case 7:
             case 8:
             case 9:
                 whenReady = await modelData.meshes.yellowTang();
-                whenReady.scene.name = "yellowTang";
+                await whenReady.getModel();
+                yellowtangCount++;
+                //whenReady.scene.name = "yellowTang";
                 break;
             default:
                 whenReady = await modelData.meshes.clownFish();
-                whenReady.scene.name = "clownfish";
+                await whenReady.getModel();
+                clownfishCount++;
+                //whenReady.scene.name = "clownfish";
                 break;
         }
 
@@ -210,31 +238,38 @@ const generateCharacters = async (count = 25) => {
         array.push(model);
     }
 
+
     return array;
 }
 
-const getGroups = async (characters, count = 20) => {
+const getGroups = async (characters, count = 3) => {
     let array = [];
-    let sharkCount = 0;
-    let maoriCount = 0;
-    let angelCount = 0;
 
     for (let i = 0; i < count; i++) {
 
 
-        let group = characters[i].scene;
-        let name = characters[i].scene.name;
+        let group = characters[i].meshObject;
+        let name = characters[i].name;
 
+        
         switch (name) {
             case "clownfish":
+                /*
                 group.position.x = utils.random(-10, -7);
                 group.position.z = utils.random(-2, 2);
                 group.position.y = utils.random(-9, -6);
-                group.scale.x = .004;
-                group.scale.y = .004;
-                group.scale.z = .004;
-                // console.log("cfish:");
-                // console.log(group.position);
+                */
+               if (characters[i].id == 1) {
+                group.position.x = -5;
+                group.position.z = 5;
+               } else if (characters[i].id == 2) {
+                group.position.x = 5;
+                group.position.z = 5;
+               } else {
+                group.position.x = 0;
+                group.position.z = -7;
+               }
+               group.position.y = utils.random(-4.5, -4);
                 break;
             case "yellowTang":
                 group.position.x = utils.random(-2, 2);
@@ -256,8 +291,7 @@ const getGroups = async (characters, count = 20) => {
                     group.position.z = -5;
                     group.position.y = -13;
                     group.rotation.y = (90 * Math.PI) / 180;
-                    // console.log("sharks:");
-                    // console.log(group.position);
+
                 }
                 group.scale.x = .023;
                 group.scale.y = .023;
@@ -305,8 +339,170 @@ const getGroups = async (characters, count = 20) => {
     array.push(aLight);
 
     return array;
+    /*
+    let array = [];
+    let sharkCount = 0;
+    let maoriCount = 0;
+    let angelCount = 0;
+
+    for (let i = 0; i < count; i++) {
+
+
+        let group = characters[i].scene;
+        let name = characters[i].scene.name;
+
+        switch (name) {
+            case "clownfish":
+                group.position.x = utils.random(-10, -7);
+                group.position.z = utils.random(-2, 2);
+                group.position.y = utils.random(-9, -6);
+                group.scale.x = .008;
+                group.scale.y = .008;
+                group.scale.z = .008;
+
+                break;
+            case "yellowTang":
+                group.position.x = utils.random(-2, 2);
+                group.position.z = utils.random(-10, -7);
+                group.position.y = utils.random(-7, -2);
+                group.rotation.y = (180 * Math.PI) / 180;
+                group.scale.x = .006;
+                group.scale.y = .006;
+                group.scale.z = .006;
+                break;
+            case "shark":
+                if (sharkCount < 1) {
+                    sharkCount++;
+                    group.position.x = 10;
+                    group.position.z = 9;
+                    group.position.y = utils.random(-9, -1);
+                } else {
+                    group.position.x = -20;
+                    group.position.z = -5;
+                    group.position.y = -13;
+                    group.rotation.y = (90 * Math.PI) / 180;
+
+                }
+                group.scale.x = .023;
+                group.scale.y = .023;
+                group.scale.z = .023;
+                break;
+            case "maoriWrasse":
+                if (maoriCount < 1) {
+                    maoriCount++;
+                    group.position.x = utils.random(7, 9);
+                    group.position.z = utils.random(-4, -1);
+                } else {
+                    group.position.x = utils.random(-9, -7);
+                    group.position.z = utils.random(-10, -7);
+                }
+                group.position.y = utils.random(-9, 7);
+                group.scale.x = .03;
+                group.scale.y = .03;
+                group.scale.z = .03;
+                break;
+            case "angelfish":
+                if (angelCount%2 == 0) {
+                    angelCount++;
+                    group.position.x = utils.random(-6, -2);
+                    group.position.z = utils.random(7, 10);
+                    group.position.y = utils.random(3, 7);
+                } else {
+                    angelCount++;
+                    group.position.x = utils.random(1, 5);
+                    group.position.z = utils.random(7, 10);
+                    group.position.y = utils.random(1, 5);
+                }
+                group.scale.x = .004;
+                group.scale.y = .004;
+                group.scale.z = .004;
+                break;
+        }
+
+        
+        array.push(group);
+    }
+
+
+    let aLight = modelData.lights.whitePointLight();
+    aLight.position.set(10, 0, 25);
+    array.push(aLight);
+
+    return array;*/
 }
 
+const loadPortalVideos = () => {
+    let array = [];
+
+    array.push(document.getElementById('blankPortal'));
+    array.push(document.getElementById('openingPortal'));
+    array.push(document.getElementById('spinningPortal'));
+    array.push(document.getElementById('closingPortal'));
+
+    return array;
+}
+
+//Swap portal texture to opening texture
+function openPortal(e) {
+    e.preventDefault();
+    if (e.keyCode == 32 && !keyP) {
+
+        // portalVideos[1].currentTime = 0;
+        keyP = true;
+        portalParam = { color: 0x000000, alphaMap: portalTextures[1] };
+        portalMaterials[1] = new THREE.MeshBasicMaterial(portalParam);
+        portalMaterials[1].alphaTest = 0;
+        portalMaterials[1].transparent = true;
+        videoTextures.portalCube.material = portalMaterials[1];
+        setTimeout(spinPortal, 4000);
+    }
+    else if (e.keyCode == 102) {
+
+        const geometry = new THREE.SphereGeometry(.1, 6, 6);
+        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
+        const sphere = new THREE.Mesh(geometry, material);
+        sphere.position.y = -4;
+        experience.scene.add(sphere);
+    }
+}
+
+//Swap portal texture to spinning texture
+function spinPortal() {
+    portalVideos[2].currentTime = 0;
+    portalParam = { color: 0x000000, alphaMap: portalTextures[2] };
+    portalMaterials[2] = new THREE.MeshBasicMaterial(portalParam);
+    portalMaterials[2].alphaTest = 0;
+    portalMaterials[2].transparent = true;
+    videoTextures.portalCube.material = portalMaterials[2];
+}
+
+//Swap portal texture to closing texture
+function closePortal(e) {
+    e.preventDefault();
+    if (e.keyCode == 32 && keyP) {
+        portalVideos[3].currentTime = 0;
+        keyP = false;
+        portalParam = { color: 0x000000, alphaMap: portalTextures[3] };
+        portalMaterials[3] = new THREE.MeshBasicMaterial(portalParam);
+        portalMaterials[3].alphaTest = 0;
+        portalMaterials[3].transparent = true;
+        videoTextures.portalCube.material = portalMaterials[3];
+
+        setTimeout(blankPortal, 4000);
+    }
+}
+
+//Swap portal texture to blank texture
+function blankPortal() {
+    portalVideos[0].currentTime = 0;
+    portalParam = { color: 0x000000, alphaMap: portalTextures[0] };
+    portalMaterials[0] = new THREE.MeshBasicMaterial(portalParam);
+    portalMaterials[0].alphaTest = 0;
+    portalMaterials[0].transparent = true;
+    videoTextures.portalCube.material = portalMaterials[0];
+}
+
+/*
 const getMixers = async (characters, count = 20) => {
 
     let array = [];
@@ -318,24 +514,38 @@ const getMixers = async (characters, count = 20) => {
 
     return array;
 
-}
+}*/
 
-const getAnimations = async (characters, mixers, count = 20) => {
+const getAnimations = async (characters, mixers, count = 3) => {
 
     let array = [];
 
     for (let i = 0; i < count; i++) {
+        /*
         let animations = characters[i].animations;
         let mixer = mixers[i];
         const clip = animations[0];
         const action = mixer.clipAction(clip);
-        array.push(action);
+        */
+        let clipAnimation = characters[i].animationClip;
+        array.push(clipAnimation);
     }
 
     return array;
 }
 
-
-
-
-export default { assembleScene, generateCharacters, getGroups, getMixers, getAnimations, assemblePortal, modelData, portalVideos, portalParam, portalTextures, portalMaterials }
+export default { 
+    assembleScene, 
+    generateCharacters,
+    getGroups, 
+    getAnimations, 
+    assemblePortal, 
+    openPortal,
+    spinPortal,
+    closePortal,
+    loadPortalVideos,
+    modelData, 
+    portalVideos, 
+    portalParam, 
+    portalTextures, 
+    portalMaterials }

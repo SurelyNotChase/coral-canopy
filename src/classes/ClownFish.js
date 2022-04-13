@@ -12,7 +12,7 @@ class ClownFish extends Fish{
     constructor(){
         super();
         //set all ClownFish-unique properties here
-        this.mesh = meshes.clownfish();
+        this.mesh = meshes. clownFish();
         this.type = "ClownFish"
         
         

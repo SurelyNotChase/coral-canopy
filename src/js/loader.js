@@ -9,15 +9,4 @@ window.onload = () => {
 }
 
 
-const loadPortalVideos = () => {
-    let array = [];
 
-    array.push(document.getElementById('blankPortal'));
-    array.push(document.getElementById('openingPortal'));
-    array.push(document.getElementById('spinningPortal'));
-    array.push(document.getElementById('closingPortal'));
-
-    return array;
-}
-
-export default { loadPortalVideos }

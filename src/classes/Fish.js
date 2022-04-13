@@ -17,9 +17,9 @@ class Fish {
             zPos: 0
         };
         this.rotation = {
-            xRot: 0,
-            yRot: 0,
-            zRot: 0
+            xRot: 0, //(90 * Math.PI) / 180,
+            yRot: 0, //(90 * Math.PI) / 180,
+            zRot: 0, //(90 * Math.PI) / 180
         };
         this.speed = 0;     //best between 0.03 and 0.1
         this.mixer;
@@ -31,17 +31,27 @@ class Fish {
 
     }
 
-    getModel() {
-        this.loadModelObject = utils.loadModelAsync(this.filename);
-        this.loadModelObject.then(value => { this.modelObject = value;
-        this.meshObject = value.scene;})
+    async getModel() {
+        this.modelObject = await utils.loadModelAsync(this.filename);
+        this.meshObject = this.modelObject.scene;
+        this.getAnimationClipData();
+        this.getBoundingBox();
+        /*
+        this.loadModelObject.then(value => {
+            this.modelObject = value;
+            this.meshObject = value.scene;
+            console.log(this.meshObject);
+            this.getAnimationClipData();
+            this.getBoundingBox();
+        });*/
     }
 
     getAnimationClipData() {
         //Condensed all the clips, mixers, etc into just two components, only ever need to use animationClip
         this.mixer = new THREE.AnimationMixer(this.modelObject.scene);
         let animations = this.modelObject.animations;
-        this.animationClip = this.mixer.clipAction(animations[0]);
+        const clip = animations[0];
+        this.animationClip = this.mixer.clipAction(clip);
     }
 
     getBoundingBox() {
@@ -66,6 +76,14 @@ class Fish {
             zMin: this.boundingBox.min.z,
             zMax: this.boundingBox.max.z
         };
+    }
+
+    getRotation() {
+        this.meshObject.rotation.x = this.rotation.xRot;
+        this.meshObject.rotation.y = this.rotation.yRot;
+        this.meshObject.rotation.z = this.rotation.zRot;
+        console.log('x');
+        console.log(this.meshObject);
     }
 }
 
