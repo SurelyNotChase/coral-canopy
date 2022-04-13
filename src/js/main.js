@@ -260,11 +260,16 @@ const animate = () => {
                     // object.position.x = -(utils.lerp(object.position.x, participant1.x, 0.01));
                     // object.position.y = -(utils.lerp(object.position.y, participant1.y, 0.01));
                     // object.position.z = -(utils.lerp(object.position.z, participant1.z, 0.01));
-                    object.position.x = utils.lerp(object.position.x, -participant1.x, 0.01);
+                    //object.position.x = utils.lerp(object.position.x, -participant1.x, 0.01);
                     // object.position.y = utils.lerp(object.position.y, -participant1.y, 0.01);
-                    object.position.y = -4;
-                    object.position.z = utils.lerp(object.position.z, -participant1.y, 0.01);
+                    //object.position.y = -4;
+                    //object.position.z = utils.lerp(object.position.z, -participant1.y, 0.01);
 
+                    object.lookAt(0,0,0);
+                    object.position.z = utils.lerp(object.position.z, 0, 0.01);
+                    object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
+                    //object.rotation.x += (90 * Math.PI) / 180;
+                    //object.position.x += .06;
                     //object.lookAt(participant1.x, participant1.z, participant1.y)
                 }
                 else{
@@ -272,11 +277,15 @@ const animate = () => {
                     // object.position.x = -(utils.lerp(object.position.x, participant2.x, 0.01));
                     // object.position.y = -(utils.lerp(object.position.y, participant2.y, 0.01));
                     // object.position.z = -(utils.lerp(object.position.z, participant2.z, 0.01));
-                    object.position.x = utils.lerp(object.position.x, -participant2.x, 0.01);
+                    //object.position.x = utils.lerp(object.position.x, -participant2.x, 0.01);
                     // object.position.y = utils.lerp(object.position.y, -participant2.y, 0.01);
-                    object.position.y = -6;
-                    object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
+                    //object.position.y = -6;
+                    //object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
 
+                    object.lookAt(0,0,0);
+                    object.position.z = utils.lerp(object.position.z, 0, 0.01);
+                    object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
+                    //object.rotation.x += (90 * Math.PI) / 180;
                     //object.lookAt(participant2.x, participant2.z, participant2.y)
                 }
               // if (object.position.x > 12) object.position.x = -12;
@@ -467,7 +476,6 @@ const populateScene = async () => {
    generate = await game.generateCharacters(); //this used to get array of gltfs which were then used to get meshes and animations,
    //now it returns array of Fish objects with all that completed.
    console.log("generate finishd");
-   //let getGroups = await game.getGroups(generate);
 
 
    generate.forEach(object => {
@@ -476,6 +484,9 @@ const populateScene = async () => {
        console.log(objectMesh);
        experience.scene.add(objectMesh);
    });
+
+   
+   let getGroups = await game.getGroups(generate);
 
    let light = new THREE.PointLight('white', 1, 500);
    const dirLight = new THREE.DirectionalLight(0xffffff, 1);

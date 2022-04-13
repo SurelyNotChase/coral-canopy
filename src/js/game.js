@@ -151,7 +151,7 @@ const assemblePortal = async () => {
 }
 
 // >>> Array of game objects
-const generateCharacters = async (count = 2) => {
+const generateCharacters = async (count = 3) => {
 
     let array = [];
     //let sharkCount = 0;
@@ -170,7 +170,7 @@ const generateCharacters = async (count = 2) => {
                 whenReady = await modelData.meshes.clownFish();
                 await whenReady.getModel();
                 clownfishCount++;
-                //whenReady.scene.name = "clownfish";
+                whenReady.name = "clownfish";
                 break;
             case 3:
             case 4:
@@ -236,7 +236,7 @@ const generateCharacters = async (count = 2) => {
     return array;
 }
 
-const getGroups = async (characters, count = 2) => {
+const getGroups = async (characters, count = 3) => {
     let array = [];
 
     for (let i = 0; i < count; i++) {
@@ -246,17 +246,25 @@ const getGroups = async (characters, count = 2) => {
         let name = characters[i].name;
 
         console.log(group);
-        /*
+        
         switch (name) {
             case "clownfish":
+                /*
                 group.position.x = utils.random(-10, -7);
                 group.position.z = utils.random(-2, 2);
                 group.position.y = utils.random(-9, -6);
-                group.scale.x = .004;
-                group.scale.y = .004;
-                group.scale.z = .004;
-                // console.log("cfish:");
-                // console.log(group.position);
+                */
+               if (characters[i].id == 1) {
+                group.position.x = -5;
+                group.position.z = 5;
+               } else if (characters[i].id == 2) {
+                group.position.x = 5;
+                group.position.z = 5;
+               } else {
+                group.position.x = 0;
+                group.position.z = -7;
+               }
+               group.position.y = utils.random(-6, -4);
                 break;
             case "yellowTang":
                 group.position.x = utils.random(-2, 2);
@@ -316,7 +324,7 @@ const getGroups = async (characters, count = 2) => {
                 group.scale.z = .004;
                 break;
         }
-*/
+
         
         array.push(group);
     }
@@ -434,7 +442,7 @@ const getMixers = async (characters, count = 20) => {
 
 }*/
 
-const getAnimations = async (characters, mixers, count = 2) => {
+const getAnimations = async (characters, mixers, count = 3) => {
 
     let array = [];
 

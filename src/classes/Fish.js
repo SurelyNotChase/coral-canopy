@@ -36,7 +36,6 @@ class Fish {
         this.meshObject = this.modelObject.scene;
         this.getAnimationClipData();
         this.getBoundingBox();
-        this.getRotation();
         /*
         this.loadModelObject.then(value => {
             this.modelObject = value;
