@@ -194,9 +194,9 @@ const animate = () => {
             //object.position.y = -4;
             //object.position.z = utils.lerp(object.position.z, -participant1.y, 0.01);
 
-            object.lookAt(0, 0, 0);
-            object.position.z = utils.lerp(object.position.z, 0, 0.01);
-            object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
+            //object.lookAt(0, 0, 0);
+            //object.position.z = utils.lerp(object.position.z, 0, 0.01);
+            //object.position.x = (utils.lerp(object.position.x, 0, 0.01));
             //object.rotation.x += (90 * Math.PI) / 180;
             //object.position.x += .06;
             //object.lookAt(participant1.x, participant1.z, participant1.y)
@@ -211,9 +211,9 @@ const animate = () => {
             //object.position.y = -6;
             //object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
 
-            object.lookAt(0, 0, 0);
-            object.position.z = utils.lerp(object.position.z, 0, 0.01);
-            object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
+            //object.lookAt(0, 0, 0);
+            //object.position.z = utils.lerp(object.position.z, 0, 0.01);
+            //object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
             //object.rotation.x += (90 * Math.PI) / 180;
             //object.lookAt(participant2.x, participant2.z, participant2.y)
         }
@@ -366,7 +366,7 @@ const populateScene = async () => {
     dirLight.position.set(4, 0, 12);
     experience.scene.add(light, dirLight);
 
-    await animateModels(generate);
+    //await animateModels(generate);
 }
 
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations

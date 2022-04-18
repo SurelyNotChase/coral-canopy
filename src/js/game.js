@@ -6,7 +6,7 @@ import { async } from 'regenerator-runtime';
 import { Fish } from '../classes/Fish.js';
 //import * as ThreeBSP from 'threebsp';
 
-let portalVideos=[];
+let portalVideos = [];
 let portalParam = {};
 let portalTextures = [];
 let portalMaterials = [];
@@ -16,10 +16,15 @@ let backgroundVideo = document.getElementById('background');
 let backgroundTexture, backgroundMaterial;
 let backgroundParam = {};
 
-let clownfishCount = 1;
+
 let angelfishCount = 1;
-let sharkCount = 1;
+let blueTangCount = 1;
 let maoriCount = 1;
+let turtleCount = 1;
+let whaleCount = 1;
+
+let clownfishCount = 1;
+let sharkCount = 1;
 let yellowtangCount = 1;
 
 let keyP = false;   //bool for spacebar being pressed
@@ -63,11 +68,14 @@ const modelData = {
     },
 
     meshes: {
+        maoriWrasse: () => new Fish("maoriWrasse", maoriCount, 'MaoriWrasse.gltf'),
+        blueTang: () => new Fish("blueTang", blueTangCount, 'BlueTang.gltf'),
+        turtle: () => new Fish("turtle", turtleCount, 'Turtle.gltf'),
+        whale: () => new Fish("whale", whaleCount, 'HumpbackWhale.gltf'),
+        angelfish: () => new Fish("angelfish", angelfishCount, 'BluefaceAngelfish.gltf'),
         greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert()),
         clownFish: () => new Fish("clownfish", clownfishCount, 'clownTest.gltf'),   //utils.loadModelAsync('cfish.gltf'),
-        angelfish: () => utils.loadModelAsync('angelfish.gltf'),
         shark: () => utils.loadModelAsync('shark.gltf'),
-        maoriWrasse: () => utils.loadModelAsync('MaoriWrasse.gltf'),
         yellowTang: () => utils.loadModelAsync('YellowTang.gltf')
     },
 
@@ -94,7 +102,7 @@ const assembleScene = (defaults = gameDefaults) => {
 
     renderer.setClearColor(defaults.rendSettings.backgroundColor);
     renderer.setSize(defaults.rendSettings.width, defaults.rendSettings.height);
-   
+
     return { renderer, camera, scene }
 
 }
@@ -160,90 +168,129 @@ const assemblePortal = async () => {
 const generateCharacters = async (count = 3) => {
 
     let array = [];
-    //let sharkCount = 0;
-    //let maoriCount = 0;
-    //let angelCount = 0;
 
-    for (let i = 0; i < count; i++) {
+    //Add whale
+    whenReady = await modelData.meshes.whale();
+    await whenReady.getModel();
+    array.push(whenReady);
 
-        //let rng = Math.floor(Math.random() * 10);
-        let rng = 1;
-        let whenReady;
-        switch (rng) {
-            case 0:
-            case 1:
-            case 2:
-                whenReady = await modelData.meshes.clownFish();
-                await whenReady.getModel();
-                clownfishCount++;
-                whenReady.name = "clownfish";
-                break;
-            case 3:
-            case 4:
-                if (angelfishCount < 5) {
-                    whenReady = await modelData.meshes.angelfish();
-                    await whenReady.getModel();
-                    angelfishCount++;
-                    //whenReady.scene.name = "angelfish";
-                } else {
-                    whenReady = await modelData.meshes.clownFish();
-                    await whenReady.getModel();
-                    clownfishCount++;
-                    //whenReady.scene.name = "clownfish";
-                }
-                break;
-            case 5:
-                if (sharkCount < 3) {
-                    whenReady = await modelData.meshes.shark();
-                    await whenReady.getModel();
-                    sharkCount++;
-                    //whenReady.scene.name = "shark";
-                } else {
-                    whenReady = await modelData.meshes.clownFish();
-                    await whenReady.getModel();
-                    clownfishCount++;
-                    //whenReady.scene.name = "clownfish";
-                }
-                break;
-            case 6:
-                if (maoriCount < 3) {
-                    whenReady = await modelData.meshes.maoriWrasse();
-                    await whenReady.getModel();
-                    maoriCount++;
-                    //whenReady.scene.name = "maoriWrasse";
-                } else {
-                    whenReady = await modelData.meshes.clownFish();
-                    await whenReady.getModel();
-                    clownfishCount++;
-                    //whenReady.scene.name = "clownfish";
-                }
-                break;
-            case 7:
-            case 8:
-            case 9:
-                whenReady = await modelData.meshes.yellowTang();
-                await whenReady.getModel();
-                yellowtangCount++;
-                //whenReady.scene.name = "yellowTang";
-                break;
-            default:
-                whenReady = await modelData.meshes.clownFish();
-                await whenReady.getModel();
-                clownfishCount++;
-                //whenReady.scene.name = "clownfish";
-                break;
-        }
-
-        let model = whenReady;
-        array.push(model);
+    //Add 2 turtles
+    for (let i = 0; i < 2; i++) {
+        whenReady = await modelData.meshes.turtle();
+        await whenReady.getModel();
+        turtleCount++;
+        array.push(whenReady);
     }
 
+    //Add 1-3 maoriWrasse
+    let rng = Math.floor(Math.random() * 3) + 1;
+    for (let i = 0; i < rng; i++) {
+        whenReady = await modelData.meshes.maoriWrasse();
+        await whenReady.getModel();
+        maoriCount++;
+        array.push(whenReady);
+    }
+
+    //Add 2-3 angelfish
+    rng = Math.floor(Math.random() * 2) + 2;
+    for (let i = 0; i < rng; i++) {
+        whenReady = await modelData.meshes.angelfish();
+        await whenReady.getModel();
+        angelfishCount++;
+        array.push(whenReady);
+    }
+
+    //Add 4-6 blue tang
+    rng = Math.floor(Math.random() * 3) + 3;
+    for (let i = 0; i < rng; i++) {
+        whenReady = await modelData.meshes.blueTang();
+        await whenReady.getModel();
+        blueTangCount++;
+        array.push(whenReady);
+    }
+
+    /*
+        for (let i = 0; i < count; i++) {
+    
+            //let rng = Math.floor(Math.random() * 10);
+            let rng = 1;
+            let whenReady;
+            switch (rng) {
+                case 0:
+                case 1:
+                case 2:
+                    whenReady = await modelData.meshes.clownFish();
+                    await whenReady.getModel();
+                    clownfishCount++;
+                    whenReady.name = "clownfish";
+                    break;
+                case 3:
+                case 4:
+                    if (angelfishCount < 5) {
+                        whenReady = await modelData.meshes.angelfish();
+                        await whenReady.getModel();
+                        angelfishCount++;
+                        //whenReady.scene.name = "angelfish";
+                    } else {
+                        whenReady = await modelData.meshes.clownFish();
+                        await whenReady.getModel();
+                        clownfishCount++;
+                        //whenReady.scene.name = "clownfish";
+                    }
+                    break;
+                case 5:
+                    if (sharkCount < 3) {
+                        whenReady = await modelData.meshes.shark();
+                        await whenReady.getModel();
+                        sharkCount++;
+                        //whenReady.scene.name = "shark";
+                    } else {
+                        whenReady = await modelData.meshes.clownFish();
+                        await whenReady.getModel();
+                        clownfishCount++;
+                        //whenReady.scene.name = "clownfish";
+                    }
+                    break;
+                case 6:
+                    if (maoriCount < 3) {
+                        whenReady = await modelData.meshes.maoriWrasse();
+                        await whenReady.getModel();
+                        maoriCount++;
+                        //whenReady.scene.name = "maoriWrasse";
+                    } else {
+                        whenReady = await modelData.meshes.clownFish();
+                        await whenReady.getModel();
+                        clownfishCount++;
+                        //whenReady.scene.name = "clownfish";
+                    }
+                    break;
+                case 7:
+                case 8:
+                case 9:
+                    whenReady = await modelData.meshes.yellowTang();
+                    await whenReady.getModel();
+                    yellowtangCount++;
+                    //whenReady.scene.name = "yellowTang";
+                    break;
+                default:
+                    whenReady = await modelData.meshes.clownFish();
+                    await whenReady.getModel();
+                    clownfishCount++;
+                    //whenReady.scene.name = "clownfish";
+                    break;
+            }
+    
+            let model = whenReady;
+            array.push(model);
+        }
+    */
 
     return array;
 }
 
 const getGroups = async (characters, count = 3) => {
     let array = [];
+    count = characters.length;
 
     for (let i = 0; i < count; i++) {
 
@@ -251,59 +298,14 @@ const getGroups = async (characters, count = 3) => {
         let group = characters[i].meshObject;
         let name = characters[i].name;
 
-        
-        switch (name) {
-            case "clownfish":
-                /*
-                group.position.x = utils.random(-10, -7);
-                group.position.z = utils.random(-2, 2);
-                group.position.y = utils.random(-9, -6);
-                */
-               if (characters[i].id == 1) {
-                group.position.x = -5;
-                group.position.z = 5;
-               } else if (characters[i].id == 2) {
-                group.position.x = 5;
-                group.position.z = 5;
-               } else {
-                group.position.x = 0;
-                group.position.z = -7;
-               }
-               group.position.y = utils.random(-4.5, -4);
-                break;
-            case "yellowTang":
-                group.position.x = utils.random(-2, 2);
-                group.position.z = utils.random(-10, -7);
-                group.position.y = utils.random(-7, -2);
-                group.rotation.y = (180 * Math.PI) / 180;
-                group.scale.x = .006;
-                group.scale.y = .006;
-                group.scale.z = .006;
-                break;
-            case "shark":
-                if (sharkCount < 1) {
-                    sharkCount++;
-                    group.position.x = 10;
-                    group.position.z = 9;
-                    group.position.y = utils.random(-9, -1);
-                } else {
-                    group.position.x = -20;
-                    group.position.z = -5;
-                    group.position.y = -13;
-                    group.rotation.y = (90 * Math.PI) / 180;
 
-                }
-                group.scale.x = .023;
-                group.scale.y = .023;
-                group.scale.z = .023;
-                break;
+        switch (name) {
             case "maoriWrasse":
-                if (maoriCount < 1) {
-                    maoriCount++;
+                if (characters[i].id == 1) {
                     group.position.x = utils.random(7, 9);
-                    group.position.z = utils.random(-4, -1);
+                    group.position.z = utils.random(7, 9);
                 } else {
-                    group.position.x = utils.random(-9, -7);
+                    group.position.x = utils.random(7, 9);
                     group.position.z = utils.random(-10, -7);
                 }
                 group.position.y = utils.random(-9, 7);
@@ -312,54 +314,54 @@ const getGroups = async (characters, count = 3) => {
                 group.scale.z = .015;
                 break;
             case "angelfish":
-                if (angelCount%2 == 0) {
-                    angelCount++;
-                    group.position.x = utils.random(-6, -2);
-                    group.position.z = utils.random(7, 10);
-                    group.position.y = utils.random(3, 7);
-                } else {
-                    angelCount++;
-                    group.position.x = utils.random(1, 5);
-                    group.position.z = utils.random(7, 10);
-                    group.position.y = utils.random(1, 5);
-                }
+                group.position.x = utils.random(-7, -4);
+                group.position.z = utils.random(5, 8);
+                group.position.y = utils.random(-8, -6);
+                group.scale.x = .003;
+                group.scale.y = .003;
+                group.scale.z = .003;
+                break;
+            case "blueTang":
+                group.position.x = utils.random(4, 7);
+                group.position.z = utils.random(-3, -1);
+                group.position.y = utils.random(6, 8);
                 group.scale.x = .004;
                 group.scale.y = .004;
                 group.scale.z = .004;
                 break;
-        }
-
-        
-        array.push(group);
-    }
-
-
-    let aLight = modelData.lights.whitePointLight();
-    aLight.position.set(10, 0, 25);
-    array.push(aLight);
-
-    return array;
-    /*
-    let array = [];
-    let sharkCount = 0;
-    let maoriCount = 0;
-    let angelCount = 0;
-
-    for (let i = 0; i < count; i++) {
-
-
-        let group = characters[i].scene;
-        let name = characters[i].scene.name;
-
-        switch (name) {
+            case "whale":
+                group.position.x = utils.random(-12, -10);
+                group.position.z = utils.random(1, 3);
+                group.position.y = 5;
+                group.scale.x = .05;
+                group.scale.y = .05;
+                group.scale.z = .05;
+                break;
+            case "turtle":
+                group.position.x = utils.random(-4, -2);
+                group.position.z = utils.random(-9, -7);
+                group.position.y = utils.random(-8, -6);
+                group.scale.x = .015;
+                group.scale.y = .015;
+                group.scale.z = .015;
+                break;
             case "clownfish":
+                /*
                 group.position.x = utils.random(-10, -7);
                 group.position.z = utils.random(-2, 2);
                 group.position.y = utils.random(-9, -6);
-                group.scale.x = .008;
-                group.scale.y = .008;
-                group.scale.z = .008;
-
+                */
+                if (characters[i].id == 1) {
+                    group.position.x = -5;
+                    group.position.z = 5;
+                } else if (characters[i].id == 2) {
+                    group.position.x = 5;
+                    group.position.z = 5;
+                } else {
+                    group.position.x = 0;
+                    group.position.z = -7;
+                }
+                group.position.y = utils.random(-4.5, -4);
                 break;
             case "yellowTang":
                 group.position.x = utils.random(-2, 2);
@@ -387,39 +389,9 @@ const getGroups = async (characters, count = 3) => {
                 group.scale.y = .023;
                 group.scale.z = .023;
                 break;
-            case "maoriWrasse":
-                if (maoriCount < 1) {
-                    maoriCount++;
-                    group.position.x = utils.random(7, 9);
-                    group.position.z = utils.random(-4, -1);
-                } else {
-                    group.position.x = utils.random(-9, -7);
-                    group.position.z = utils.random(-10, -7);
-                }
-                group.position.y = utils.random(-9, 7);
-                group.scale.x = .03;
-                group.scale.y = .03;
-                group.scale.z = .03;
-                break;
-            case "angelfish":
-                if (angelCount%2 == 0) {
-                    angelCount++;
-                    group.position.x = utils.random(-6, -2);
-                    group.position.z = utils.random(7, 10);
-                    group.position.y = utils.random(3, 7);
-                } else {
-                    angelCount++;
-                    group.position.x = utils.random(1, 5);
-                    group.position.z = utils.random(7, 10);
-                    group.position.y = utils.random(1, 5);
-                }
-                group.scale.x = .004;
-                group.scale.y = .004;
-                group.scale.z = .004;
-                break;
         }
 
-        
+
         array.push(group);
     }
 
@@ -428,7 +400,7 @@ const getGroups = async (characters, count = 3) => {
     aLight.position.set(10, 0, 25);
     array.push(aLight);
 
-    return array;*/
+    return array;
 }
 
 const loadPortalVideos = () => {
@@ -534,18 +506,19 @@ const getAnimations = async (characters, mixers, count = 3) => {
     return array;
 }
 
-export default { 
-    assembleScene, 
+export default {
+    assembleScene,
     generateCharacters,
-    getGroups, 
-    getAnimations, 
-    assemblePortal, 
+    getGroups,
+    getAnimations,
+    assemblePortal,
     openPortal,
     spinPortal,
     closePortal,
     loadPortalVideos,
-    modelData, 
-    portalVideos, 
-    portalParam, 
-    portalTextures, 
-    portalMaterials }
+    modelData,
+    portalVideos,
+    portalParam,
+    portalTextures,
+    portalMaterials
+}
