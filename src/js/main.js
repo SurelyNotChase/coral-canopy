@@ -49,7 +49,7 @@ const participant1 = {
 } //magenta
 
 const participant2 = {
-    
+
     x: 0,
     y: 0,
     z: 0
@@ -182,9 +182,50 @@ const animate = () => {
     // console.log("2",participant2)
 
     experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
-
-
-        if (index === 0) {
+        let name = generate[index].name;
+        if (name == 'turtle') {
+            object.position.x += .01;
+            object.position.z += .06;
+            if (object.position.z > 10) {
+                object.position.x = -6;
+                object.position.z = -9;
+            }
+        }
+        else if (name == 'maoriWrasse') {
+            if (generate[index].id == 1) {
+                object.position.x -= .02;
+                object.position.z -= .05;
+                if (object.position.z < -10) {
+                    object.position.x = 9;
+                    object.position.z = 9;
+                }
+            } else {
+                object.position.x -= .05;
+                object.position.z += .05;
+                if (object.position.x < -10) {
+                    object.position.x = 7;
+                    object.position.z = -8;
+                }
+            }
+        }
+        else if (name == 'whale') {
+            object.position.x += .04;
+            if (object.position.x > 25) object.position.x = -25;
+        }
+        else if (name == 'blueTang') {
+            object.position.x -= .12;
+            if (object.position.x < -20) object.position.x = 20;
+        }
+        else if (name == 'angelfish') {
+            object.position.x += .03;
+            object.position.z -= .03;
+            if (object.position.x > 10) {
+                object.position.x = -7;
+                object.position.z = 8;
+            }
+        }
+        /*
+        if (index == 1 || index == 2) {
 
             // object.position.x = -(utils.lerp(object.position.x, participant1.x, 0.01));
             // object.position.y = -(utils.lerp(object.position.y, participant1.y, 0.01));
@@ -210,7 +251,6 @@ const animate = () => {
             // object.position.y = utils.lerp(object.position.y, -participant2.y, 0.01);
             //object.position.y = -6;
             //object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
-
             //object.lookAt(0, 0, 0);
             //object.position.z = utils.lerp(object.position.z, 0, 0.01);
             //object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
@@ -256,7 +296,7 @@ const animate = () => {
         //          //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
         //         // }
 
-
+        */
 
 
 
@@ -273,7 +313,7 @@ const devMessages = () => {
     console.log('Backend: ', tracker.logBackend());
     console.log('Experience:', experience)
     console.log('Entity Sample:', aJellyFish)
-    console.log('Cameras:',[webcam,webcam2])
+    console.log('Cameras:', [webcam, webcam2])
 }
 //all initial changes to the web document, event listners, DOM elements, etc...
 const mount = () => {
@@ -296,48 +336,52 @@ const mount = () => {
         .then(devices => {
             const filtered = devices.filter(device => device.kind === 'videoinput');
             console.log("Video Devices:", filtered)
-            
-            navigator.mediaDevices.getUserMedia({'video': {
-                'deviceId': filtered[camera1Index].deviceId,
-        
-            }})
-            .then(function (stream) {
-                webcam.srcObject = stream;
-                webcam.addEventListener('loadeddata', () => { 
-                    //when camera is ready...
 
+            navigator.mediaDevices.getUserMedia({
+                'video': {
+                    'deviceId': filtered[camera1Index].deviceId,
 
-                 })
+                }
             })
+                .then(function (stream) {
+                    webcam.srcObject = stream;
+                    webcam.addEventListener('loadeddata', () => {
+                        //when camera is ready...
 
-            navigator.mediaDevices.getUserMedia({'video': {
-                'deviceId': filtered[camera2Index].deviceId,
-        
-            }})
-        .then(function (stream) {
-            webcam2.srcObject = stream;
-            webcam2.addEventListener('loadeddata', () => { 
-                //when camera is ready...
 
-                
+                    })
+                })
 
-             })
-        })
+            navigator.mediaDevices.getUserMedia({
+                'video': {
+                    'deviceId': filtered[camera2Index].deviceId,
+
+                }
+            })
+                .then(function (stream) {
+                    webcam2.srcObject = stream;
+                    webcam2.addEventListener('loadeddata', () => {
+                        //when camera is ready...
+
+
+
+                    })
+                })
 
         });
 
 
-    
+
 
     navigator.mediaDevices.getUserMedia(cam2Constraints)
         .then(function (stream) {
             webcam2.srcObject = stream;
-            webcam2.addEventListener('loadeddata', () => { 
+            webcam2.addEventListener('loadeddata', () => {
                 //when camera is ready...
 
 
 
-             })
+            })
         })
 
 
@@ -345,7 +389,7 @@ const mount = () => {
 
 //Puts entities in the scene
 const populateScene = async () => {
-  
+
     // all the portal stuff
 
 
@@ -353,7 +397,6 @@ const populateScene = async () => {
     //now it returns array of Fish objects with all that completed.
 
     generate.forEach(object => {
-        //experience.scene.add(object.meshObject);
         let objectMesh = object.meshObject;
 
         experience.scene.add(objectMesh);
@@ -366,12 +409,11 @@ const populateScene = async () => {
     dirLight.position.set(4, 0, 12);
     experience.scene.add(light, dirLight);
 
-    //await animateModels(generate);
+    await animateModels(generate);
 }
 
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations
 const animateModels = async (models) => {
-    //mixers = await game.getMixers(models);
     let animations = await game.getAnimations(models, mixers);
 
     animations.forEach(object => {
@@ -383,21 +425,32 @@ const animateModels = async (models) => {
 
 const runAnimation = () => {
     const dt = clock.getDelta();
-    /*
-    for (const mixer of mixers) {
-        mixer.update(dt);
-    }*/
     for (let i = 0; i < generate.length; i++) {
         generate[i].mixer.update(dt);
+
+        let name = generate[i].name;
+        let time = generate[i].mixer._actions[0].time;
+
+        switch (name) {
+            case "maoriWrasse":
+                if (time > 1) generate[i].mixer._actions[0].time = 0;
+                break;
+            case "angelfish":
+                if (time > 1) generate[i].mixer._actions[0].time = 0;
+                break;
+            case "blueTang":
+                if (time < 1 || time > 3.4) generate[i].mixer._actions[0].time = 1;
+                break;
+            case "whale":
+                break;
+            case "turtle":
+                if (time < 1 || time > 6.25) generate[i].mixer._actions[0].time = 1;
+                break;
+        }
     }
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
     requestAnimationFrame(runAnimation);
-
-
-
-    // let testX = tracker.x;
-    // console.log(tracker.x);
 }
 
 export default { init, gameObjects, masterAnimations }

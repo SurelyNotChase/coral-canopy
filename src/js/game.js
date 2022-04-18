@@ -200,90 +200,14 @@ const generateCharacters = async (count = 3) => {
         array.push(whenReady);
     }
 
-    //Add 4-6 blue tang
-    rng = Math.floor(Math.random() * 3) + 3;
+    //Add 5-7 blue tang
+    rng = Math.floor(Math.random() * 3) + 4;
     for (let i = 0; i < rng; i++) {
         whenReady = await modelData.meshes.blueTang();
         await whenReady.getModel();
         blueTangCount++;
         array.push(whenReady);
     }
-
-    /*
-        for (let i = 0; i < count; i++) {
-    
-            //let rng = Math.floor(Math.random() * 10);
-            let rng = 1;
-            let whenReady;
-            switch (rng) {
-                case 0:
-                case 1:
-                case 2:
-                    whenReady = await modelData.meshes.clownFish();
-                    await whenReady.getModel();
-                    clownfishCount++;
-                    whenReady.name = "clownfish";
-                    break;
-                case 3:
-                case 4:
-                    if (angelfishCount < 5) {
-                        whenReady = await modelData.meshes.angelfish();
-                        await whenReady.getModel();
-                        angelfishCount++;
-                        //whenReady.scene.name = "angelfish";
-                    } else {
-                        whenReady = await modelData.meshes.clownFish();
-                        await whenReady.getModel();
-                        clownfishCount++;
-                        //whenReady.scene.name = "clownfish";
-                    }
-                    break;
-                case 5:
-                    if (sharkCount < 3) {
-                        whenReady = await modelData.meshes.shark();
-                        await whenReady.getModel();
-                        sharkCount++;
-                        //whenReady.scene.name = "shark";
-                    } else {
-                        whenReady = await modelData.meshes.clownFish();
-                        await whenReady.getModel();
-                        clownfishCount++;
-                        //whenReady.scene.name = "clownfish";
-                    }
-                    break;
-                case 6:
-                    if (maoriCount < 3) {
-                        whenReady = await modelData.meshes.maoriWrasse();
-                        await whenReady.getModel();
-                        maoriCount++;
-                        //whenReady.scene.name = "maoriWrasse";
-                    } else {
-                        whenReady = await modelData.meshes.clownFish();
-                        await whenReady.getModel();
-                        clownfishCount++;
-                        //whenReady.scene.name = "clownfish";
-                    }
-                    break;
-                case 7:
-                case 8:
-                case 9:
-                    whenReady = await modelData.meshes.yellowTang();
-                    await whenReady.getModel();
-                    yellowtangCount++;
-                    //whenReady.scene.name = "yellowTang";
-                    break;
-                default:
-                    whenReady = await modelData.meshes.clownFish();
-                    await whenReady.getModel();
-                    clownfishCount++;
-                    //whenReady.scene.name = "clownfish";
-                    break;
-            }
-    
-            let model = whenReady;
-            array.push(model);
-        }
-    */
 
     return array;
 }
@@ -298,15 +222,18 @@ const getGroups = async (characters, count = 3) => {
         let group = characters[i].meshObject;
         let name = characters[i].name;
 
+        console.log(name);
 
         switch (name) {
             case "maoriWrasse":
                 if (characters[i].id == 1) {
                     group.position.x = utils.random(7, 9);
                     group.position.z = utils.random(7, 9);
+                    group.rotation.y = (25 * Math.PI) / 180;
                 } else {
-                    group.position.x = utils.random(7, 9);
-                    group.position.z = utils.random(-10, -7);
+                    group.position.x = utils.random(6, 9);
+                    group.position.z = utils.random(-10, -6);
+                    group.rotation.y = (145 * Math.PI) / 180;
                 }
                 group.position.y = utils.random(-9, 7);
                 group.scale.x = .015;
@@ -316,15 +243,17 @@ const getGroups = async (characters, count = 3) => {
             case "angelfish":
                 group.position.x = utils.random(-7, -4);
                 group.position.z = utils.random(5, 8);
-                group.position.y = utils.random(-8, -6);
+                group.position.y = utils.random(-4, 0);
+                group.rotation.y = -(35 * Math.PI) / 180;
                 group.scale.x = .003;
                 group.scale.y = .003;
                 group.scale.z = .003;
                 break;
             case "blueTang":
-                group.position.x = utils.random(4, 7);
+                group.position.x = utils.random(4, 8);
                 group.position.z = utils.random(-3, -1);
-                group.position.y = utils.random(6, 8);
+                group.position.y = utils.random(-9, -5);
+                group.rotation.y = (90 * Math.PI) / 180;
                 group.scale.x = .004;
                 group.scale.y = .004;
                 group.scale.z = .004;
@@ -333,17 +262,19 @@ const getGroups = async (characters, count = 3) => {
                 group.position.x = utils.random(-12, -10);
                 group.position.z = utils.random(1, 3);
                 group.position.y = 5;
+                group.rotation.y = -(90 * Math.PI) / 180;
                 group.scale.x = .05;
                 group.scale.y = .05;
                 group.scale.z = .05;
                 break;
             case "turtle":
-                group.position.x = utils.random(-4, -2);
-                group.position.z = utils.random(-9, -7);
-                group.position.y = utils.random(-8, -6);
+                group.position.x = utils.random(-6, -1);
+                group.position.z = utils.random(-9, -5);
+                group.position.y = utils.random(-8, -4);
                 group.scale.x = .015;
                 group.scale.y = .015;
                 group.scale.z = .015;
+                group.rotation.y = (200 * Math.PI) / 180;
                 break;
             case "clownfish":
                 /*
@@ -491,6 +422,7 @@ const getMixers = async (characters, count = 20) => {
 const getAnimations = async (characters, mixers, count = 3) => {
 
     let array = [];
+    count = characters.length;
 
     for (let i = 0; i < count; i++) {
         /*
@@ -501,6 +433,7 @@ const getAnimations = async (characters, mixers, count = 3) => {
         */
         let clipAnimation = characters[i].animationClip;
         array.push(clipAnimation);
+        //console.log(clipAnimation);
     }
 
     return array;
