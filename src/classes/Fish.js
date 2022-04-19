@@ -21,7 +21,7 @@ class Fish {
             yRot: 0, //(90 * Math.PI) / 180,
             zRot: 0, //(90 * Math.PI) / 180
         };
-        this.speed = 0;     //best between 0.03 and 0.1
+        this.speed = 1;     //best between 0.03 and 0.1
         this.mixer;
         this.animationClip;
         this.boundingBox = {};

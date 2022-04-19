@@ -31,6 +31,8 @@ let masterAnimations = []; //array of animation arrays
 let clock = new THREE.Clock();
 let mixers;
 
+let pause = false;
+
 let camera1Index = 0;
 let camera2Index = 1;
 
@@ -84,12 +86,12 @@ const init = async () => {
 
     await populateScene();
 
-    tracker.init();
+    //tracker.init();
 
     mount();
 
-    setupColorTracker(video, 1);
-    setupColorTracker(video2, 2);
+    //setupColorTracker(video, 1);
+    //setupColorTracker(video2, 2);
 
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
@@ -191,7 +193,7 @@ const animate = () => {
                 object.position.z = -9;
             }
         }
-        else if (name == 'maoriWrasse') {
+        else if (name == 'maoriWrasse' && generate[index].speed > 0) {
             if (generate[index].id == 1) {
                 object.position.x -= .02;
                 object.position.z -= .05;
@@ -216,7 +218,7 @@ const animate = () => {
             object.position.x -= .12;
             if (object.position.x < -20) object.position.x = 20;
         }
-        else if (name == 'angelfish') {
+        else if (name == 'angelfish' && generate[index].speed > 0) {
             object.position.x += .03;
             object.position.z -= .03;
             if (object.position.x > 10) {
@@ -410,6 +412,8 @@ const populateScene = async () => {
     experience.scene.add(light, dirLight);
 
     await animateModels(generate);
+
+
 }
 
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations
@@ -453,4 +457,4 @@ const runAnimation = () => {
     requestAnimationFrame(runAnimation);
 }
 
-export default { init, gameObjects, masterAnimations }
+export default { init, gameObjects, masterAnimations, pause }

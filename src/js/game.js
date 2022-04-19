@@ -29,6 +29,8 @@ let yellowtangCount = 1;
 
 let keyP = false;   //bool for spacebar being pressed
 
+let groups;
+
 
 const gameDefaults = {
 
@@ -216,13 +218,13 @@ const getGroups = async (characters, count = 3) => {
     let array = [];
     count = characters.length;
 
+    groups = characters;
+
     for (let i = 0; i < count; i++) {
 
 
         let group = characters[i].meshObject;
         let name = characters[i].name;
-
-        console.log(name);
 
         switch (name) {
             case "maoriWrasse":
@@ -326,7 +328,6 @@ const getGroups = async (characters, count = 3) => {
         array.push(group);
     }
 
-
     let aLight = modelData.lights.whitePointLight();
     aLight.position.set(10, 0, 25);
     array.push(aLight);
@@ -360,12 +361,42 @@ function openPortal(e) {
         setTimeout(spinPortal, 4000);
     }
     else if (e.keyCode == 102) {
+        let count = groups.length
+        for (let i = 0; i < count; i++) {
 
-        const geometry = new THREE.SphereGeometry(.1, 6, 6);
-        const material = new THREE.MeshBasicMaterial({ color: 0xffff00 });
-        const sphere = new THREE.Mesh(geometry, material);
-        sphere.position.y = -4;
-        experience.scene.add(sphere);
+
+            let group = groups[i].meshObject;
+            let name = groups[i].name;
+
+            switch (name) {
+                case "maoriWrasse":
+                    if (groups[i].id == 1) {
+                        group.rotation.x = -(45 * Math.PI) / 180;
+                    } else {
+                        group.rotation.x = (45 * Math.PI) / 180;
+                    }
+                    break;
+                case "angelfish":
+                    group.rotation.x = -(45 * Math.PI) / 180;
+                    if(group.position.x > 0) {
+                        group.rotation.x = (35 * Math.PI) / 180;
+                        group.rotation.y = (180 * Math.PI) / 180;
+                    }
+                    break;
+            }
+            groups[i].speed = 0;
+        }
+        main.pause = true;
+
+        setTimeout(() => { 
+            let count = groups.length
+            for (let i = 0; i < count; i++) { 
+                groups[i].meshObject.rotation.x = 0; 
+                groups[i].speed = 1; 
+                //if(groups[i].name == 'angelfish') { groups[i].rotation.y = 0; groups[i].rotation.y = (90 * Math.PI) / 180; console.log("yay"); }
+            }
+            console.log("done");
+        }, 4000);
     }
 }
 
