@@ -130,42 +130,51 @@ const setupColorTracker = (videoSource, index) => {
 
 }
 
-const colorEvent = (detection, index) => {
+const colorEvent = (detection, cameraIndex) => {
 
+    //console.log(detection)
+    let color = detection.color;
+    let colorY = utils.scale(detection.y,0,480,-20,20);
+    let colorX;
+    let colorZ;
+    //let colorWidth = detection.width;
+    //let colorHeight = detection.height;
 
-    if (detection.color === "magenta") {
-        console.log("magenta");
+    if(cameraIndex === 0){
+       colorX = utils.scale(detection.x,0,640,-20,20);
+    }
+    
+    if(cameraIndex === 1){
+        colorZ = utils.scale(detection.x,0,640,-20,20);
+    }
 
-        //update participant 1 x,y,z
+    //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
+    if(colorY<-15) {
+        console.log(`${color} raised`);
 
-        // if (index === 1) participant1.z = utils.scale(detection.x, 0, 640, -20, 20)
-        // if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -10, 10)
-        // if (index === 2) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
-        //if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
-        //if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -20, 20)
-        // if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
-        // console.log("magenta",participant1)
-
+        if(color === 'magenta'){
+            //when magenta is raised...
+        }
+        if(color === 'cyan'){
+            //when cyan is raised...
+        }
+        if(color === 'yellow'){
+            //when yellow is raised
+        }
 
     }
 
-    if (detection.color === "cyan") {
-
-        //console.log('cyan detected',detection)
-
+    //constant color detection events
+    if (color === "magenta") {
+        //when magenta is in detected...
     }
 
-    if (detection.color === "yellow") {
-        console.log("orange");
+    if (color === "cyan") {
+        //when cyan is detected...
+    }
 
-
-        // if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -10, 10)
-        // if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -10, 10)
-        // if (index === 2) participant2.z = utils.scale(detection.x, 0, 640, -10, 10)
-        //if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -20, 20)
-        //if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -20, 20)
-        // if (index === 1) participant2.z = utils.scale(detection.x, 0, 640, -10, 10)
-        //console.log("yellow",participant2)
+    if (color === "yellow") {
+        //when yellow is detected...
     }
 
 
@@ -175,13 +184,9 @@ const colorEvent = (detection, index) => {
 const animate = () => {
     requestAnimationFrame(animate)
 
-
     controls.update();
 
     let sharkCount = 0;
-
-    // console.log("1",participant1)
-    // console.log("2",participant2)
 
     experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
         let name = generate[index].name;
