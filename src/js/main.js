@@ -40,6 +40,10 @@ let camera2Index = 1;
 
 let videoVisibility = false;
 
+let prevMag = -25;
+let prevCy = -25;
+let prevYel = -25;
+
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
@@ -136,51 +140,62 @@ const setupColorTracker = (videoSource, index) => {
 
 const colorEvent = (detection, cameraIndex) => {
 
-    //console.log(detection)
-    let color = detection.color;
-    let colorY = utils.scale(detection.y,0,480,-20,20);
-    let colorX;
-    let colorZ;
-    //let colorWidth = detection.width;
-    //let colorHeight = detection.height;
-
-    if(cameraIndex === 0){
-       colorX = utils.scale(detection.x,0,640,-20,20);
-    }
-    
-    if(cameraIndex === 1){
-        colorZ = utils.scale(detection.x,0,640,-20,20);
-    }
-
-    //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
-    if(colorY<-15) {
-        console.log(`${color} raised`);
-
-        if(color === 'magenta'){
-            //when magenta is raised...
-        }
-        if(color === 'cyan'){
-            //when cyan is raised...
-        }
-        if(color === 'yellow'){
-            //when yellow is raised
-        }
-
-    }
-
-    //constant color detection events
-    if (color === "magenta") {
-        //when magenta is detected...
-    }
-
-    if (color === "cyan") {
-        //when cyan is detected...
-    }
-
-    if (color === "yellow") {
-        //when yellow is detected...
-    }
-
+     //console.log(detection)
+     let color = detection.color;
+     let colorY = utils.scale(detection.y, 0, 480, -20, 20);
+     let colorX;
+     let colorZ;
+     //let colorWidth = detection.width;
+     //let colorHeight = detection.height;
+ 
+     if (cameraIndex === 0) {
+         colorX = utils.scale(detection.x, 0, 640, -20, 20);
+     }
+ 
+     if (cameraIndex === 1) {
+         colorZ = utils.scale(detection.x, 0, 640, -20, 20);
+     }
+ 
+     //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
+     if (colorY < 0) {
+         //console.log(`${color} raised`);
+ 
+         if (color === 'magenta') {
+             //when magenta is raised...
+             if (colorY < prevMag - 2){
+                 console.log("magenta raised");
+             }
+         }
+         if (color === 'cyan') {
+             //when cyan is raised...
+             if (colorY < prevCy - 2){
+                 //console.log("cyan raised");
+             }
+         }
+         if (color === 'yellow') {
+             //when yellow is raised
+             if (colorY < prevYel - 2){
+                 //console.log("yellow raised");
+             }
+         }
+ 
+     }
+ 
+     //constant color detection events
+     if (color === "magenta") {
+         //when magenta is detected...
+         prevMag = colorY;
+     }
+ 
+     if (color === "cyan") {
+         //when cyan is detected...
+         prevCy = colorY;
+     }
+ 
+     if (color === "yellow") {
+         //when yellow is detected...
+         prevYel = colorY;
+     }
 
 }
 
