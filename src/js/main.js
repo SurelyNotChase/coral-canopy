@@ -47,39 +47,8 @@ let prevYel = -25;
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
-const predictionDelay = 1000 //minimum time in ms between predictions (alter for benchmarking)
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
 
-const participant1 = {
-
-    x: 0,
-    y: 0,
-    z: 0
-
-} //magenta
-
-const participant2 = {
-
-    x: 0,
-    y: 0,
-    z: 0
-
-} //yellow
-
-const cam1Constraints = {
-    // 'audio': { 'echoCancellation': true },
-    'video': {
-        'deviceId': "4d5d35147ed1c2aaf3cb86a7c3684c7c1160c9110d901e7f62a87c20f2ab61a6",
-
-    }
-}
-const cam2Constraints = {
-    // 'audio': { 'echoCancellation': true },
-    'video': {
-        'deviceId': "0d5e508ec959eabc5e19bacfa8f00fcdb0a3c75eeb0601f7838d51bb088d5913",
-
-    }
-}
 
 //// ----- CORE ----- ////
 //Runs at document load
@@ -126,8 +95,6 @@ const init = async () => {
     devMessages();
 };
 
-
-
 //returns color tracker
 const setupColorTracker = (videoSource, index) => {
 
@@ -155,6 +122,7 @@ const setupColorTracker = (videoSource, index) => {
 
 }
 
+<<<<<<< HEAD
 const colorEvent = (detection, cameraIndex) => {
 
     //console.log(detection)
@@ -216,6 +184,8 @@ const colorEvent = (detection, cameraIndex) => {
 
 }
 
+=======
+>>>>>>> 3d73c7a5172d010e80cd345f31b73303dcfbcbf8
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)
@@ -355,6 +325,68 @@ const animate = () => {
 
 //// ----- SIDE EFFECTS ----- ////
 //Logs information to the console
+
+const colorEvent = (detection, cameraIndex) => {
+
+    //console.log(detection)
+    let color = detection.color;
+    let colorY = utils.scale(detection.y, 0, 480, -20, 20);
+    let colorX;
+    let colorZ;
+    //let colorWidth = detection.width;
+    //let colorHeight = detection.height;
+
+    if (cameraIndex === 0) {
+        colorX = utils.scale(detection.x, 0, 640, -20, 20);
+    }
+
+    if (cameraIndex === 1) {
+        colorZ = utils.scale(detection.x, 0, 640, -20, 20);
+    }
+
+    //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
+    if (colorY < 0) {
+        //console.log(`${color} raised`);
+
+        if (color === 'magenta') {
+            //when magenta is raised...
+            if (colorY < prevMag - 2){
+                console.log("magenta raised");
+            }
+        }
+        if (color === 'cyan') {
+            //when cyan is raised...
+            if (colorY < prevCy - 2){
+                //console.log("cyan raised");
+            }
+        }
+        if (color === 'yellow') {
+            //when yellow is raised
+            if (colorY < prevYel - 2){
+                //console.log("yellow raised");
+            }
+        }
+
+    }
+
+    //constant color detection events
+    if (color === "magenta") {
+        //when magenta is detected...
+        prevMag = colorY;
+    }
+
+    if (color === "cyan") {
+        //when cyan is detected...
+        prevCy = colorY;
+    }
+
+    if (color === "yellow") {
+        //when yellow is detected...
+        prevYel = colorY;
+    }
+
+}
+
 const devMessages = () => {
     console.log('Instructions: ', instructions)
     console.log('Backend: ', tracker.logBackend());
@@ -368,7 +400,12 @@ const mount = () => {
     //add renderer to canvas
     document.querySelector('body').appendChild(experience.renderer.domElement);
 
+<<<<<<< HEAD
 
+=======
+    //set default visibility
+    cams.style.zIndex = videoVisibility ? '1' : "-99"
+>>>>>>> 3d73c7a5172d010e80cd345f31b73303dcfbcbf8
 
     //Set up event functions for opening and closing portal, currently based on pressing spacebar
 
@@ -413,6 +450,7 @@ const mount = () => {
         });
 
 
+<<<<<<< HEAD
 
 
     navigator.mediaDevices.getUserMedia(cam2Constraints)
@@ -456,6 +494,31 @@ const mount = () => {
 
     })
 
+=======
+        //responsive scaling event listener
+         window.addEventListener('resize', () => {
+            experience.renderer.setSize(window.innerWidth, window.innerHeight);
+            experience.camera.aspect = window.innerWidth / window.innerHeight;
+            experience.camera.updateProjectionMatrix();
+        })
+
+        window.addEventListener("keyup", game.closePortal);
+        
+        window.addEventListener("keypress", (e)=>{
+            e.preventDefault();
+            //console.log(e.key)
+            if(e.key === 'v') {
+                 videoVisibility ? videoVisibility = false : videoVisibility = true;
+                // console.log(videoVisibility)
+                 cams.style.zIndex = videoVisibility ? '1' : "-99"
+            }
+
+            if(e.key = 'c'){
+                game.resetCamera();
+            }
+            if (e.key == " ") game.openPortal(e);
+        });
+>>>>>>> 3d73c7a5172d010e80cd345f31b73303dcfbcbf8
 
 
 }
