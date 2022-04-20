@@ -347,7 +347,8 @@ const mount = () => {
     //add renderer to canvas
     document.querySelector('body').appendChild(experience.renderer.domElement);
 
-    
+    //set default visibility
+    cams.style.zIndex = videoVisibility ? '1' : "-99"
 
     //Set up event functions for opening and closing portal, currently based on pressing spacebar
     
@@ -421,6 +422,10 @@ const mount = () => {
                  videoVisibility ? videoVisibility = false : videoVisibility = true;
                 // console.log(videoVisibility)
                  cams.style.zIndex = videoVisibility ? '1' : "-99"
+            }
+
+            if(e.key = 'c'){
+                game.resetCamera();
             }
             if (e.key == " ") game.openPortal(e);
         });

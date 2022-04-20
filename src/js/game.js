@@ -31,6 +31,8 @@ let keyP = false;   //bool for spacebar being pressed
 
 let groups;
 
+let camera;
+
 
 const gameDefaults = {
 
@@ -40,8 +42,8 @@ const gameDefaults = {
         nearPlane: 0.1,
         farPlane: 1000,
         x: 0,
-        y: 0,
-        z: 10
+        y: -22,
+        z: 0
     },
     rendSettings: {
         backgroundColor: 'lightgrey',
@@ -96,7 +98,7 @@ const assembleScene = (defaults = gameDefaults) => {
 
     const scene = new THREE.Scene();
 
-    const camera = new THREE.PerspectiveCamera(defaults.camSettings.fov, defaults.camSettings.aspectRatio, defaults.camSettings.nearPlane, defaults.camSettings.farPlane);
+    camera = new THREE.PerspectiveCamera(defaults.camSettings.fov, defaults.camSettings.aspectRatio, defaults.camSettings.nearPlane, defaults.camSettings.farPlane);
     camera.position.z = defaults.camSettings.z;
     camera.position.x = defaults.camSettings.x;
     camera.position.y = defaults.camSettings.y;
@@ -108,6 +110,12 @@ const assembleScene = (defaults = gameDefaults) => {
 
     return { renderer, camera, scene }
 
+}
+
+const resetCamera = (defaults = gameDefaults) => {
+    camera.position.z = defaults.camSettings.z;
+    camera.position.x = defaults.camSettings.x;
+    camera.position.y = defaults.camSettings.y;
 }
 
 const assemblePortal = async () => {
@@ -481,6 +489,7 @@ export default {
     spinPortal,
     closePortal,
     loadPortalVideos,
+    resetCamera,
     modelData,
     portalVideos,
     portalParam,
