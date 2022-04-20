@@ -86,12 +86,12 @@ const init = async () => {
 
     await populateScene();
 
-    //tracker.init();
+    tracker.init();
 
     mount();
 
-    //setupColorTracker(video, 1);
-    //setupColorTracker(video2, 2);
+    setupColorTracker(video, 1);
+    setupColorTracker(video2, 2);
 
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
@@ -134,15 +134,15 @@ const colorEvent = (detection, index) => {
 
 
     if (detection.color === "magenta") {
-
+        console.log("magenta");
 
         //update participant 1 x,y,z
 
         // if (index === 1) participant1.z = utils.scale(detection.x, 0, 640, -20, 20)
         // if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -10, 10)
         // if (index === 2) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
-        if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
-        if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -20, 20)
+        //if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
+        //if (index === 1) participant1.y = utils.scale(detection.y, 0, 640, -20, 20)
         // if (index === 1) participant1.x = utils.scale(detection.x, 0, 640, -20, 20)
         // console.log("magenta",participant1)
 
@@ -156,14 +156,14 @@ const colorEvent = (detection, index) => {
     }
 
     if (detection.color === "yellow") {
-
+        console.log("orange");
 
 
         // if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -10, 10)
         // if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -10, 10)
         // if (index === 2) participant2.z = utils.scale(detection.x, 0, 640, -10, 10)
-        if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -20, 20)
-        if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -20, 20)
+        //if (index === 1) participant2.x = utils.scale(detection.x, 0, 640, -20, 20)
+        //if (index === 1) participant2.y = utils.scale(detection.y, 0, 640, -20, 20)
         // if (index === 1) participant2.z = utils.scale(detection.x, 0, 640, -10, 10)
         //console.log("yellow",participant2)
     }

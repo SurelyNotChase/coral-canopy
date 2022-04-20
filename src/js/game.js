@@ -78,7 +78,8 @@ const modelData = {
         greenBox: () => new THREE.Mesh(modelData.geometries.cube(), modelData.materials.greenLambert()),
         clownFish: () => new Fish("clownfish", clownfishCount, 'clownTest.gltf'),   //utils.loadModelAsync('cfish.gltf'),
         shark: () => utils.loadModelAsync('shark.gltf'),
-        yellowTang: () => utils.loadModelAsync('YellowTang.gltf')
+        yellowTang: () => utils.loadModelAsync('YellowTang.gltf'),
+        sharkEating: () => new Fish("sharkEating", 1, "SharkEating.gltf")
     },
 
 
@@ -171,8 +172,8 @@ const generateCharacters = async (count = 3) => {
 
     let array = [];
 
-    //Add whale
-    whenReady = await modelData.meshes.whale();
+    //Add sharkEating animation
+    whenReady = await modelData.meshes.sharkEating();
     await whenReady.getModel();
     array.push(whenReady);
 
@@ -260,14 +261,14 @@ const getGroups = async (characters, count = 3) => {
                 group.scale.y = .004;
                 group.scale.z = .004;
                 break;
-            case "whale":
+            case "sharkEating":
                 group.position.x = utils.random(-12, -10);
                 group.position.z = utils.random(1, 3);
-                group.position.y = 5;
+                group.position.y = 0;
                 group.rotation.y = -(90 * Math.PI) / 180;
-                group.scale.x = .05;
-                group.scale.y = .05;
-                group.scale.z = .05;
+                group.scale.x = .03;
+                group.scale.y = .03;
+                group.scale.z = .03;
                 break;
             case "turtle":
                 group.position.x = utils.random(-6, -1);
