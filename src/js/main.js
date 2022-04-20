@@ -36,6 +36,8 @@ let pause = false;
 let camera1Index = 0;
 let camera2Index = 1;
 
+let videoVisibility = false;
+
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
@@ -166,7 +168,7 @@ const colorEvent = (detection, cameraIndex) => {
 
     //constant color detection events
     if (color === "magenta") {
-        //when magenta is in detected...
+        //when magenta is detected...
     }
 
     if (color === "cyan") {
@@ -336,8 +338,8 @@ const mount = () => {
     })
 
     //Set up event functions for opening and closing portal, currently based on pressing spacebar
-    window.addEventListener("keypress", game.openPortal);
-    window.addEventListener("keyup", game.closePortal);
+    
+    
 
     navigator.mediaDevices.enumerateDevices()
         .then(devices => {
@@ -391,6 +393,19 @@ const mount = () => {
             })
         })
 
+
+
+        window.addEventListener("keyup", game.closePortal);
+        
+        window.addEventListener("keypress", (e)=>{
+            console.log(e.key)
+            if(e.key === 'v') {
+                 videoVisibility ? videoVisibility = false : videoVisibility=true;
+                 console.log(videoVisibility)
+                 cams.style.zIndex = videoVisibility ? '1' : "-99"
+            }
+            if (e.key == " ") game.openPortal(e);
+        });
 
 }
 

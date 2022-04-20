@@ -350,7 +350,7 @@ const loadPortalVideos = () => {
 //Swap portal texture to opening texture
 function openPortal(e) {
     e.preventDefault();
-    if (e.keyCode == 32 && !keyP) {
+    if (!keyP) {
 
         // portalVideos[1].currentTime = 0;
         keyP = true;
@@ -361,7 +361,7 @@ function openPortal(e) {
         videoTextures.portalCube.material = portalMaterials[1];
         setTimeout(spinPortal, 4000);
     }
-    else if (e.keyCode == 102) {
+    if (e.keyCode == 102) {
         let count = groups.length
         for (let i = 0; i < count; i++) {
 
