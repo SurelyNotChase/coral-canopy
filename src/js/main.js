@@ -122,70 +122,6 @@ const setupColorTracker = (videoSource, index) => {
 
 }
 
-<<<<<<< HEAD
-const colorEvent = (detection, cameraIndex) => {
-
-    //console.log(detection)
-    let color = detection.color;
-    let colorY = utils.scale(detection.y, 0, 480, -20, 20);
-    let colorX;
-    let colorZ;
-    //let colorWidth = detection.width;
-    //let colorHeight = detection.height;
-
-    if (cameraIndex === 0) {
-        colorX = utils.scale(detection.x, 0, 640, -20, 20);
-    }
-
-    if (cameraIndex === 1) {
-        colorZ = utils.scale(detection.x, 0, 640, -20, 20);
-    }
-
-    //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
-    if (colorY < 0) {
-        //console.log(`${color} raised`);
-
-        if (color === 'magenta') {
-            //when magenta is raised...
-            if (colorY < prevMag - 2) {
-                console.log("magenta raised");
-            }
-        }
-        if (color === 'cyan') {
-            //when cyan is raised...
-            if (colorY < prevCy - 2) {
-                //console.log("cyan raised");
-            }
-        }
-        if (color === 'yellow') {
-            //when yellow is raised
-            if (colorY < prevYel - 2) {
-                //console.log("yellow raised");
-            }
-        }
-
-    }
-
-    //constant color detection events
-    if (color === "magenta") {
-        //when magenta is detected...
-        prevMag = colorY;
-    }
-
-    if (color === "cyan") {
-        //when cyan is detected...
-        prevCy = colorY;
-    }
-
-    if (color === "yellow") {
-        //when yellow is detected...
-        prevYel = colorY;
-    }
-
-}
-
-=======
->>>>>>> 3d73c7a5172d010e80cd345f31b73303dcfbcbf8
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)
@@ -400,12 +336,8 @@ const mount = () => {
     //add renderer to canvas
     document.querySelector('body').appendChild(experience.renderer.domElement);
 
-<<<<<<< HEAD
-
-=======
     //set default visibility
     cams.style.zIndex = videoVisibility ? '1' : "-99"
->>>>>>> 3d73c7a5172d010e80cd345f31b73303dcfbcbf8
 
     //Set up event functions for opening and closing portal, currently based on pressing spacebar
 
@@ -450,51 +382,6 @@ const mount = () => {
         });
 
 
-<<<<<<< HEAD
-
-
-    navigator.mediaDevices.getUserMedia(cam2Constraints)
-        .then(function (stream) {
-            webcam2.srcObject = stream;
-            webcam2.addEventListener('loadeddata', () => {
-                //when camera is ready...
-
-
-
-            })
-        })
-
-    //responsive scaling event listener
-    window.addEventListener('resize', () => {
-        experience.renderer.setSize(window.innerWidth, window.innerHeight);
-        experience.camera.aspect = window.innerWidth / window.innerHeight;
-        experience.camera.updateProjectionMatrix();
-    })
-
-    window.addEventListener("keyup", game.closePortal);
-
-    window.addEventListener("keypress", (e) => {
-        e.preventDefault();
-        //console.log(e.key)
-        if (e.key === 'v') {
-            videoVisibility ? videoVisibility = false : videoVisibility = true;
-            // console.log(videoVisibility)
-            cams.style.zIndex = videoVisibility ? '1' : "-99"
-        }
-        if (e.key == " ") game.openPortal(e);
-    });
-
-    experience.scene.add(mouseCube) // debugging the scaling 
-    window.addEventListener('click', (e) => {
-        canvasX = utils.scale(e.clientX, 0, window.innerWidth, -20, 20);
-        canvasY = utils.scale(e.clientY, 0, window.innerHeight, -20, 20);
-        console.log(canvasX + "," + canvasY);
-        mouseCube.position.x = canvasX;
-        mouseCube.position.z = -canvasY;
-
-    })
-
-=======
         //responsive scaling event listener
          window.addEventListener('resize', () => {
             experience.renderer.setSize(window.innerWidth, window.innerHeight);
@@ -518,7 +405,6 @@ const mount = () => {
             }
             if (e.key == " ") game.openPortal(e);
         });
->>>>>>> 3d73c7a5172d010e80cd345f31b73303dcfbcbf8
 
 
 }
