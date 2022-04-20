@@ -30,8 +30,8 @@ const gameDefaults = {
         nearPlane: 0.1,
         farPlane: 1000,
         x: 0,
-        y: 0,
-        z: 10
+        y: -20,
+        z: 0
     },
     rendSettings: {
         backgroundColor: 'lightgrey',

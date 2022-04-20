@@ -92,7 +92,24 @@ const init = async () => {
     game.assemblePortal();
     experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
 
+    let coralRing = await utils.loadModelAsync('coralRing.gltf');
+    //console.log(coralRing);
+    coralRing.scene.name = "coralRing";
+    coralRing.scene.scale.x = .07;
+    coralRing.scene.scale.y = .07;
+    coralRing.scene.scale.z = .07;
+    coralRing.scene.position.y = -20;
+
+    let bubble = await utils.loadModelAsync("bubble.gltf");
+    
+    bubble.scene.scale.x = .05;
+    bubble.scene.scale.y = .05;
+    bubble.scene.scale.z = .05;
+
     await populateScene();
+
+    experience.scene.add(coralRing.scene, bubble.scene);
+    console.log(bubble);
 
     tracker.init();
 
@@ -140,62 +157,62 @@ const setupColorTracker = (videoSource, index) => {
 
 const colorEvent = (detection, cameraIndex) => {
 
-     //console.log(detection)
-     let color = detection.color;
-     let colorY = utils.scale(detection.y, 0, 480, -20, 20);
-     let colorX;
-     let colorZ;
-     //let colorWidth = detection.width;
-     //let colorHeight = detection.height;
- 
-     if (cameraIndex === 0) {
-         colorX = utils.scale(detection.x, 0, 640, -20, 20);
-     }
- 
-     if (cameraIndex === 1) {
-         colorZ = utils.scale(detection.x, 0, 640, -20, 20);
-     }
- 
-     //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
-     if (colorY < 0) {
-         //console.log(`${color} raised`);
- 
-         if (color === 'magenta') {
-             //when magenta is raised...
-             if (colorY < prevMag - 2){
-                 console.log("magenta raised");
-             }
-         }
-         if (color === 'cyan') {
-             //when cyan is raised...
-             if (colorY < prevCy - 2){
-                 //console.log("cyan raised");
-             }
-         }
-         if (color === 'yellow') {
-             //when yellow is raised
-             if (colorY < prevYel - 2){
-                 //console.log("yellow raised");
-             }
-         }
- 
-     }
- 
-     //constant color detection events
-     if (color === "magenta") {
-         //when magenta is detected...
-         prevMag = colorY;
-     }
- 
-     if (color === "cyan") {
-         //when cyan is detected...
-         prevCy = colorY;
-     }
- 
-     if (color === "yellow") {
-         //when yellow is detected...
-         prevYel = colorY;
-     }
+    //console.log(detection)
+    let color = detection.color;
+    let colorY = utils.scale(detection.y, 0, 480, -20, 20);
+    let colorX;
+    let colorZ;
+    //let colorWidth = detection.width;
+    //let colorHeight = detection.height;
+
+    if (cameraIndex === 0) {
+        colorX = utils.scale(detection.x, 0, 640, -20, 20);
+    }
+
+    if (cameraIndex === 1) {
+        colorZ = utils.scale(detection.x, 0, 640, -20, 20);
+    }
+
+    //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
+    if (colorY < 0) {
+        //console.log(`${color} raised`);
+
+        if (color === 'magenta') {
+            //when magenta is raised...
+            if (colorY < prevMag - 2) {
+                console.log("magenta raised");
+            }
+        }
+        if (color === 'cyan') {
+            //when cyan is raised...
+            if (colorY < prevCy - 2) {
+                //console.log("cyan raised");
+            }
+        }
+        if (color === 'yellow') {
+            //when yellow is raised
+            if (colorY < prevYel - 2) {
+                //console.log("yellow raised");
+            }
+        }
+
+    }
+
+    //constant color detection events
+    if (color === "magenta") {
+        //when magenta is detected...
+        prevMag = colorY;
+    }
+
+    if (color === "cyan") {
+        //when cyan is detected...
+        prevCy = colorY;
+    }
+
+    if (color === "yellow") {
+        //when yellow is detected...
+        prevYel = colorY;
+    }
 
 }
 
@@ -206,50 +223,54 @@ const animate = () => {
     controls.update();
 
     let sharkCount = 0;
-
     experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
-        let name = generate[index].name;
-        if (name == 'turtle') {
-            object.position.x += .01;
-            object.position.z += .06;
-            if (object.position.z > 10) {
-                object.position.x = -6;
-                object.position.z = -9;
-            }
-        }
-        else if (name == 'maoriWrasse' && generate[index].speed > 0) {
-            if (generate[index].id == 1) {
-                object.position.x -= .02;
-                object.position.z -= .05;
-                if (object.position.z < -10) {
-                    object.position.x = 9;
-                    object.position.z = 9;
-                }
-            } else {
-                object.position.x -= .05;
-                object.position.z += .05;
-                if (object.position.x < -10) {
-                    object.position.x = 7;
-                    object.position.z = -8;
+        try {
+            let name = generate[index].name;
+            if (name == 'turtle') {
+                object.position.x += .01;
+                object.position.z += .06;
+                if (object.position.z > 10) {
+                    object.position.x = -6;
+                    object.position.z = -9;
                 }
             }
-        }
-        else if (name == 'whale') {
-            object.position.x += .04;
-            if (object.position.x > 25) object.position.x = -25;
-        }
-        else if (name == 'blueTang') {
-            object.position.x -= .12;
-            if (object.position.x < -20) object.position.x = 20;
-        }
-        else if (name == 'angelfish' && generate[index].speed > 0) {
-            object.position.x += .03;
-            object.position.z -= .03;
-            if (object.position.x > 10) {
-                object.position.x = -7;
-                object.position.z = 8;
+            else if (name == 'maoriWrasse' && generate[index].speed > 0) {
+                if (generate[index].id == 1) {
+                    object.position.x -= .02;
+                    object.position.z -= .05;
+                    if (object.position.z < -10) {
+                        object.position.x = 9;
+                        object.position.z = 9;
+                    }
+                } else {
+                    object.position.x -= .05;
+                    object.position.z += .05;
+                    if (object.position.x < -10) {
+                        object.position.x = 7;
+                        object.position.z = -8;
+                    }
+                }
             }
+            else if (name == 'whale') {
+                object.position.x += .04;
+                if (object.position.x > 25) object.position.x = -25;
+            }
+            else if (name == 'blueTang') {
+                object.position.x -= .12;
+                if (object.position.x < -20) object.position.x = 20;
+            }
+            else if (name == 'angelfish' && generate[index].speed > 0) {
+                object.position.x += .03;
+                object.position.z -= .03;
+                if (object.position.x > 10) {
+                    object.position.x = -7;
+                    object.position.z = 8;
+                }
+            }
+        } catch {
+
         }
+
         /*
         if (index == 1 || index == 2) {
 
@@ -347,11 +368,11 @@ const mount = () => {
     //add renderer to canvas
     document.querySelector('body').appendChild(experience.renderer.domElement);
 
-    
+
 
     //Set up event functions for opening and closing portal, currently based on pressing spacebar
-    
-    
+
+
 
     navigator.mediaDevices.enumerateDevices()
         .then(devices => {
@@ -405,37 +426,37 @@ const mount = () => {
             })
         })
 
-        //responsive scaling event listener
-         window.addEventListener('resize', () => {
-            experience.renderer.setSize(window.innerWidth, window.innerHeight);
-            experience.camera.aspect = window.innerWidth / window.innerHeight;
-            experience.camera.updateProjectionMatrix();
-        })
+    //responsive scaling event listener
+    window.addEventListener('resize', () => {
+        experience.renderer.setSize(window.innerWidth, window.innerHeight);
+        experience.camera.aspect = window.innerWidth / window.innerHeight;
+        experience.camera.updateProjectionMatrix();
+    })
 
-        window.addEventListener("keyup", game.closePortal);
-        
-        window.addEventListener("keypress", (e)=>{
-            e.preventDefault();
-            //console.log(e.key)
-            if(e.key === 'v') {
-                 videoVisibility ? videoVisibility = false : videoVisibility = true;
-                // console.log(videoVisibility)
-                 cams.style.zIndex = videoVisibility ? '1' : "-99"
-            }
-            if (e.key == " ") game.openPortal(e);
-        });
+    window.addEventListener("keyup", game.closePortal);
 
-        experience.scene.add(mouseCube) // debugging the scaling 
-        window.addEventListener('click',(e)=>{
-            canvasX = utils.scale(e.clientX,0,window.innerWidth,-20,20);
-            canvasY = utils.scale(e.clientY,0,window.innerHeight,-20,20);
-            
-            mouseCube.position.x = canvasX;
-            mouseCube.position.z = -canvasY;
-            
-        })
-            
-       
+    window.addEventListener("keypress", (e) => {
+        e.preventDefault();
+        //console.log(e.key)
+        if (e.key === 'v') {
+            videoVisibility ? videoVisibility = false : videoVisibility = true;
+            // console.log(videoVisibility)
+            cams.style.zIndex = videoVisibility ? '1' : "-99"
+        }
+        if (e.key == " ") game.openPortal(e);
+    });
+
+    experience.scene.add(mouseCube) // debugging the scaling 
+    window.addEventListener('click', (e) => {
+        canvasX = utils.scale(e.clientX, 0, window.innerWidth, -20, 20);
+        canvasY = utils.scale(e.clientY, 0, window.innerHeight, -20, 20);
+        console.log(canvasX + "," + canvasY);
+        mouseCube.position.x = canvasX;
+        mouseCube.position.z = -canvasY;
+
+    })
+
+
 
 }
 

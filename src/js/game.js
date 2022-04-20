@@ -40,8 +40,8 @@ const gameDefaults = {
         nearPlane: 0.1,
         farPlane: 1000,
         x: 0,
-        y: 0,
-        z: 10
+        y: -22,
+        z: 0
     },
     rendSettings: {
         backgroundColor: 'lightgrey',
@@ -79,7 +79,8 @@ const modelData = {
         clownFish: () => new Fish("clownfish", clownfishCount, 'clownTest.gltf'),   //utils.loadModelAsync('cfish.gltf'),
         shark: () => utils.loadModelAsync('shark.gltf'),
         yellowTang: () => utils.loadModelAsync('YellowTang.gltf'),
-        sharkEating: () => new Fish("sharkEating", 1, "SharkEating.gltf")
+        sharkEating: () => new Fish("sharkEating", 1, "SharkEating.gltf"),
+        bubble:() => new Fish("bubble", 1, "bubble.gltf"),
     },
 
 
@@ -339,7 +340,7 @@ const getGroups = async (characters, count = 3) => {
 const loadPortalVideos = () => {
     let array = [];
 
-    array.push(document.getElementById('blankPortal'));
+    array.push(document.getElementById('spinningPortal'));
     array.push(document.getElementById('openingPortal'));
     array.push(document.getElementById('spinningPortal'));
     array.push(document.getElementById('closingPortal'));
