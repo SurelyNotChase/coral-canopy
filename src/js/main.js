@@ -24,6 +24,8 @@ let controls; //ordbit controls
 let generate;
 
 let aJellyFish = new ClownFish(); //testing object
+let mouseCube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), game.modelData.materials.greenLambert())
+
 
 let gameObjects = [];
 let masterAnimations = []; //array of animation arrays
@@ -330,12 +332,7 @@ const mount = () => {
     //add renderer to canvas
     document.querySelector('body').appendChild(experience.renderer.domElement);
 
-    //responsive scaling event listener
-    window.addEventListener('resize', () => {
-        experience.renderer.setSize(window.innerWidth, window.innerHeight);
-        experience.camera.aspect = window.innerWidth / window.innerHeight;
-        experience.camera.updateProjectionMatrix();
-    })
+    
 
     //Set up event functions for opening and closing portal, currently based on pressing spacebar
     
@@ -393,19 +390,37 @@ const mount = () => {
             })
         })
 
-
+        //responsive scaling event listener
+         window.addEventListener('resize', () => {
+            experience.renderer.setSize(window.innerWidth, window.innerHeight);
+            experience.camera.aspect = window.innerWidth / window.innerHeight;
+            experience.camera.updateProjectionMatrix();
+        })
 
         window.addEventListener("keyup", game.closePortal);
         
         window.addEventListener("keypress", (e)=>{
-            console.log(e.key)
+            e.preventDefault();
+            //console.log(e.key)
             if(e.key === 'v') {
-                 videoVisibility ? videoVisibility = false : videoVisibility=true;
-                 console.log(videoVisibility)
+                 videoVisibility ? videoVisibility = false : videoVisibility = true;
+                // console.log(videoVisibility)
                  cams.style.zIndex = videoVisibility ? '1' : "-99"
             }
             if (e.key == " ") game.openPortal(e);
         });
+
+        experience.scene.add(mouseCube) // debugging the scaling 
+        window.addEventListener('click',(e)=>{
+            canvasX = utils.scale(e.clientX,0,window.innerWidth,-20,20);
+            canvasY = utils.scale(e.clientY,0,window.innerHeight,-20,20);
+            
+            mouseCube.position.x = canvasX;
+            mouseCube.position.z = -canvasY;
+            
+        })
+            
+       
 
 }
 
