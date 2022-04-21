@@ -67,15 +67,16 @@ const init = async () => {
     game.assemblePortal();
     experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
 
-    let coralRing = await utils.loadModelAsync('coralRing.gltf');
+    let coralRing = await utils.loadModelAsync('CoralExport_Final.gltf');
     //console.log(coralRing);
     coralRing.scene.name = "coralRing";
-    coralRing.scene.scale.x = .07;
-    coralRing.scene.scale.y = .07;
-    coralRing.scene.scale.z = .07;
-    coralRing.scene.position.y = -20;
+    coralRing.scene.scale.x = .06;
+    coralRing.scene.scale.y = .06;
+    coralRing.scene.scale.z = .06;
+    coralRing.scene.rotation.y = (180 * Math.PI) / 180;
+    coralRing.scene.position.y = -22;
 
-    let bubble = await utils.loadModelAsync("bubble.gltf");
+    let bubble = await utils.loadModelAsync("Bubbles_Bubbling.gltf");
     
     bubble.scene.scale.x = .05;
     bubble.scene.scale.y = .05;
@@ -133,7 +134,7 @@ const animate = () => {
     requestAnimationFrame(animate)
 
     controls.update();
-    // console.log(colorX, colorY, colorZ)
+    console.log(colorX, colorY, colorZ)
     let sharkCount = 0;
     experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
         try {
@@ -176,7 +177,7 @@ const animate = () => {
                     activeDetection = false; //only works for first maori wrasse
                 }
                 // activeDetection = false; //only works for first maori wrasse
-                // console.log(activeDetection)
+                console.log(activeDetection)
             }
             else if (name == 'whale') {
                 object.position.x += .04;
@@ -462,10 +463,12 @@ const populateScene = async () => {
 
     let getGroups = await game.getGroups(generate);
 
-    let light = new THREE.PointLight('white', 1, 500);
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-    dirLight.position.set(4, 0, 12);
-    experience.scene.add(light, dirLight);
+    let light = new THREE.PointLight('white', 1, 1);
+    const spotLight = new THREE.SpotLight(16777215, 5);
+    spotLight.position.set(0, -9, 0);
+    spotLight.angle = Math.PI / 2;
+    const spotLightHelper = new THREE.SpotLightHelper(spotLight);
+    experience.scene.add(light, spotLight, spotLightHelper);
 
     await animateModels(generate);
 
