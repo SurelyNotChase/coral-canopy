@@ -9,6 +9,8 @@ import { Fish } from '../classes/Fish.js';
 let portalVideos = [];
 let portalParam = {};
 let portalTextures = [];
+//let videoTextures;
+
 let portalMaterials = [];
 let portalGeo, backgroundGeo;
 let portalCube, backgroundCube;
@@ -82,7 +84,7 @@ const modelData = {
         shark: () => utils.loadModelAsync('shark.gltf'),
         yellowTang: () => utils.loadModelAsync('YellowTang.gltf'),
         sharkEating: () => new Fish("sharkEating", 1, "SharkEating.gltf"),
-        bubble:() => new Fish("bubble", 1, "bubble.gltf"),
+        bubble:() => new Fish("bubble", 1, "Bubbles_Bubbling.gltf"),
     },
 
 
@@ -173,7 +175,7 @@ const assemblePortal = async () => {
     backgroundCube.position.y = 10;
     backgroundCube.rotation.x = (-90 * Math.PI) / 180;
 
-    videoTextures = { portalCube, backgroundCube };
+    return { portalCube, backgroundCube };
 
 }
 // >>> Array of game objects
@@ -359,17 +361,17 @@ const loadPortalVideos = () => {
 //Swap portal texture to opening texture
 function openPortal(e) {
     e.preventDefault();
-    if (!keyP) {
+    // if (!keyP) {
 
-        // portalVideos[1].currentTime = 0;
-        keyP = true;
-        portalParam = { color: 0x000000, alphaMap: portalTextures[1] };
-        portalMaterials[1] = new THREE.MeshBasicMaterial(portalParam);
-        portalMaterials[1].alphaTest = 0;
-        portalMaterials[1].transparent = true;
-        videoTextures.portalCube.material = portalMaterials[1];
-        setTimeout(spinPortal, 4000);
-    }
+    //     // portalVideos[1].currentTime = 0;
+    //     keyP = true;
+    //     portalParam = { color: 0x000000, alphaMap: portalTextures[1] };
+    //     portalMaterials[1] = new THREE.MeshBasicMaterial(portalParam);
+    //     portalMaterials[1].alphaTest = 0;
+    //     portalMaterials[1].transparent = true;
+    //     videoTextures.portalCube.material = portalMaterials[1];
+    //     setTimeout(spinPortal, 4000);
+    // }
     if (e.keyCode == 102) {
         let count = groups.length
         for (let i = 0; i < count; i++) {
@@ -417,23 +419,23 @@ function spinPortal() {
     portalMaterials[2] = new THREE.MeshBasicMaterial(portalParam);
     portalMaterials[2].alphaTest = 0;
     portalMaterials[2].transparent = true;
-    videoTextures.portalCube.material = portalMaterials[2];
+    //videoTextures.portalCube.material = portalMaterials[2];
 }
 
 //Swap portal texture to closing texture
 function closePortal(e) {
     e.preventDefault();
-    if (e.keyCode == 32 && keyP) {
-        portalVideos[3].currentTime = 0;
-        keyP = false;
-        portalParam = { color: 0x000000, alphaMap: portalTextures[3] };
-        portalMaterials[3] = new THREE.MeshBasicMaterial(portalParam);
-        portalMaterials[3].alphaTest = 0;
-        portalMaterials[3].transparent = true;
-        videoTextures.portalCube.material = portalMaterials[3];
+    // if (e.keyCode == 32 && keyP) {
+    //     portalVideos[3].currentTime = 0;
+    //     keyP = false;
+    //     portalParam = { color: 0x000000, alphaMap: portalTextures[3] };
+    //     portalMaterials[3] = new THREE.MeshBasicMaterial(portalParam);
+    //     portalMaterials[3].alphaTest = 0;
+    //     portalMaterials[3].transparent = true;
+    //     videoTextures.portalCube.material = portalMaterials[3];
 
-        setTimeout(blankPortal, 4000);
-    }
+    //     setTimeout(blankPortal, 4000);
+    // }
 }
 
 //Swap portal texture to blank texture
@@ -443,7 +445,7 @@ function blankPortal() {
     portalMaterials[0] = new THREE.MeshBasicMaterial(portalParam);
     portalMaterials[0].alphaTest = 0;
     portalMaterials[0].transparent = true;
-    videoTextures.portalCube.material = portalMaterials[0];
+    //videoTextures.portalCube.material = portalMaterials[0];
 }
 
 /*

@@ -46,9 +46,7 @@ let prevYel = -25;
 
 let colorY
 let colorX;
-let colorZ;
-
-let activeDetection = false; //bool for when a color is being detected
+let colorZ;                                                             
 
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
@@ -57,6 +55,7 @@ const instructions = 'Orbit Controls are enabled. Click to log current pose pred
 
 
 //// ----- CORE ----- ////
+    
 //Runs at document load
 const init = async () => {
 
@@ -67,15 +66,16 @@ const init = async () => {
     game.assemblePortal();
     experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
 
-    let coralRing = await utils.loadModelAsync('coralRing.gltf');
+    let coralRing = await utils.loadModelAsync('CoralExport_Final.gltf');
     //console.log(coralRing);
     coralRing.scene.name = "coralRing";
-    coralRing.scene.scale.x = .07;
-    coralRing.scene.scale.y = .07;
-    coralRing.scene.scale.z = .07;
-    coralRing.scene.position.y = -20;
+    coralRing.scene.scale.x = .06;
+    coralRing.scene.scale.y = .06;
+    coralRing.scene.scale.z = .06;
+    coralRing.scene.rotation.y = (180 * Math.PI) / 180;
+    coralRing.scene.position.y = -22;
 
-    let bubble = await utils.loadModelAsync("bubble.gltf");
+    let bubble = await utils.loadModelAsync("Bubbles_Bubbling.gltf");
     
     bubble.scene.scale.x = .05;
     bubble.scene.scale.y = .05;
@@ -147,36 +147,25 @@ const animate = () => {
                 }
             }
             else if (name == 'maoriWrasse' && generate[index].speed > 0) {
-                if (!activeDetection) {
-                    if (generate[index].id == 1) {
-                        object.position.x -= .02;
-                        object.position.z -= .05;
-                        // console.log(object.rotation.x, object.rotation.y, object.rotation.z)
-                        object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
-                        object.rotation.y = utils.lerp(object.rotation.y, (25 * Math.PI) / 180, 0.1);
-                        object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
-
-                        if (object.position.z < -10) {
-                            object.position.x = 9;
-                            object.position.z = 9;
-                        }
-                    } else {
-                        object.position.x -= .05;
-                        object.position.z += .05;
-                        if (object.position.x < -10) {
-                            object.position.x = 7;
-                            object.position.z = -8;
-                        }
+                if (generate[index].id == 1) {
+                    object.position.x -= .02;
+                    object.position.z -= .05;
+                    if (object.position.z < -10) {
+                        object.position.x = 9;
+                        object.position.z = 9;
+                    }
+                } else {
+                    object.position.x -= .05;
+                    object.position.z += .05;
+                    if (object.position.x < -10) {
+                        object.position.x = 7;
+                        object.position.z = -8;
                     }
                 }
-                else {
-                    // object.position.x = utils.lerp(object.position.x, colorX, 0.01);
-                    // object.position.z = utils.lerp(object.position.z, colorZ, 0.01);
-                    object.lookAt(colorX, colorZ, 0);
-                    activeDetection = false; //only works for first maori wrasse
-                }
-                // activeDetection = false; //only works for first maori wrasse
-                // console.log(activeDetection)
+
+                object.lookAt(colorX, colorZ, 0);
+                // object.lookAt(0, 0, 0);
+                
             }
             else if (name == 'whale') {
                 object.position.x += .04;
@@ -300,51 +289,46 @@ const colorEvent = (detection, cameraIndex) => {
         colorZ = utils.scale(detection.x, 0, 640, -20, 20);
     }
 
-    //when magenta is active, change activeDetection bool to true
-    if (color === 'magenta') {
-        activeDetection = true;
-    }
-
     //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
-    if (detection.y < 240) { //changed colorY to detection.y to make this work
+    if (colorY < 0) {
         console.log(`${color} raised`);
 
-        // if (color === 'magenta') {
-        //     //when magenta is raised...
-        //     if (colorY < prevMag - 2){
-        //         console.log("magenta raised");
-        //     }
-        // }
-        // if (color === 'cyan') {
-        //     //when cyan is raised...
-        //     if (colorY < prevCy - 2){
-        //         //console.log("cyan raised");
-        //     }
-        // }
-        // if (color === 'yellow') {
-        //     //when yellow is raised
-        //     if (colorY < prevYel - 2){
-        //         //console.log("yellow raised");
-        //     }
-        // }
+        if (color === 'magenta') {
+            //when magenta is raised...
+            if (colorY < prevMag - 2){
+                console.log("magenta raised");
+            }
+        }
+        if (color === 'cyan') {
+            //when cyan is raised...
+            if (colorY < prevCy - 2){
+                //console.log("cyan raised");
+            }
+        }
+        if (color === 'yellow') {
+            //when yellow is raised
+            if (colorY < prevYel - 2){
+                //console.log("yellow raised");
+            }
+        }
 
     }
 
-    // //constant color detection events
-    // if (color === "magenta") {
-    //     //when magenta is detected...
-    //     prevMag = colorY;
-    // }
+    //constant color detection events
+    if (color === "magenta") {
+        //when magenta is detected...
+        prevMag = colorY;
+    }
 
-    // if (color === "cyan") {
-    //     //when cyan is detected...
-    //     prevCy = colorY;
-    // }
+    if (color === "cyan") {
+        //when cyan is detected...
+        prevCy = colorY;
+    }
 
-    // if (color === "yellow") {
-    //     //when yellow is detected...
-    //     prevYel = colorY;
-    // }
+    if (color === "yellow") {
+        //when yellow is detected...
+        prevYel = colorY;
+    }
 
 }
 
@@ -448,8 +432,6 @@ const mount = () => {
 //Puts entities in the scene
 const populateScene = async () => {
 
-    // all the portal stuff
-
 
     generate = await game.generateCharacters(); //this used to get array of gltfs which were then used to get meshes and animations,
     //now it returns array of Fish objects with all that completed.
@@ -460,7 +442,6 @@ const populateScene = async () => {
         experience.scene.add(objectMesh);
     });
 
-    let getGroups = await game.getGroups(generate);
 
     let light = new THREE.PointLight('white', 1, 1);
     const spotLight = new THREE.SpotLight( 0xffffff,5 );
