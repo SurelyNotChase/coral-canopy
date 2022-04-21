@@ -328,6 +328,12 @@ const getGroups = async (characters, count = 3) => {
                 group.scale.y = .023;
                 group.scale.z = .023;
                 break;
+            // case "bubble":
+            //     if (bubbleCount < 1) {
+            //         bubbleCount++;
+            //         group.position.x = 10;
+
+            //     }
         }
 
 
