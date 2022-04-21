@@ -83,6 +83,8 @@ const modelData = {
         shark: () => utils.loadModelAsync('shark.gltf'),
         yellowTang: () => utils.loadModelAsync('YellowTang.gltf'),
         sharkEating: () => new Fish("sharkEating", 1, "SharkEating.gltf"),
+        moorishEating: () => new Fish("moorishEating", 1, "MoorishEating.gltf"),
+        turtleEating: () => new Fish("turtleEating", 1, "TurtleEating.gltf"),
         bubble: () => new Fish("bubble", 1, "Bubbles_Bubbling.gltf"),
     },
 
@@ -182,6 +184,16 @@ const generateCharacters = async (count = 3) => {
     await whenReady.getModel();
     array.push(whenReady);
 
+    //Add moorishEating animation
+    whenReady = await modelData.meshes.moorishEating();
+    await whenReady.getModel();
+    array.push(whenReady);
+
+    //Add turtleEating animation
+    whenReady = await modelData.meshes.turtleEating();
+    await whenReady.getModel();
+    array.push(whenReady);
+
     //Add 2 turtles
     for (let i = 0; i < 2; i++) {
         whenReady = await modelData.meshes.turtle();
@@ -270,6 +282,24 @@ const getGroups = async (characters, count = 3) => {
                 group.position.x = utils.random(-12, -10);
                 group.position.z = utils.random(1, 3);
                 group.position.y = 0;
+                group.rotation.y = -(90 * Math.PI) / 180;
+                group.scale.x = .03;
+                group.scale.y = .03;
+                group.scale.z = .03;
+                break;
+            case "moorishEating":
+                group.position.x = utils.random(-12, -10);
+                group.position.z = utils.random(1, 3);
+                group.position.y = 20;
+                group.rotation.y = -(90 * Math.PI) / 180;
+                group.scale.x = .03;
+                group.scale.y = .03;
+                group.scale.z = .03;
+                break;
+            case "turtleEating":
+                group.position.x = utils.random(-12, -10);
+                group.position.z = utils.random(1, 3);
+                group.position.y = 20;
                 group.rotation.y = -(90 * Math.PI) / 180;
                 group.scale.x = .03;
                 group.scale.y = .03;

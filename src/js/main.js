@@ -80,7 +80,7 @@ const init = async () => {
     coralRing.scene.position.y = -22;
 
     bubble = await utils.loadModelAsync("Bubbles_Bubbling.gltf");
-    
+
     bubble.scene.name = "bubble"; //added bubbles name
     bubble.scene.scale.x = .05;
     bubble.scene.scale.y = .05;
@@ -178,9 +178,9 @@ const animate = () => {
                     // object.position.x = utils.lerp(object.position.x, colorX, 0.01);
                     // object.position.z = utils.lerp(object.position.z, colorZ, 0.01);
                     object.lookAt(colorX, colorZ, 0);
-                    activeDetection = false; //only works for first maori wrasse
+                    //activeDetection = false; //only works for first maori wrasse
                 }
-                // activeDetection = false; //only works for first maori wrasse
+                activeDetection = false; //only works for first maori wrasse
                 // console.log(activeDetection)
             }
             else if (name == 'whale') {
@@ -208,7 +208,7 @@ const animate = () => {
             bubble.scene.position.x = colorX;
             bubble.scene.position.y = colorY;
             bubble.scene.position.z = colorZ;
-            console.log(bubble.scene.position.x, bubble.scene.position.y, bubble.scene.position.z);
+            //console.log(bubble.scene.position.x, bubble.scene.position.y, bubble.scene.position.z);
         } catch {
 
         }
@@ -289,7 +289,7 @@ const animate = () => {
 
 
 
-    })
+    });
     experience.renderer.render(experience.scene, experience.camera);
 
 
@@ -303,7 +303,7 @@ const colorEvent = (detection, cameraIndex) => {
     //console.log(detection)
     let color = detection.color;
     colorY = utils.scale(detection.y, 0, 480, -20, 20);
-    
+
     //let colorWidth = detection.width;
     //let colorHeight = detection.height;
 
@@ -318,7 +318,7 @@ const colorEvent = (detection, cameraIndex) => {
     //when magenta is active, change activeDetection bool to true
     if (color === 'magenta') {
         activeDetection = true;
-    }
+    } else activeDetection = false;
 
     //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
     if (detection.y < 240) { //changed colorY to detection.y to make this work
@@ -422,40 +422,40 @@ const mount = () => {
         });
 
 
-        //responsive scaling event listener
-         window.addEventListener('resize', () => {
-            experience.renderer.setSize(window.innerWidth, window.innerHeight);
-            experience.camera.aspect = window.innerWidth / window.innerHeight;
-            experience.camera.updateProjectionMatrix();
-        })
+    //responsive scaling event listener
+    window.addEventListener('resize', () => {
+        experience.renderer.setSize(window.innerWidth, window.innerHeight);
+        experience.camera.aspect = window.innerWidth / window.innerHeight;
+        experience.camera.updateProjectionMatrix();
+    })
 
-        window.addEventListener("keyup", game.closePortal);
+    window.addEventListener("keyup", game.closePortal);
 
-        window.addEventListener('click',(e)=>{
+    window.addEventListener('click', (e) => {
 
-            let mouseX = utils.scale(e.clientX, 0, window.innerWidth, -20, 20);
-            let mouseY = utils.scale(e.clientY, 0, window.innerHeight, -20, 20); //scaled
+        let mouseX = utils.scale(e.clientX, 0, window.innerWidth, -20, 20);
+        let mouseY = utils.scale(e.clientY, 0, window.innerHeight, -20, 20); //scaled
 
-            console.log(mouseX,mouseY)
-            mouseCube.position.x = mouseX;
-            mouseCube.position.y = mouseY;
+        console.log(mouseX, mouseY)
+        mouseCube.position.x = mouseX;
+        mouseCube.position.y = mouseY;
 
-        })
-        
-        window.addEventListener("keypress", (e)=>{
-            e.preventDefault();
-            //console.log(e.key)
-            if(e.key === 'v') {
-                 videoVisibility ? videoVisibility = false : videoVisibility = true;
-                // console.log(videoVisibility)
-                 cams.style.zIndex = videoVisibility ? '1' : "-99"
-            }
+    })
 
-            if(e.key = 'c'){
-                game.resetCamera();
-            }
-            if (e.key == " ") game.openPortal(e);
-        });
+    window.addEventListener("keypress", (e) => {
+        e.preventDefault();
+        //console.log(e.key)
+        if (e.key === 'v') {
+            videoVisibility ? videoVisibility = false : videoVisibility = true;
+            // console.log(videoVisibility)
+            cams.style.zIndex = videoVisibility ? '1' : "-99"
+        }
+
+        if (e.key = 'c') {
+            game.resetCamera();
+        }
+        if (e.key == " ") game.openPortal(e);
+    });
 
 
 }
