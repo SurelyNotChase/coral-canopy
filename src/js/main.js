@@ -134,7 +134,7 @@ const animate = () => {
     requestAnimationFrame(animate)
 
     controls.update();
-    console.log(colorX, colorY, colorZ)
+    // console.log(colorX, colorY, colorZ)
     let sharkCount = 0;
     experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
         try {
@@ -177,7 +177,7 @@ const animate = () => {
                     activeDetection = false; //only works for first maori wrasse
                 }
                 // activeDetection = false; //only works for first maori wrasse
-                console.log(activeDetection)
+                // console.log(activeDetection)
             }
             else if (name == 'whale') {
                 object.position.x += .04;
@@ -464,7 +464,7 @@ const populateScene = async () => {
     let getGroups = await game.getGroups(generate);
 
     let light = new THREE.PointLight('white', 1, 1);
-    const spotLight = new THREE.SpotLight(16777215, 5);
+    const spotLight = new THREE.SpotLight(16777215, 2.5); //INTENSITY OF EITHER 1.5, 2, OR 2.5 IS GREAT
     spotLight.position.set(0, -9, 0);
     spotLight.angle = Math.PI / 2;
     const spotLightHelper = new THREE.SpotLightHelper(spotLight);
