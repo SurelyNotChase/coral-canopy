@@ -48,6 +48,8 @@ let colorY
 let colorX;
 let colorZ;
 
+let bubble
+
 let activeDetection = false; //bool for when a color is being detected
 
 //// ----- IMMUTABLES ----- ////
@@ -76,8 +78,9 @@ const init = async () => {
     coralRing.scene.rotation.y = (180 * Math.PI) / 180;
     coralRing.scene.position.y = -22;
 
-    let bubble = await utils.loadModelAsync("Bubbles_Bubbling.gltf");
+    bubble = await utils.loadModelAsync("Bubbles_Bubbling.gltf");
     
+    bubble.scene.name = "bubble"; //added bubbles name
     bubble.scene.scale.x = .05;
     bubble.scene.scale.y = .05;
     bubble.scene.scale.z = .05;
@@ -195,6 +198,16 @@ const animate = () => {
                     object.position.z = 8;
                 }
             }
+            // else if (name == 'bubbles') {
+            //     object.position.x = colorX;
+            //     object.position.y = colorY;
+            //     object.position.z = colorZ;
+            //     console.log(object.position.x, object.position.y, object.position.z)
+            // }
+            bubble.scene.position.x = colorX;
+            bubble.scene.position.y = colorY;
+            bubble.scene.position.z = colorZ;
+            console.log(bubble.scene.position.x, bubble.scene.position.y, bubble.scene.position.z);
         } catch {
 
         }
@@ -464,7 +477,7 @@ const populateScene = async () => {
     let getGroups = await game.getGroups(generate);
 
     let light = new THREE.PointLight('white', 1, 1);
-    const spotLight = new THREE.SpotLight(16777215, 2.5); //INTENSITY OF EITHER 1.5, 2, OR 2.5 IS GREAT
+    const spotLight = new THREE.SpotLight(16777215, 2); //INTENSITY OF EITHER 1.5 OR 2 IS GREAT -KENNY
     spotLight.position.set(0, -9, 0);
     spotLight.angle = Math.PI / 2;
     const spotLightHelper = new THREE.SpotLightHelper(spotLight);
