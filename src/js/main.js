@@ -33,10 +33,11 @@ let masterAnimations = []; //array of animation arrays
 let clock = new THREE.Clock();
 let mixers;
 
+
 let pause = false;
 
 let camera1Index = 0;
-let camera2Index = 1;
+let camera2Index = 1;                           
 
 let videoVisibility = false;
 
@@ -64,7 +65,7 @@ const init = async () => {
 
     controls = new OrbitControls(experience.camera, experience.renderer.domElement);
 
-    game.assemblePortal();
+    let videoTextures = game.assemblePortal();
     experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
 
     let coralRing = await utils.loadModelAsync('coralRing.gltf');
@@ -133,7 +134,7 @@ const animate = () => {
     requestAnimationFrame(animate)
 
     controls.update();
-    // console.log(colorX, colorY, colorZ)
+    console.log(colorX, colorY, colorZ)
     let sharkCount = 0;
     experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
         try {
@@ -173,10 +174,10 @@ const animate = () => {
                     // object.position.x = utils.lerp(object.position.x, colorX, 0.01);
                     // object.position.z = utils.lerp(object.position.z, colorZ, 0.01);
                     object.lookAt(colorX, colorZ, 0);
-                    activeDetection = false; //only works for first maori wrasse
+                    // activeDetection = false; //only works for first maori wrasse
                 }
                 // activeDetection = false; //only works for first maori wrasse
-                // console.log(activeDetection)
+                console.log(activeDetection)
             }
             else if (name == 'whale') {
                 object.position.x += .04;
@@ -448,8 +449,6 @@ const mount = () => {
 //Puts entities in the scene
 const populateScene = async () => {
 
-    // all the portal stuff
-
 
     generate = await game.generateCharacters(); //this used to get array of gltfs which were then used to get meshes and animations,
     //now it returns array of Fish objects with all that completed.
@@ -460,12 +459,17 @@ const populateScene = async () => {
         experience.scene.add(objectMesh);
     });
 
-    let getGroups = await game.getGroups(generate);
 
-    let light = new THREE.PointLight('white', 1, 500);
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-    dirLight.position.set(4, 0, 12);
-    experience.scene.add(light, dirLight);
+    let light = new THREE.PointLight('white', 1, 1);
+    const spotLight = new THREE.SpotLight( 0xffffff,5 );
+    
+    spotLight.position.set( 0, -9, 0);
+    spotLight.angle = Math.PI/2
+
+    const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+    
+
+    experience.scene.add(light, spotLight,spotLightHelper);
 
     await animateModels(generate);
 
@@ -506,6 +510,9 @@ const runAnimation = () => {
             case "turtle":
                 if (time < 1 || time > 6.25) generate[i].mixer._actions[0].time = 1;
                 break;
+            // case "bubble":
+            //     if (time < 1 || time > 6.25) generate[i].mixer._actions[0].time = 1;
+            //     break;
         }
     }
     experience.renderer.render(experience.scene, experience.camera);
