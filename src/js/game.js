@@ -6,12 +6,11 @@ import { async } from 'regenerator-runtime';
 import { Fish } from '../classes/Fish.js';
 //import * as ThreeBSP from 'threebsp';
 
-let portalVideos = [];
+let portalVideos;
 let portalParam = {};
-let portalTextures = [];
-//let videoTextures;
+let portalTextures;
 
-let portalMaterials = [];
+let portalMaterials;
 let portalGeo, backgroundGeo;
 let portalCube, backgroundCube;
 let backgroundVideo = document.getElementById('background');
@@ -84,7 +83,7 @@ const modelData = {
         shark: () => utils.loadModelAsync('shark.gltf'),
         yellowTang: () => utils.loadModelAsync('YellowTang.gltf'),
         sharkEating: () => new Fish("sharkEating", 1, "SharkEating.gltf"),
-        bubble:() => new Fish("bubble", 1, "Bubbles_Bubbling.gltf"),
+        bubble: () => new Fish("bubble", 1, "Bubbles_Bubbling.gltf"),
     },
 
 
@@ -125,14 +124,11 @@ const assemblePortal = async () => {
 
     portalVideos = loadPortalVideos();
 
-    //Make sure all videos are playing before adding as textures
-    portalVideos.forEach(pVideo => {
-        pVideo.play();
-        pVideo.addEventListener('play', function () {
-            this.currentTime = 0;
-        });
-        portalTextures.push(new THREE.VideoTexture(pVideo));
+    portalVideos.play();
+    portalVideos.addEventListener('play', function () {
+        this.currentTime = 0;
     });
+    portalTextures = new THREE.VideoTexture(portalVideos);
 
     backgroundVideo.play();
 
@@ -143,18 +139,16 @@ const assemblePortal = async () => {
     backgroundTexture = new THREE.VideoTexture(backgroundVideo);
 
     //Set up array of portal materials based on different textures
-    portalTextures.forEach(texture => {
-        portalParam = { color: 0x000000, alphaMap: texture };
-        portalMaterials.push(new THREE.MeshBasicMaterial(portalParam));
-    });
+
+    portalParam = { color: 0x000000, alphaMap: portalTextures };
+    portalMaterials = new THREE.MeshBasicMaterial(portalParam);
+
 
     //Set each portal material to have an alpha of .5, this allows transparency
-    portalMaterials.forEach(material => {
-        material.alpaTest = .5;
-    });
+    portalMaterials.alpaTest = .5;
 
     //Set up inital texture mapping params to make cubes, start with blankPortal texture
-    portalParam = { color: 0x000000, alphaMap: portalTextures[0] };
+    portalParam = { color: 0x000000, alphaMap: portalTextures };
     backgroundParam = { color: 0xFFFFFF, map: backgroundTexture };
 
     //Set up geometry to make cubes, current size based on John's original scene
@@ -175,7 +169,7 @@ const assemblePortal = async () => {
     backgroundCube.position.y = 10;
     backgroundCube.rotation.x = (-90 * Math.PI) / 180;
 
-    return { portalCube, backgroundCube };
+    return [portalCube, backgroundCube];
 
 }
 // >>> Array of game objects
@@ -348,12 +342,9 @@ const getGroups = async (characters, count = 3) => {
 }
 
 const loadPortalVideos = () => {
-    let array = [];
+    let array;
 
-    array.push(document.getElementById('spinningPortal'));
-    array.push(document.getElementById('openingPortal'));
-    array.push(document.getElementById('spinningPortal'));
-    array.push(document.getElementById('closingPortal'));
+    array = document.getElementById('spinningPortal');
 
     return array;
 }
@@ -361,54 +352,55 @@ const loadPortalVideos = () => {
 //Swap portal texture to opening texture
 function openPortal(e) {
     e.preventDefault();
-    // if (!keyP) {
+    if (!keyP) {
 
-    //     // portalVideos[1].currentTime = 0;
-    //     keyP = true;
-    //     portalParam = { color: 0x000000, alphaMap: portalTextures[1] };
-    //     portalMaterials[1] = new THREE.MeshBasicMaterial(portalParam);
-    //     portalMaterials[1].alphaTest = 0;
-    //     portalMaterials[1].transparent = true;
-    //     videoTextures.portalCube.material = portalMaterials[1];
-    //     setTimeout(spinPortal, 4000);
-    // }
-    if (e.keyCode == 102) {
-        let count = groups.length
-        for (let i = 0; i < count; i++) {
-
-
-            let group = groups[i].meshObject;
-            let name = groups[i].name;
-
-            switch (name) {
-                case "maoriWrasse":
-                    if (groups[i].id == 1) {
-                        group.rotation.x = -(45 * Math.PI) / 180;
-                    } else {
-                        group.rotation.x = (45 * Math.PI) / 180;
-                    }
-                    break;
-                case "angelfish":
-                    group.rotation.x = -(45 * Math.PI) / 180;
-                    if(group.position.x > 0) {
-                        group.rotation.x = (35 * Math.PI) / 180;
-                        group.rotation.y = (180 * Math.PI) / 180;
-                    }
-                    break;
-            }
-            groups[i].speed = 0;
-        }
-        main.pause = true;
-
-        setTimeout(() => { 
+        //     // portalVideos[1].currentTime = 0;
+        //     keyP = true;
+        //     portalParam = { color: 0x000000, alphaMap: portalTextures[1] };
+        //     portalMaterials[1] = new THREE.MeshBasicMaterial(portalParam);
+        //     portalMaterials[1].alphaTest = 0;
+        //     portalMaterials[1].transparent = true;
+        //     videoTextures.portalCube.material = portalMaterials[1];
+        //     setTimeout(spinPortal, 4000);
+        // }
+        if (e.keyCode == 102) {
             let count = groups.length
-            for (let i = 0; i < count; i++) { 
-                groups[i].meshObject.rotation.x = 0; 
-                groups[i].speed = 1; 
-                //if(groups[i].name == 'angelfish') { groups[i].rotation.y = 0; groups[i].rotation.y = (90 * Math.PI) / 180; console.log("yay"); }
+            for (let i = 0; i < count; i++) {
+
+
+                let group = groups[i].meshObject;
+                let name = groups[i].name;
+
+                switch (name) {
+                    case "maoriWrasse":
+                        if (groups[i].id == 1) {
+                            group.rotation.x = -(45 * Math.PI) / 180;
+                        } else {
+                            group.rotation.x = (45 * Math.PI) / 180;
+                        }
+                        break;
+                    case "angelfish":
+                        group.rotation.x = -(45 * Math.PI) / 180;
+                        if (group.position.x > 0) {
+                            group.rotation.x = (35 * Math.PI) / 180;
+                            group.rotation.y = (180 * Math.PI) / 180;
+                        }
+                        break;
+                }
+                groups[i].speed = 0;
             }
-            console.log("done");
-        }, 4000);
+            main.pause = true;
+
+            setTimeout(() => {
+                let count = groups.length
+                for (let i = 0; i < count; i++) {
+                    groups[i].meshObject.rotation.x = 0;
+                    groups[i].speed = 1;
+                    //if(groups[i].name == 'angelfish') { groups[i].rotation.y = 0; groups[i].rotation.y = (90 * Math.PI) / 180; console.log("yay"); }
+                }
+                console.log("done");
+            }, 4000);
+        }
     }
 }
 
@@ -450,16 +442,16 @@ function blankPortal() {
 
 /*
 const getMixers = async (characters, count = 20) => {
-
+ 
     let array = [];
-
+ 
     for (let i = 0; i < count; i++) {
         let mixer = new THREE.AnimationMixer(characters[i].scene);
         array.push(mixer);
     }
-
+ 
     return array;
-
+ 
 }*/
 
 const getAnimations = async (characters, mixers, count = 3) => {
@@ -482,6 +474,8 @@ const getAnimations = async (characters, mixers, count = 3) => {
     return array;
 }
 
+
+
 export default {
     assembleScene,
     generateCharacters,
@@ -493,9 +487,5 @@ export default {
     closePortal,
     loadPortalVideos,
     resetCamera,
-    modelData,
-    portalVideos,
-    portalParam,
-    portalTextures,
-    portalMaterials
+    modelData
 }

@@ -64,8 +64,9 @@ const init = async () => {
 
     controls = new OrbitControls(experience.camera, experience.renderer.domElement);
 
-    game.assemblePortal();
-    experience.scene.add(videoTextures.backgroundCube, videoTextures.portalCube);
+    let textures = await game.assemblePortal();
+    console.log(textures);
+    experience.scene.add(textures[0], textures[1]);
 
     let coralRing = await utils.loadModelAsync('CoralExport_Final.gltf');
     //console.log(coralRing);
