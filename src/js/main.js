@@ -44,6 +44,10 @@ let prevMag = -25;
 let prevCy = -25;
 let prevYel = -25;
 
+let colorY
+let colorX;
+let colorZ;
+
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
@@ -84,8 +88,8 @@ const init = async () => {
 
     mount();
 
-    setupColorTracker(video, 1);
-    setupColorTracker(video2, 2);
+    setupColorTracker(video, 0);
+    setupColorTracker(video2, 1);
 
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
@@ -98,7 +102,7 @@ const init = async () => {
 //returns color tracker
 const setupColorTracker = (videoSource, index) => {
 
-    const myColors = ['magenta', 'yellow', 'cyan'];
+    const myColors = ['magenta'];
     const myColorTracker = tracker.getColorTracker(myColors);
 
     //mount color events
@@ -127,7 +131,7 @@ const animate = () => {
     requestAnimationFrame(animate)
 
     controls.update();
-
+    // console.log(colorX, colorY, colorZ)
     let sharkCount = 0;
     experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
         try {
@@ -156,6 +160,10 @@ const animate = () => {
                         object.position.z = -8;
                     }
                 }
+
+                object.lookAt(colorX, colorZ, 0);
+                // object.lookAt(0, 0, 0);
+                
             }
             else if (name == 'whale') {
                 object.position.x += .04;
@@ -266,9 +274,8 @@ const colorEvent = (detection, cameraIndex) => {
 
     //console.log(detection)
     let color = detection.color;
-    let colorY = utils.scale(detection.y, 0, 480, -20, 20);
-    let colorX;
-    let colorZ;
+    colorY = utils.scale(detection.y, 0, 480, -20, 20);
+    
     //let colorWidth = detection.width;
     //let colorHeight = detection.height;
 
@@ -282,7 +289,7 @@ const colorEvent = (detection, cameraIndex) => {
 
     //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
     if (colorY < 0) {
-        //console.log(`${color} raised`);
+        console.log(`${color} raised`);
 
         if (color === 'magenta') {
             //when magenta is raised...
@@ -390,6 +397,17 @@ const mount = () => {
         })
 
         window.addEventListener("keyup", game.closePortal);
+
+        window.addEventListener('click',(e)=>{
+
+            let mouseX = utils.scale(e.clientX, 0, window.innerWidth, -20, 20);
+            let mouseY = utils.scale(e.clientY, 0, window.innerHeight, -20, 20); //scaled
+
+            console.log(mouseX,mouseY)
+            mouseCube.position.x = mouseX;
+            mouseCube.position.y = mouseY;
+
+        })
         
         window.addEventListener("keypress", (e)=>{
             e.preventDefault();
