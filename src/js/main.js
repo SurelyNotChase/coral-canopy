@@ -462,10 +462,16 @@ const populateScene = async () => {
 
     let getGroups = await game.getGroups(generate);
 
-    let light = new THREE.PointLight('white', 1, 500);
-    const dirLight = new THREE.DirectionalLight(0xffffff, 1);
-    dirLight.position.set(4, 0, 12);
-    experience.scene.add(light, dirLight);
+    let light = new THREE.PointLight('white', 1, 1);
+    const spotLight = new THREE.SpotLight( 0xffffff,5 );
+    
+    spotLight.position.set( 0, -9, 0);
+    spotLight.angle = Math.PI/2
+
+    const spotLightHelper = new THREE.SpotLightHelper( spotLight );
+    
+
+    experience.scene.add(light, spotLight,spotLightHelper);
 
     await animateModels(generate);
 
