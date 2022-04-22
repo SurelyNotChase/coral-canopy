@@ -200,13 +200,11 @@ const generateCharacters = async (count = 3) => {
     await whenReady.getModel();
     array.push(whenReady);
 
-    //Add 2 turtles
-    for (let i = 0; i < 2; i++) {
-        whenReady = await modelData.meshes.turtle();
-        await whenReady.getModel();
-        turtleCount++;
-        array.push(whenReady);
-    }
+    //Add a turtle
+    whenReady = await modelData.meshes.turtle();
+    await whenReady.getModel();
+    turtleCount++;
+    array.push(whenReady);
 
     //Add 1-3 maoriWrasse
     let rng = Math.floor(Math.random() * 3) + 1;
@@ -310,10 +308,9 @@ const getGroups = async (characters, count = 3) => {
                 group.position.x = utils.random(-12, -10);
                 group.position.z = utils.random(1, 3);
                 group.position.y = 20;
-                group.rotation.y = -(90 * Math.PI) / 180;
-                group.scale.x = .04;
-                group.scale.y = .04;
-                group.scale.z = .04;
+                group.scale.x = .1;
+                group.scale.y = .1;
+                group.scale.z = .1;
                 break;
             case "octopusEating":
                 group.position.x = utils.random(-12, -10);
