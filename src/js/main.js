@@ -171,6 +171,11 @@ const animate = () => {
                     } else {
                         object.position.x -= .05;
                         object.position.z += .05;
+
+                        object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
+                        object.rotation.y = utils.lerp(object.rotation.y, (145 * Math.PI) / 180, 0.1);
+                        object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
+
                         if (object.position.x < -10) {
                             object.position.x = 7;
                             object.position.z = -8;
@@ -181,9 +186,8 @@ const animate = () => {
                     // object.position.x = utils.lerp(object.position.x, colorX, 0.01);
                     // object.position.z = utils.lerp(object.position.z, colorZ, 0.01);
                     object.lookAt(colorX, colorZ, 0);
-                    //activeDetection = false; //only works for first maori wrasse
+                    // console.log(object.position.x, object.position.z)
                 }
-                activeDetection = false; //only works for first maori wrasse
                 // console.log(activeDetection)
             }
             else if (name == 'whale') {
@@ -230,19 +234,20 @@ const animate = () => {
                 }
             }
             else if (name == 'bubble') {
-                object.position.x = -colorX
-                // object.position.y = colorY
-                object.position.z = -colorZ
-                // object.position.x = utils.lerp(object.position.x, colorX, 0.01);
-                // object.position.y = utils.lerp(object.position.y, colorY, 0.01);
-                // object.position.z = utils.lerp(object.position.z, colorZ, 0.01);
-                console.log(object.position.x, object.position.y, object.position.z)
-                // console.log(object)
+                if (!activeDetection) {
+                    object.position.y = utils.lerp(object.position.y, 11, 0.05);
+                    if (object.position.y > 10) {
+                        object.position.x = 11;
+                        object.position.z = 11;
+                    }
+                }
+                else {
+                    object.position.x = utils.lerp(object.position.x, -colorX, 0.1);
+                    object.position.y = -9; //default y for bubbles
+                    object.position.z = utils.lerp(object.position.z, -colorZ, 0.1);
+                }
+                // console.log(object.position.x, object.position.y, object.position.z)
             }
-            // bubble.scene.position.x = colorX;
-            // bubble.scene.position.y = colorY;
-            // bubble.scene.position.z = colorZ;
-            //console.log(bubble.scene.position.x, bubble.scene.position.y, bubble.scene.position.z);
         } catch {
 
         }
