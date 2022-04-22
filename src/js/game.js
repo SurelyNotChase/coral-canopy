@@ -365,7 +365,7 @@ const getGroups = async (characters, count = 3) => {
                 if (characters[i].id == 1) {
                     group.position.x = -5;
                     group.position.z = 5;
-                    group.rotation.y = -(145 * Math.PI) / 180;//
+                    group.rotation.y = -(25 * Math.PI) / 180//
                 } else if (characters[i].id == 2) {
                     group.position.x = 5;
                     group.position.z = 5;

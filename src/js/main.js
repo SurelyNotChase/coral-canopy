@@ -167,7 +167,7 @@ const animate = () => {
         }
         else if (name == 'maoriWrasse' && generate[index].speed > 0) {
             if (!activeDetection) {
-                if (object.id == 1) {
+                if (generate[index].id == 1) {
                     object.position.x -= .02;
                     object.position.z -= .05;
                     // console.log(object.rotation.x, object.rotation.y, object.rotation.z)
@@ -224,31 +224,32 @@ const animate = () => {
         } 
         else if (name == 'clownfish' && generate[index].speed > 0) {
             if (!activeDetection) {
-                if (object.id == 1) {
-                    object.position.x -= .02;
-                    object.position.z -= .05;
-                    // console.log(object.rotation.x, object.rotation.y, object.rotation.z)
-                    object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
-                    object.rotation.y = utils.lerp(object.rotation.y, (25 * Math.PI) / 180, 0.1);
-                    object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
+                // if (generate[index].id == 1) {
+                //     object.position.x -= .02;
+                //     object.position.z -= .05;
+                //     // console.log(object.rotation.x, object.rotation.y, object.rotation.z)
+                //     object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
+                //     // object.rotation.y = utils.lerp(object.rotation.y, -(145 * Math.PI) / 180, 0.1);
+                //     object.rotation.y = utils.lerp(object.rotation.y, -(25 * Math.PI) / 180, 0.1);
+                //     object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
 
-                    if (object.position.z < -10) {
-                        object.position.x = 9;
-                        object.position.z = 9;
-                    }
-                } else {
+                //     if (object.position.z < -10) {
+                //         object.position.x = 9;
+                //         object.position.z = 9;
+                //     }
+                // } else {
                     object.position.x -= .05;
                     object.position.z += .05;
 
                     object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
-                    //object.rotation.y = utils.lerp(object.rotation.y, (145 * Math.PI) / 180, 0.1);
+                    object.rotation.y = utils.lerp(object.rotation.y, -(145 * Math.PI) / 180, 0.1);
                     object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
 
                     if (object.position.x < -10) {
                         object.position.x = 7;
                         object.position.z = -8;
                     }
-                }
+                // }
             }
             else {
                 // rotX = object.rotation.x;
