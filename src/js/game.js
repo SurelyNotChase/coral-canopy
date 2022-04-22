@@ -215,6 +215,15 @@ const generateCharacters = async (count = 3) => {
         array.push(whenReady);
     }
 
+    // //Add 1-3 clownfish
+    // rng = Math.floor(Math.random() * 3) + 1;
+    // for (let i = 0; i < rng; i++) {
+    //     whenReady = await modelData.meshes.clownFish();
+    //     await whenReady.getModel();
+    //     clownfishCount++;
+    //     array.push(whenReady);
+    // }
+
     //Add 2-3 angelfish
     rng = Math.floor(Math.random() * 2) + 2;
     for (let i = 0; i < rng; i++) {
@@ -343,12 +352,15 @@ const getGroups = async (characters, count = 3) => {
                 if (characters[i].id == 1) {
                     group.position.x = -5;
                     group.position.z = 5;
+                    // group.rotation.y = (25 * Math.PI) / 180;//
                 } else if (characters[i].id == 2) {
                     group.position.x = 5;
                     group.position.z = 5;
+                    // group.rotation.y = (145 * Math.PI) / 180;//
                 } else {
                     group.position.x = 0;
                     group.position.z = -7;
+                    // group.rotation.y = (145 * Math.PI) / 180;//
                 }
                 group.position.y = utils.random(-4.5, -4);
                 break;

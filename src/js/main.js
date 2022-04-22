@@ -54,10 +54,15 @@ let activeDetection = false; //bool for when a color is being detected
 let eating = false;
 let eatingModel;
 
+let trackedColor = "cyan";
+
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
+
+// TEST
+let rotX, rotY, rotZ;
 
 
 //// ----- CORE ----- ////
@@ -112,7 +117,7 @@ const init = async () => {
 //returns color tracker
 const setupColorTracker = (videoSource, index) => {
 
-    const myColors = ['magenta'];
+    const myColors = [trackedColor];
     const myColorTracker = tracker.getColorTracker(myColors);
 
     //mount color events
@@ -120,8 +125,7 @@ const setupColorTracker = (videoSource, index) => {
 
         let detectedColors = event.data;
 
-
-        //if (detectedColors.length === 0) activeDetection = false;
+        if (detectedColors.length === 0) activeDetection = false; //need this for activeDetection to work -kenny
 
         detectedColors.forEach((detection) => {
 
@@ -183,9 +187,14 @@ const animate = () => {
                     }
                 }
                 else {
-                    // object.position.x = utils.lerp(object.position.x, colorX, 0.01);
-                    // object.position.z = utils.lerp(object.position.z, colorZ, 0.01);
-                    object.lookAt(colorX, colorZ, 0);
+                    // rotX = object.rotation.x;
+                    // rotZ = object.rotation.z;
+                    // rotX = utils.lerp(rotX, colorX, 0.1);
+                    // // rotY = utils.lerp(object.rotation.y, colorY, 0.1);
+                    // rotZ = utils.lerp(rotZ, colorZ, 0.1);
+                    // object.lookAt(rotX, Math.abs(rotZ), 0);
+
+                    object.lookAt(colorX, Math.abs(colorZ), colorZ);
                     // console.log(object.position.x, object.position.z)
                 }
                 // console.log(activeDetection)
@@ -209,6 +218,7 @@ const animate = () => {
 
             if (activeDetection && !eating) {
                 let rng = Math.floor(utils.random(1,5));
+                // let rng = 4;
                 if (name == 'moorishEating' && rng == 1) {
                     object.position.x = 3.75;
                     generate[index].mixer._actions[0].time = 0;
@@ -276,7 +286,7 @@ const resetEating = () => {
 
 const colorEvent = (detection, cameraIndex) => {
 
-    activeDetection = true;
+    // activeDetection = true;
     let color = detection.color;
     colorY = utils.scale(detection.y, 0, 480, -10, 10);
 
@@ -289,10 +299,10 @@ const colorEvent = (detection, cameraIndex) => {
         colorZ = utils.scale(detection.x, 0, 640, -10, 10);
     }
 
-    //when magenta is active, change activeDetection bool to true
-    if (color === 'magenta') {
-        
-    } 
+    //when trackedColor is active, change activeDetection bool to true
+    if (color === trackedColor) {
+        activeDetection = true;
+    }
 
 
 }
