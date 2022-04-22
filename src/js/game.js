@@ -176,27 +176,20 @@ const assemblePortal = async () => {
 
 }
 // >>> Array of game objects
-const generateCharacters = async (count = 3) => {
+const generateCharacters = async (variant) => {
 
     let array = [];
+    let rng;
 
-    //Add sharkEating animation
-    whenReady = await modelData.meshes.sharkEating();
-    await whenReady.getModel();
-    array.push(whenReady);
-
-    //Add moorishEating animation
-    whenReady = await modelData.meshes.moorishEating();
-    await whenReady.getModel();
-    array.push(whenReady);
+    if(variant === 'variantA'){
 
     //Add turtleEating animation
     whenReady = await modelData.meshes.turtleEating();
     await whenReady.getModel();
     array.push(whenReady);
     
-    //Add octopusEating animation
-    whenReady = await modelData.meshes.octopusEating();
+    //Add moorishEating animation
+    whenReady = await modelData.meshes.moorishEating();
     await whenReady.getModel();
     array.push(whenReady);
 
@@ -206,23 +199,43 @@ const generateCharacters = async (count = 3) => {
     turtleCount++;
     array.push(whenReady);
 
+
+
+    }else if(variant === 'variantB'){
+
+    //Add sharkEating animation
+    whenReady = await modelData.meshes.sharkEating();
+    await whenReady.getModel();
+    array.push(whenReady);
+
+    //Add octopusEating animation
+    whenReady = await modelData.meshes.octopusEating();
+    await whenReady.getModel();
+    array.push(whenReady);
+
+
+
+    
+    // //Add 1-3 clownfish
+    rng = Math.floor(Math.random() * 3) + 1;
+    for (let i = 0; i < rng; i++) {
+        whenReady = await modelData.meshes.clownFish();
+        await whenReady.getModel();
+        clownfishCount++;
+        array.push(whenReady);
+    }
+
+    }
+
+
     //Add 1-3 maoriWrasse
-    let rng = Math.floor(Math.random() * 3) + 1;
+    rng = Math.floor(Math.random() * 3) + 1;
     for (let i = 0; i < rng; i++) {
         whenReady = await modelData.meshes.maoriWrasse();
         await whenReady.getModel();
         maoriCount++;
         array.push(whenReady);
     }
-
-    // //Add 1-3 clownfish
-    // rng = Math.floor(Math.random() * 3) + 1;
-    // for (let i = 0; i < rng; i++) {
-    //     whenReady = await modelData.meshes.clownFish();
-    //     await whenReady.getModel();
-    //     clownfishCount++;
-    //     array.push(whenReady);
-    // }
 
     //Add 2-3 angelfish
     rng = Math.floor(Math.random() * 2) + 2;
@@ -352,15 +365,15 @@ const getGroups = async (characters, count = 3) => {
                 if (characters[i].id == 1) {
                     group.position.x = -5;
                     group.position.z = 5;
-                    // group.rotation.y = (25 * Math.PI) / 180;//
+                    group.rotation.y = -(145 * Math.PI) / 180;//
                 } else if (characters[i].id == 2) {
                     group.position.x = 5;
                     group.position.z = 5;
-                    // group.rotation.y = (145 * Math.PI) / 180;//
+                    group.rotation.y = -(145 * Math.PI) / 180;//
                 } else {
                     group.position.x = 0;
                     group.position.z = -7;
-                    // group.rotation.y = (145 * Math.PI) / 180;//
+                    group.rotation.y = -(145 * Math.PI) / 180;//
                 }
                 group.position.y = utils.random(-4.5, -4);
                 break;

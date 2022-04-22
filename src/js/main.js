@@ -21,7 +21,7 @@ require('@tensorflow/tfjs-backend-webgl');
 //// ----- MUTABLES ----- ////
 let experience = {}; //scene, renderer, and camera
 let controls; //ordbit controls
-let generate;
+let generate = [];
 
 let aJellyFish = new ClownFish(); //testing object
 let mouseCube = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), game.modelData.materials.greenLambert())
@@ -60,12 +60,13 @@ let trackedColor = "cyan";
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
+const option = 'variantB'
 
 // TEST
 let rotX, rotY, rotZ;
 
 
-//// ----- CORE ----- ////
+//// ----- CORE ----- ////  
 //Runs at document load
 const init = async () => {
 
@@ -106,6 +107,8 @@ const init = async () => {
     setupColorTracker(video, 0);
     setupColorTracker(video2, 1);
 
+    let test = experience.scene.children.filter((item) => item.type === "Group");
+
     experience.renderer.render(experience.scene, experience.camera);
     controls.update();
 
@@ -145,132 +148,180 @@ const setupColorTracker = (videoSource, index) => {
 const animate = () => {
     requestAnimationFrame(animate)
     controls.update();
-    // console.log(colorX, colorY, colorZ)
-    let sharkCount = 0;
-    experience.scene.children.filter((item) => item.type === "Group").forEach((object, index) => {
-        try {
-            let name = generate[index].name;
-            if (name == 'turtle') {
-                object.position.x += .01;
-                object.position.z += .06;
-                if (object.position.z > 10) {
-                    object.position.x = -6;
-                    object.position.z = -9;
-                }
-            }
-            else if (name == 'maoriWrasse' && generate[index].speed > 0) {
-                if (!activeDetection) {
-                    if (generate[index].id == 1) {
-                        object.position.x -= .02;
-                        object.position.z -= .05;
-                        // console.log(object.rotation.x, object.rotation.y, object.rotation.z)
-                        object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
-                        object.rotation.y = utils.lerp(object.rotation.y, (25 * Math.PI) / 180, 0.1);
-                        object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
 
-                        if (object.position.z < -10) {
-                            object.position.x = 9;
-                            object.position.z = 9;
-                        }
-                    } else {
-                        object.position.x -= .05;
-                        object.position.z += .05;
 
-                        object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
-                        object.rotation.y = utils.lerp(object.rotation.y, (145 * Math.PI) / 180, 0.1);
-                        object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
+    experience.scene.children.filter((item) => item.type === "Group" && item.name !== "coralRing").forEach((object, index) => {
+        //generate.forEach((object) => {
+        //console.log(object.name);
+        object.name = generate[index].name;
+        let name = object.name;
+        //console.log(name);
 
-                        if (object.position.x < -10) {
-                            object.position.x = 7;
-                            object.position.z = -8;
-                        }
-                    }
-                }
-                else {
-                    // rotX = object.rotation.x;
-                    // rotZ = object.rotation.z;
-                    // rotX = utils.lerp(rotX, colorX, 0.1);
-                    // // rotY = utils.lerp(object.rotation.y, colorY, 0.1);
-                    // rotZ = utils.lerp(rotZ, colorZ, 0.1);
-                    // object.lookAt(rotX, Math.abs(rotZ), 0);
-
-                    object.lookAt(colorX, Math.abs(colorZ), colorZ);
-                    // console.log(object.position.x, object.position.z)
-                }
-                // console.log(activeDetection)
+        if (name == 'turtle') {
+            object.position.x += .01;
+            object.position.z += .06;
+            if (object.position.z > 10) {
+                object.position.x = -6;
+                object.position.z = -9;
             }
-            else if (name == 'whale') {
-                object.position.x += .04;
-                if (object.position.x > 25) object.position.x = -25;
-            }
-            else if (name == 'blueTang') {
-                object.position.x -= .12;
-                if (object.position.x < -20) object.position.x = 20;
-            }
-            else if (name == 'angelfish' && generate[index].speed > 0) {
-                object.position.x += .03;
-                object.position.z -= .03;
-                if (object.position.x > 10) {
-                    object.position.x = -7;
-                    object.position.z = 8;
-                }
-            }
-
-            if (activeDetection && !eating) {
-                let rng = Math.floor(utils.random(1,5));
-                // let rng = 4;
-                if (name == 'moorishEating' && rng == 1) {
-                    object.position.x = 3.75;
-                    generate[index].mixer._actions[0].time = 0;
-                    object.position.y = -6;
-                    object.position.z = .5;
-                    eating = true;
-                    eatingModel = object;
-                    const myTimeout = setTimeout(resetEating, 11700);
-                } else if (name == 'sharkEating' && rng == 2){
-                    object.position.x = 2;
-                    generate[index].mixer._actions[0].time = 0;
-                    object.position.y = -12;
-                    eating = true;
-                    eatingModel = object;
-                    const myTimeout = setTimeout(resetEating, 8000);
-                } else if (name == 'turtleEating' && rng == 3){
-                    object.position.x = 2.5;
-                    object.position.z = 0;
-                    generate[index].mixer._actions[0].time = 0;
-                    object.position.y = -20;
-                    eating = true;
-                    eatingModel = object;
-                    const myTimeout = setTimeout(resetEating, 8000);
-                } else if (name == 'octopusEating' && rng == 4){
-                    generate[index].mixer._actions[0].time = 0;
-                    object.position.x = -8;
-                    object.position.z = 2;
-                    object.position.y = -5;
-                    eating = true;
-                    eatingModel = object;
-                    const myTimeout = setTimeout(resetEating, 11000);
-                }
-            }
-            else if (name == 'bubble') {
-                if (!activeDetection) {
-                    object.position.y = utils.lerp(object.position.y, 11, 0.05);
-                    if (object.position.y > 10) {
-                        object.position.x = 0;
-                        object.position.z = 0;
-                    }
-                }
-                else {
-                    object.position.x = utils.lerp(object.position.x, -colorX, 0.1);
-                    object.position.y = -9; //default y for bubbles
-                    object.position.z = utils.lerp(object.position.z, -colorZ, 0.1);
-                }
-                // console.log(object.position.x, object.position.y, object.position.z)
-            }
-        } catch {
-
         }
+        else if (name == 'maoriWrasse' && generate[index].speed > 0) {
+            if (!activeDetection) {
+                if (object.id == 1) {
+                    object.position.x -= .02;
+                    object.position.z -= .05;
+                    // console.log(object.rotation.x, object.rotation.y, object.rotation.z)
+                    object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
+                    object.rotation.y = utils.lerp(object.rotation.y, (25 * Math.PI) / 180, 0.1);
+                    object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
+
+                    if (object.position.z < -10) {
+                        object.position.x = 9;
+                        object.position.z = 9;
+                    }
+                } else {
+                    object.position.x -= .05;
+                    object.position.z += .05;
+
+                    object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
+                    object.rotation.y = utils.lerp(object.rotation.y, (145 * Math.PI) / 180, 0.1);
+                    object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
+
+                    if (object.position.x < -10) {
+                        object.position.x = 7;
+                        object.position.z = -8;
+                    }
+                }
+            }
+            else {
+                // rotX = object.rotation.x;
+                // rotZ = object.rotation.z;
+                // rotX = utils.lerp(rotX, colorX, 0.1);
+                // // rotY = utils.lerp(object.rotation.y, colorY, 0.1);
+                // rotZ = utils.lerp(rotZ, colorZ, 0.1);
+                // object.lookAt(rotX, Math.abs(rotZ), 0);
+
+                object.lookAt(colorX, Math.abs(colorZ), colorZ);
+                // console.log(object.position.x, object.position.z)
+            }
+            // console.log(activeDetection)
+        }
+        else if (name == 'whale') {
+            object.position.x += .04;
+            if (object.position.x > 25) object.position.x = -25;
+        }
+        else if (name == 'blueTang') {
+            object.position.x -= .12;
+            if (object.position.x < -20) object.position.x = 20;
+        }
+        else if (name == 'angelfish' && generate[index].speed > 0) {
+            object.position.x += .03;
+            object.position.z -= .03;
+            if (object.position.x > 10) {
+                object.position.x = -7;
+                object.position.z = 8;
+            }
+        } 
+        else if (name == 'clownfish' && generate[index].speed > 0) {
+            if (!activeDetection) {
+                if (object.id == 1) {
+                    object.position.x -= .02;
+                    object.position.z -= .05;
+                    // console.log(object.rotation.x, object.rotation.y, object.rotation.z)
+                    object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
+                    object.rotation.y = utils.lerp(object.rotation.y, (25 * Math.PI) / 180, 0.1);
+                    object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
+
+                    if (object.position.z < -10) {
+                        object.position.x = 9;
+                        object.position.z = 9;
+                    }
+                } else {
+                    object.position.x -= .05;
+                    object.position.z += .05;
+
+                    object.rotation.x = utils.lerp(object.rotation.x, 0, 0.1);
+                    //object.rotation.y = utils.lerp(object.rotation.y, (145 * Math.PI) / 180, 0.1);
+                    object.rotation.z = utils.lerp(object.rotation.z, 0, 0.1);
+
+                    if (object.position.x < -10) {
+                        object.position.x = 7;
+                        object.position.z = -8;
+                    }
+                }
+            }
+            else {
+                // rotX = object.rotation.x;
+                // rotZ = object.rotation.z;
+                // rotX = utils.lerp(rotX, colorX, 0.1);
+                // // rotY = utils.lerp(object.rotation.y, colorY, 0.1);
+                // rotZ = utils.lerp(rotZ, colorZ, 0.1);
+                // object.lookAt(rotX, Math.abs(rotZ), 0);
+
+                object.lookAt(colorX, Math.abs(colorZ), colorZ);
+                // console.log(object.position.x, object.position.z)
+            }
+            // console.log(activeDetection)
+        }
+
+        if (activeDetection && !eating) {
+            let rng = Math.floor(utils.random(1, 5));
+            if (name == 'moorishEating' && rng == 1) {
+                generate[index].mixer._actions[0].time = 0;
+                object.position.x = 3.75;
+                object.position.y = -6;
+                object.position.z = .5;
+                eating = true;
+                eatingModel = object;
+                generate[index].mixer._actions[0].paused = false;
+                const myTimeout = setTimeout(resetEating, 11700);
+            } else if (name == 'sharkEating' && rng == 2) {
+                //console.log(object);
+                generate[index].mixer._actions[0].time = 0;
+                object.position.x = 2;
+                object.position.y = -12;
+                eating = true;
+                eatingModel = object;
+                generate[index].mixer._actions[0].paused = false;
+                const myTimeout = setTimeout(resetEating, 8000);
+            } else if (name == 'turtleEating' && rng == 3) {
+                generate[index].mixer._actions[0].time = 0;
+                object.position.x = 2.5;
+                object.position.z = 0;
+                object.position.y = -20;
+                eating = true;
+                eatingModel = object;
+                generate[index].mixer._actions[0].paused = false;
+                const myTimeout = setTimeout(resetEating, 8000);
+            } else if (name == 'octopusEating' && rng == 4) {
+                generate[index].mixer._actions[0].time = 0;
+                object.position.x = -8;
+                object.position.z = 2;
+                object.position.y = -5;
+                eating = true;
+                eatingModel = object;
+                generate[index].mixer._actions[0].paused = false;
+                const myTimeout = setTimeout(resetEating, 11000);
+            }
+        }
+        else if (name == 'bubble') {
+            if (!activeDetection) {
+                object.position.y = utils.lerp(object.position.y, 11, 0.05);
+                if (object.position.y > 10) {
+                    object.position.x = 0;
+                    object.position.z = 0;
+                }
+            }
+            else {
+                object.position.x = utils.lerp(object.position.x, -colorX, 0.1);
+                object.position.y = -9; //default y for bubbles
+                object.position.z = utils.lerp(object.position.z, -colorZ, 0.1);
+            }
+            // console.log(object.position.x, object.position.y, object.position.z)
+        }
+
     });
+
     experience.renderer.render(experience.scene, experience.camera);
 
 
@@ -278,7 +329,7 @@ const animate = () => {
 
 const resetEating = () => {
     eatingModel.position.y = 20;
-    setTimeout(() => {eating = false;}, 5000); 
+    setTimeout(() => { eating = false; }, 5000);
 }
 
 //// ----- SIDE EFFECTS ----- ////
@@ -302,6 +353,7 @@ const colorEvent = (detection, cameraIndex) => {
     //when trackedColor is active, change activeDetection bool to true
     if (color === trackedColor) {
         activeDetection = true;
+        // console.log(trackedColor);
     }
 
 
@@ -397,15 +449,15 @@ const mount = () => {
             game.resetCamera();
         }
         if (e.key === " ") game.openPortal(e);
-        if(e.key === 'e') {
+        if (e.key === 'e') {
             activeDetection = true;
             console.log(activeDetection)
         };
-        if(e.key === 'r') {
+        if (e.key === 'r') {
             activeDetection = false;
             console.log(activeDetection)
         };
-        
+
     });
 
 
@@ -416,8 +468,7 @@ const populateScene = async () => {
 
     // all the portal stuff
 
-
-    generate = await game.generateCharacters(); //this used to get array of gltfs which were then used to get meshes and animations,
+    generate = await game.generateCharacters(option); //this used to get array of gltfs which were then used to get meshes and animations,
     //now it returns array of Fish objects with all that completed.
 
     generate.forEach(object => {
@@ -443,7 +494,7 @@ const populateScene = async () => {
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations
 const animateModels = async (models) => {
     let animations = await game.getAnimations(models, mixers);
-
+    console.log(animations);
     animations.forEach(object => {
         object.play();
     });
@@ -473,6 +524,18 @@ const runAnimation = () => {
                 break;
             case "turtle":
                 if (time < 1 || time > 6.25) generate[i].mixer._actions[0].time = 1;
+                break;
+            case "sharkEating":
+                if (!activeDetection && !eating) generate[i].mixer._actions[0].paused = true;
+                break;
+            case "moorishEating":
+                if (!activeDetection && !eating) generate[i].mixer._actions[0].paused = true;
+                break;
+            case "octopusEating":
+                if (!activeDetection && !eating) generate[i].mixer._actions[0].paused = true;
+                break;
+            case "turtleEating":
+                if (!activeDetection && !eating) generate[i].mixer._actions[0].paused = true;
                 break;
         }
     }
