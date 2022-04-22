@@ -237,8 +237,8 @@ const animate = () => {
                 if (!activeDetection) {
                     object.position.y = utils.lerp(object.position.y, 11, 0.05);
                     if (object.position.y > 10) {
-                        object.position.x = 11;
-                        object.position.z = 11;
+                        object.position.x = 0;
+                        object.position.z = 0;
                     }
                 }
                 else {
