@@ -300,9 +300,9 @@ const getGroups = async (characters, count = 3) => {
                 group.position.z = utils.random(1, 3);
                 group.position.y = 20;
                 group.rotation.y = -(90 * Math.PI) / 180;
-                group.scale.x = .08;
-                group.scale.y = .08;
-                group.scale.z = .08;
+                group.scale.x = .1;
+                group.scale.y = .1;
+                group.scale.z = .1;
                 break;
             case "turtleEating":
                 group.position.x = utils.random(-12, -10);

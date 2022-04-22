@@ -212,7 +212,7 @@ const animate = () => {
                 if (name == 'moorishEating' && rng == 1) {
                     object.position.x = 3.75;
                     generate[index].mixer._actions[0].time = 0;
-                    object.position.y = -7;
+                    object.position.y = -6;
                     object.position.z = .5;
                     eating = true;
                     eatingModel = object;
