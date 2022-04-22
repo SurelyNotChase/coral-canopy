@@ -48,7 +48,7 @@ let colorY
 let colorX;
 let colorZ;
 
-let bubble
+// let bubble
 
 let activeDetection = false; //bool for when a color is being detected
 let eating = false;
@@ -81,17 +81,18 @@ const init = async () => {
     coralRing.scene.rotation.y = (180 * Math.PI) / 180;
     coralRing.scene.position.y = -22;
 
-    bubble = await utils.loadModelAsync("Bubbles_Bubbling.gltf");
+    // bubble = await utils.loadModelAsync("Bubbles_Bubbling.gltf");
 
-    bubble.scene.name = "bubble"; //added bubbles name
-    bubble.scene.scale.x = .05;
-    bubble.scene.scale.y = .05;
-    bubble.scene.scale.z = .05;
+    // bubble.scene.name = "bubble"; //added bubbles name
+    // bubble.scene.scale.x = .05;
+    // bubble.scene.scale.y = .05;
+    // bubble.scene.scale.z = .05;
 
     await populateScene();
 
-    experience.scene.add(coralRing.scene, bubble.scene);
-    console.log(bubble);
+    // experience.scene.add(coralRing.scene, bubble.scene);
+    experience.scene.add(coralRing.scene);
+    // console.log(bubble);
 
     tracker.init();
 
@@ -221,17 +222,19 @@ const animate = () => {
                     const myTimeout = setTimeout(resetEating, 3000);
                 }
             }
-
-
-            // else if (name == 'bubbles') {
-            //     object.position.x = colorX;
-            //     object.position.y = colorY;
-            //     object.position.z = colorZ;
-            //     console.log(object.position.x, object.position.y, object.position.z)
-            // }
-            bubble.scene.position.x = colorX;
-            bubble.scene.position.y = colorY;
-            bubble.scene.position.z = colorZ;
+            else if (name == 'bubble') {
+                object.position.x = -colorX
+                // object.position.y = colorY
+                object.position.z = -colorZ
+                // object.position.x = utils.lerp(object.position.x, colorX, 0.01);
+                // object.position.y = utils.lerp(object.position.y, colorY, 0.01);
+                // object.position.z = utils.lerp(object.position.z, colorZ, 0.01);
+                console.log(object.position.x, object.position.y, object.position.z)
+                // console.log(object)
+            }
+            // bubble.scene.position.x = colorX;
+            // bubble.scene.position.y = colorY;
+            // bubble.scene.position.z = colorZ;
             //console.log(bubble.scene.position.x, bubble.scene.position.y, bubble.scene.position.z);
         } catch {
 
@@ -254,17 +257,17 @@ const colorEvent = (detection, cameraIndex) => {
 
     //console.log(detection)
     let color = detection.color;
-    colorY = utils.scale(detection.y, 0, 480, -20, 20);
+    colorY = utils.scale(detection.y, 0, 480, -10, 10);
 
     //let colorWidth = detection.width;
     //let colorHeight = detection.height;
 
     if (cameraIndex === 0) {
-        colorX = utils.scale(detection.x, 0, 640, -20, 20);
+        colorX = utils.scale(detection.x, 0, 640, -10, 10);
     }
 
     if (cameraIndex === 1) {
-        colorZ = utils.scale(detection.x, 0, 640, -20, 20);
+        colorZ = utils.scale(detection.x, 0, 640, -10, 10);
     }
 
     //when magenta is active, change activeDetection bool to true
@@ -431,7 +434,7 @@ const populateScene = async () => {
     let getGroups = await game.getGroups(generate);
 
     let light = new THREE.PointLight('white', 1, 1);
-    const spotLight = new THREE.SpotLight(16777215, 2); //INTENSITY OF EITHER 1.5 OR 2 IS GREAT -KENNY
+    const spotLight = new THREE.SpotLight(16777215, 3); //INTENSITY OF EITHER 1.5 OR 2 IS GREAT -KENNY
     spotLight.position.set(0, -9, 0);
     spotLight.angle = Math.PI / 2;
     const spotLightHelper = new THREE.SpotLightHelper(spotLight);

@@ -229,6 +229,10 @@ const generateCharacters = async (count = 3) => {
         array.push(whenReady);
     }
 
+    whenReady = await modelData.meshes.bubble();
+    await whenReady.getModel();
+    array.push(whenReady);
+
     return array;
 }
 
@@ -358,12 +362,13 @@ const getGroups = async (characters, count = 3) => {
                 group.scale.y = .023;
                 group.scale.z = .023;
                 break;
-            // case "bubble":
-            //     if (bubbleCount < 1) {
-            //         bubbleCount++;
-            //         group.position.x = 10;
-
-            //     }
+            case "bubble":
+                group.scale.x = 0.1;
+                group.scale.y = 0.1;
+                group.scale.z = 0.1;
+                group.position.x = 10;
+                group.position.y = -9;
+                group.position.z = 10;
         }
 
 
