@@ -17,11 +17,17 @@
     }
     body {
         overflow: hidden; /* Hide scrollbars */
-        
+        background-color: black;
     }
     #cams {
         position: absolute; 
 
+    }
+    #instructions{
+        color:white;
+        list-style: none;
+        font-family: sans-serif;
+        font-size:24px;
     }
 
 
@@ -31,7 +37,13 @@
     <div id="cams">
     <video id="webcam" autoplay="" width="640" height="480"></video>
     <video id="webcam2" autoplay="" width="640" height="480"></video>
+        <ul id="instructions">
+            <li>Press 'V' to show or hide status </li>
+            <li>Press 'C' to re-center camera </li>
+            <li>Press 'E' to make 'activeDetection = true' </li>
+            <li>Press 'R' to make 'activeDetection = false' </li>
 
+        </ul>
     </div>
 
     <video id="blankPortal" loop="" crossorigin="anonymous" playsinline="" style="display:none" muted="">

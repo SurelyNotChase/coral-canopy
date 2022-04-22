@@ -271,8 +271,10 @@ const getGroups = async (characters, count = 3) => {
             case "angelfish":
                 group.position.x = utils.random(-7, -4);
                 group.position.z = utils.random(5, 8);
-                group.position.y = utils.random(-4, 0);
+                //group.position.y = utils.random(-4, 0);
+                group.position.y = -9 //makes them look a little better - chase
                 group.rotation.y = -(35 * Math.PI) / 180;
+                group.rotation.x = -(35 * Math.PI) / 180; //makes them look a little better - chase
                 group.scale.x = .003;
                 group.scale.y = .003;
                 group.scale.z = .003;

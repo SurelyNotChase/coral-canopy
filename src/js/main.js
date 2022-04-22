@@ -121,7 +121,7 @@ const setupColorTracker = (videoSource, index) => {
         let detectedColors = event.data;
 
 
-        if (detectedColors.length === 0) activeDetection = false;
+        //if (detectedColors.length === 0) activeDetection = false;
 
         detectedColors.forEach((detection) => {
 
@@ -276,12 +276,10 @@ const resetEating = () => {
 
 const colorEvent = (detection, cameraIndex) => {
 
-    //console.log(detection)
+    activeDetection = true;
     let color = detection.color;
     colorY = utils.scale(detection.y, 0, 480, -10, 10);
 
-    //let colorWidth = detection.width;
-    //let colorHeight = detection.height;
 
     if (cameraIndex === 0) {
         colorX = utils.scale(detection.x, 0, 640, -10, 10);
@@ -293,50 +291,9 @@ const colorEvent = (detection, cameraIndex) => {
 
     //when magenta is active, change activeDetection bool to true
     if (color === 'magenta') {
-        activeDetection = true;
-    } else activeDetection = false;
+        
+    } 
 
-
-    //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
-    if (detection.y < 240) { //changed colorY to detection.y to make this work
-        console.log(`${color} raised`);
-
-        // if (color === 'magenta') {
-        //     //when magenta is raised...
-        //     if (colorY < prevMag - 2){
-        //         console.log("magenta raised");
-        //     }
-        // }
-        // if (color === 'cyan') {
-        //     //when cyan is raised...
-        //     if (colorY < prevCy - 2){
-        //         //console.log("cyan raised");
-        //     }
-        // }
-        // if (color === 'yellow') {
-        //     //when yellow is raised
-        //     if (colorY < prevYel - 2){
-        //         //console.log("yellow raised");
-        //     }
-        // }
-
-    }
-
-    // //constant color detection events
-    // if (color === "magenta") {
-    //     //when magenta is detected...
-    //     prevMag = colorY;
-    // }
-
-    // if (color === "cyan") {
-    //     //when cyan is detected...
-    //     prevCy = colorY;
-    // }
-
-    // if (color === "yellow") {
-    //     //when yellow is detected...
-    //     prevYel = colorY;
-    // }
 
 }
 
@@ -406,7 +363,6 @@ const mount = () => {
         experience.camera.updateProjectionMatrix();
     })
 
-    window.addEventListener("keyup", game.closePortal);
 
     window.addEventListener('click', (e) => {
 
@@ -424,14 +380,22 @@ const mount = () => {
         //console.log(e.key)
         if (e.key === 'v') {
             videoVisibility ? videoVisibility = false : videoVisibility = true;
-            // console.log(videoVisibility)
             cams.style.zIndex = videoVisibility ? '1' : "-99"
         }
 
-        if (e.key = 'c') {
+        if (e.key === 'c') {
             game.resetCamera();
         }
-        if (e.key == " ") game.openPortal(e);
+        if (e.key === " ") game.openPortal(e);
+        if(e.key === 'e') {
+            activeDetection = true;
+            console.log(activeDetection)
+        };
+        if(e.key === 'r') {
+            activeDetection = false;
+            console.log(activeDetection)
+        };
+        
     });
 
 
@@ -459,7 +423,7 @@ const populateScene = async () => {
     spotLight.position.set(0, -9, 0);
     spotLight.angle = Math.PI / 2;
     const spotLightHelper = new THREE.SpotLightHelper(spotLight);
-    experience.scene.add(light, spotLight, spotLightHelper);
+    experience.scene.add(light, spotLight);
 
     await animateModels(generate);
 
