@@ -292,18 +292,18 @@ const getGroups = async (characters, count = 3) => {
                 group.position.z = utils.random(1, 3);
                 group.position.y = 20;
                 group.rotation.y = -(90 * Math.PI) / 180;
-                group.scale.x = .03;
-                group.scale.y = .03;
-                group.scale.z = .03;
+                group.scale.x = .06;
+                group.scale.y = .06;
+                group.scale.z = .06;
                 break;
             case "turtleEating":
                 group.position.x = utils.random(-12, -10);
                 group.position.z = utils.random(1, 3);
                 group.position.y = 20;
                 group.rotation.y = -(90 * Math.PI) / 180;
-                group.scale.x = .03;
-                group.scale.y = .03;
-                group.scale.z = .03;
+                group.scale.x = .04;
+                group.scale.y = .04;
+                group.scale.z = .04;
                 break;
             case "turtle":
                 group.position.x = utils.random(-6, -1);

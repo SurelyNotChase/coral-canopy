@@ -205,20 +205,27 @@ const animate = () => {
             if (activeDetection && !eating) {
                 let rng = utils.random(1,9);
                 if (name == 'moorishEating' && rng <= 3) {
-                    object.position.y = 0;
+                    object.position.x = 4;
+                    generate[index].mixer._actions[0].time = 0;
+                    object.position.y = -8;
                     eating = true;
                     eatingModel = object;
-                    const myTimeout = setTimeout(resetEating, 3000);
+                    const myTimeout = setTimeout(resetEating, 11700);
                 } else if (name == 'sharkEating' && (rng > 3 && rng <= 6)){
-                    object.position.y = -10;
+                    object.position.x = 2;
+                    generate[index].mixer._actions[0].time = 0;
+                    object.position.y = -12;
                     eating = true;
                     eatingModel = object;
-                    const myTimeout = setTimeout(resetEating, 3000);
+                    const myTimeout = setTimeout(resetEating, 8000);
                 } else if (name == 'turtleEating'){
-                    object.position.y = 0;
+                    object.position.x = 2;
+                    object.position.z = 3;
+                    generate[index].mixer._actions[0].time = 0;
+                    object.position.y = -15;
                     eating = true;
                     eatingModel = object;
-                    const myTimeout = setTimeout(resetEating, 3000);
+                    const myTimeout = setTimeout(resetEating, 8000);
                 }
             }
 
