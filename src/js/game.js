@@ -85,6 +85,7 @@ const modelData = {
         sharkEating: () => new Fish("sharkEating", 1, "SharkEating.gltf"),
         moorishEating: () => new Fish("moorishEating", 1, "MoorishEating.gltf"),
         turtleEating: () => new Fish("turtleEating", 1, "TurtleEating.gltf"),
+        octopusEating: () => new Fish("octopusEating", 1, "octopusEating.gltf"),
         bubble: () => new Fish("bubble", 1, "Bubbles_Bubbling.gltf"),
     },
 
@@ -193,6 +194,11 @@ const generateCharacters = async (count = 3) => {
     whenReady = await modelData.meshes.turtleEating();
     await whenReady.getModel();
     array.push(whenReady);
+    
+    //Add octopusEating animation
+    whenReady = await modelData.meshes.octopusEating();
+    await whenReady.getModel();
+    array.push(whenReady);
 
     //Add 2 turtles
     for (let i = 0; i < 2; i++) {
@@ -286,7 +292,7 @@ const getGroups = async (characters, count = 3) => {
                 group.position.x = utils.random(-12, -10);
                 group.position.z = utils.random(1, 3);
                 group.position.y = 0;
-                group.rotation.y = -(90 * Math.PI) / 180;
+                group.rotation.y = (90 * Math.PI) / 180;
                 group.scale.x = .03;
                 group.scale.y = .03;
                 group.scale.z = .03;
@@ -308,6 +314,17 @@ const getGroups = async (characters, count = 3) => {
                 group.scale.x = .04;
                 group.scale.y = .04;
                 group.scale.z = .04;
+                break;
+            case "octopusEating":
+                group.position.x = utils.random(-12, -10);
+                group.position.z = utils.random(1, 3);
+                group.position.y = 35;
+                group.rotation.x = (200 * Math.PI) / 180;
+                group.rotation.z = (240 * Math.PI) / 180;
+                //group.rotation.y = (30 * Math.PI) / 180;
+                group.scale.x = .06;
+                group.scale.y = .06;
+                group.scale.z = .06;
                 break;
             case "turtle":
                 group.position.x = utils.random(-6, -1);

@@ -208,22 +208,22 @@ const animate = () => {
             }
 
             if (activeDetection && !eating) {
-                let rng = utils.random(1,9);
-                if (name == 'moorishEating' && rng <= 3) {
+                let rng = Math.floor(utils.random(1,5));
+                if (name == 'moorishEating' && rng == 10) {
                     object.position.x = 4;
                     generate[index].mixer._actions[0].time = 0;
                     object.position.y = -8;
                     eating = true;
                     eatingModel = object;
                     const myTimeout = setTimeout(resetEating, 11700);
-                } else if (name == 'sharkEating' && (rng > 3 && rng <= 6)){
+                } else if (name == 'sharkEating' && rng == 20){
                     object.position.x = 2;
                     generate[index].mixer._actions[0].time = 0;
                     object.position.y = -12;
                     eating = true;
                     eatingModel = object;
                     const myTimeout = setTimeout(resetEating, 8000);
-                } else if (name == 'turtleEating'){
+                } else if (name == 'turtleEating' && rng == 30){
                     object.position.x = 2;
                     object.position.z = 3;
                     generate[index].mixer._actions[0].time = 0;
@@ -231,6 +231,14 @@ const animate = () => {
                     eating = true;
                     eatingModel = object;
                     const myTimeout = setTimeout(resetEating, 8000);
+                } else if (name == 'octopusEating'){
+                    generate[index].mixer._actions[0].time = 0;
+                    object.position.x = -8;
+                    object.position.z = 2;
+                    object.position.y = -5;
+                    eating = true;
+                    eatingModel = object;
+                    const myTimeout = setTimeout(resetEating, 11000);
                 }
             }
             else if (name == 'bubble') {
