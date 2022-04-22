@@ -209,14 +209,15 @@ const animate = () => {
 
             if (activeDetection && !eating) {
                 let rng = Math.floor(utils.random(1,5));
-                if (name == 'moorishEating' && rng == 10) {
-                    object.position.x = 4;
+                if (name == 'moorishEating' && rng == 1) {
+                    object.position.x = 3.75;
                     generate[index].mixer._actions[0].time = 0;
-                    object.position.y = -8;
+                    object.position.y = -7;
+                    object.position.z = .5;
                     eating = true;
                     eatingModel = object;
                     const myTimeout = setTimeout(resetEating, 11700);
-                } else if (name == 'sharkEating' && rng == 20){
+                } else if (name == 'sharkEating' && rng == 2){
                     object.position.x = 2;
                     generate[index].mixer._actions[0].time = 0;
                     object.position.y = -12;
@@ -231,7 +232,7 @@ const animate = () => {
                     eating = true;
                     eatingModel = object;
                     const myTimeout = setTimeout(resetEating, 8000);
-                } else if (name == 'octopusEating' && rng == 40){
+                } else if (name == 'octopusEating' && rng == 4){
                     generate[index].mixer._actions[0].time = 0;
                     object.position.x = -8;
                     object.position.z = 2;
