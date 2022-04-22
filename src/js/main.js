@@ -51,6 +51,8 @@ let colorZ;
 let bubble
 
 let activeDetection = false; //bool for when a color is being detected
+let eating = false;
+let eatingModel;
 
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
@@ -117,7 +119,8 @@ const setupColorTracker = (videoSource, index) => {
 
         let detectedColors = event.data;
 
-        // if (detectedColors.length === 0) return
+
+        if (detectedColors.length === 0) activeDetection = false;
 
         detectedColors.forEach((detection) => {
 
@@ -136,7 +139,6 @@ const setupColorTracker = (videoSource, index) => {
 //Runs every frame
 const animate = () => {
     requestAnimationFrame(animate)
-
     controls.update();
     // console.log(colorX, colorY, colorZ)
     let sharkCount = 0;
@@ -199,6 +201,28 @@ const animate = () => {
                     object.position.z = 8;
                 }
             }
+
+            if (activeDetection && !eating) {
+                let rng = utils.random(1,9);
+                if (name == 'moorishEating' && rng <= 3) {
+                    object.position.y = 0;
+                    eating = true;
+                    eatingModel = object;
+                    const myTimeout = setTimeout(resetEating, 3000);
+                } else if (name == 'sharkEating' && (rng > 3 && rng <= 6)){
+                    object.position.y = -10;
+                    eating = true;
+                    eatingModel = object;
+                    const myTimeout = setTimeout(resetEating, 3000);
+                } else if (name == 'turtleEating'){
+                    object.position.y = 0;
+                    eating = true;
+                    eatingModel = object;
+                    const myTimeout = setTimeout(resetEating, 3000);
+                }
+            }
+
+
             // else if (name == 'bubbles') {
             //     object.position.x = colorX;
             //     object.position.y = colorY;
@@ -212,87 +236,15 @@ const animate = () => {
         } catch {
 
         }
-
-        /*
-        if (index == 1 || index == 2) {
-
-            // object.position.x = -(utils.lerp(object.position.x, participant1.x, 0.01));
-            // object.position.y = -(utils.lerp(object.position.y, participant1.y, 0.01));
-            // object.position.z = -(utils.lerp(object.position.z, participant1.z, 0.01));
-            //object.position.x = utils.lerp(object.position.x, -participant1.x, 0.01);
-            // object.position.y = utils.lerp(object.position.y, -participant1.y, 0.01);
-            //object.position.y = -4;
-            //object.position.z = utils.lerp(object.position.z, -participant1.y, 0.01);
-
-            //object.lookAt(0, 0, 0);
-            //object.position.z = utils.lerp(object.position.z, 0, 0.01);
-            //object.position.x = (utils.lerp(object.position.x, 0, 0.01));
-            //object.rotation.x += (90 * Math.PI) / 180;
-            //object.position.x += .06;
-            //object.lookAt(participant1.x, participant1.z, participant1.y)
-        }
-        else {
-
-            // object.position.x = -(utils.lerp(object.position.x, participant2.x, 0.01));
-            // object.position.y = -(utils.lerp(object.position.y, participant2.y, 0.01));
-            // object.position.z = -(utils.lerp(object.position.z, participant2.z, 0.01));
-            //object.position.x = utils.lerp(object.position.x, -participant2.x, 0.01);
-            // object.position.y = utils.lerp(object.position.y, -participant2.y, 0.01);
-            //object.position.y = -6;
-            //object.position.z = utils.lerp(object.position.z, -participant2.y, 0.01);
-            //object.lookAt(0, 0, 0);
-            //object.position.z = utils.lerp(object.position.z, 0, 0.01);
-            //object.position.x = -(utils.lerp(object.position.x, 0, 0.01));
-            //object.rotation.x += (90 * Math.PI) / 180;
-            //object.lookAt(participant2.x, participant2.z, participant2.y)
-        }
-        // if (object.position.x > 12) object.position.x = -12;
-
-        // else if (fishType == "angelfish" || fishType == "maoriWrasse" || fishType == "yellowTang") {
-        //     if (fishType == "yellowTang") object.position.z += utils.random(.3,.6);
-        //     else object.position.z -= utils.random(.3,.6);
-
-        //     if (object.position.z < -14) object.position.z = 14;
-        //     else if (object.position.z > 14) object.position.z = -14;
-        // }
-        // else if (fishType == "shark"){
-        //     if (sharkCount == 0) object.position.z += utils.random(0,1.5);
-        //     else object.position.x += utils.random(.2,.6);
-        //     sharkCount++;
-        //     if (object.position.z > 16) object.position.z = -16;
-        //     if (object.position.x > 20) object.position.x = -20;
-        // }
-
-
-        //         // object.position.x += utils.lerp(0, utils.random(-1, 1), 0.1)
-        //         // object.position.y += utils.lerp(0, utils.random(-1, 1), 0.1)
-        //         // object.position.z += utils.random(-0.2, 0.2)
-
-        //         // object.rotation.x += 0.01
-        //         // object.rotation.y += 0.01
-        //         // object.rotation.z += 0.01
-
-        //         // NOSE TEST keypoints[0] WRIST 9
-        //         //let poseX = -utils.scale(poses.allPoses[0].keypoints[10].position.x, 0, 640, -12, 12);
-        //         // let poseY = -utils.scale(poses2.allPoses[0].keypoints[6].position.y, 0, 480, -4, 4);
-        //         // let poseZ = -utils.scale(poses2.allPoses[0].keypoints[6].position.x, 0, 650, 0, 1000);
-        //         //let poseZ = -utils.scale(poses2.allPoses[0].keypoints[10].position.x, 0, 640, -10, 10);
-        //         // object.position.x -= (utils.lerp(0, poseX, 0.01))
-        //         // object.position.y -= (utils.lerp(0, poseY, 0.01))
-        //         // if (utils.random(0, 1) > 0.99) {
-        //        //object.position.x = utils.lerp(object.position.x, poseX, 0.01)
-        //         //object.position.y = utils.lerp(object.position.y, poseY, 0.01)
-        //          //object.position.y = utils.lerp(object.position.y, poseZ, 0.01)
-        //         // }
-
-        */
-
-
-
     });
     experience.renderer.render(experience.scene, experience.camera);
 
 
+}
+
+const resetEating = () => {
+    eatingModel.position.y = 20;
+    setTimeout(() => {eating = false;}, 5000); 
 }
 
 //// ----- SIDE EFFECTS ----- ////
@@ -319,6 +271,7 @@ const colorEvent = (detection, cameraIndex) => {
     if (color === 'magenta') {
         activeDetection = true;
     } else activeDetection = false;
+
 
     //raising color to about the top 1/4 of the screen (Scaled to the range -20,20)
     if (detection.y < 240) { //changed colorY to detection.y to make this work
