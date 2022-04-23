@@ -86,6 +86,7 @@ const init = async () => {
     coralRing.scene.scale.x = .06;
     coralRing.scene.scale.y = .06;
     coralRing.scene.scale.z = .06;
+    coralRing.scene.position.x -= 1;
     coralRing.scene.rotation.y = (180 * Math.PI) / 180;
     coralRing.scene.position.y = -22;
 

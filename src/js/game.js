@@ -82,7 +82,7 @@ const modelData = {
         clownFish: () => new Fish("clownfish", clownfishCount, 'clownTest.gltf'),   //utils.loadModelAsync('cfish.gltf'),
         shark: () => utils.loadModelAsync('shark.gltf'),
         yellowTang: () => utils.loadModelAsync('YellowTang.gltf'),
-        sharkEating: () => new Fish("sharkEating", 1, "SharkEating.gltf"),
+        sharkEating: () => new Fish("sharkEating", 1, "SharkSnack_Long.gltf"),
         moorishEating: () => new Fish("moorishEating", 1, "MoorishEating.gltf"),
         turtleEating: () => new Fish("turtleEating", 1, "TurtleEating.gltf"),
         octopusEating: () => new Fish("octopusEating", 1, "octopusEating.gltf"),
@@ -157,7 +157,7 @@ const assemblePortal = async () => {
 
     //Set up geometry to make cubes, current size based on John's original scene
     portalGeo = new THREE.BoxGeometry(40, 20);
-    backgroundGeo = new THREE.BoxGeometry(60, 40);
+    backgroundGeo = new THREE.BoxGeometry(70, 50);
     backgroundMaterial = new THREE.MeshBasicMaterial(backgroundParam);
 
     //Set up cubes to add to scene for portal and background, (portal initially blank)
@@ -317,9 +317,9 @@ const getGroups = async (characters, count = 3) => {
                 group.position.z = utils.random(1, 3);
                 group.position.y = 0;
                 group.rotation.y = (90 * Math.PI) / 180;
-                group.scale.x = .03;
-                group.scale.y = .03;
-                group.scale.z = .03;
+                group.scale.x = .05;
+                group.scale.y = .05;
+                group.scale.z = .05;
                 break;
             case "moorishEating":
                 group.position.x = utils.random(-12, -10);
