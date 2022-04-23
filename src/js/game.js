@@ -13,7 +13,7 @@ let portalTextures;
 let portalMaterials;
 let portalGeo, backgroundGeo;
 let portalCube, backgroundCube;
-let backgroundVideo = document.getElementById('background');
+let backgroundVideo;
 let backgroundTexture, backgroundMaterial;
 let backgroundParam = {};
 
@@ -124,6 +124,9 @@ const resetCamera = (defaults = gameDefaults) => {
 }
 
 const assemblePortal = async () => {
+    if (main.option == 'variantB'){
+        backgroundVideo = document.getElementById('background2');
+    } else backgroundVideo = document.getElementById('background');
 
     portalVideos = loadPortalVideos();
 
@@ -180,38 +183,39 @@ const generateCharacters = async (variant) => {
 
     let array = [];
     let rng;
+    let ready;
 
     if(variant === 'variantA'){
 
     //Add turtleEating animation
-    whenReady = await modelData.meshes.turtleEating();
-    await whenReady.getModel();
-    array.push(whenReady);
+    ready = await modelData.meshes.turtleEating();
+    await ready.getModel();
+    array.push(ready);
     
     //Add moorishEating animation
-    whenReady = await modelData.meshes.moorishEating();
-    await whenReady.getModel();
-    array.push(whenReady);
+    ready = await modelData.meshes.moorishEating();
+    await ready.getModel();
+    array.push(ready);
 
     //Add a turtle
-    whenReady = await modelData.meshes.turtle();
-    await whenReady.getModel();
+    ready = await modelData.meshes.turtle();
+    await ready.getModel();
     turtleCount++;
-    array.push(whenReady);
+    array.push(ready);
 
 
 
     }else if(variant === 'variantB'){
 
     //Add sharkEating animation
-    whenReady = await modelData.meshes.sharkEating();
-    await whenReady.getModel();
-    array.push(whenReady);
+    ready = await modelData.meshes.sharkEating();
+    await ready.getModel();
+    array.push(ready);
 
     //Add octopusEating animation
-    whenReady = await modelData.meshes.octopusEating();
-    await whenReady.getModel();
-    array.push(whenReady);
+    ready = await modelData.meshes.octopusEating();
+    await ready.getModel();
+    array.push(ready);
 
 
 
@@ -219,10 +223,10 @@ const generateCharacters = async (variant) => {
     // //Add 1-3 clownfish
     rng = Math.floor(Math.random() * 3) + 1;
     for (let i = 0; i < rng; i++) {
-        whenReady = await modelData.meshes.clownFish();
-        await whenReady.getModel();
+        ready = await modelData.meshes.clownFish();
+        await ready.getModel();
         clownfishCount++;
-        array.push(whenReady);
+        array.push(ready);
     }
 
     }
@@ -231,33 +235,33 @@ const generateCharacters = async (variant) => {
     //Add 1-3 maoriWrasse
     rng = Math.floor(Math.random() * 3) + 1;
     for (let i = 0; i < rng; i++) {
-        whenReady = await modelData.meshes.maoriWrasse();
-        await whenReady.getModel();
+        ready = await modelData.meshes.maoriWrasse();
+        await ready.getModel();
         maoriCount++;
-        array.push(whenReady);
+        array.push(ready);
     }
 
     //Add 2-3 angelfish
     rng = Math.floor(Math.random() * 2) + 2;
     for (let i = 0; i < rng; i++) {
-        whenReady = await modelData.meshes.angelfish();
-        await whenReady.getModel();
+        ready = await modelData.meshes.angelfish();
+        await ready.getModel();
         angelfishCount++;
-        array.push(whenReady);
+        array.push(ready);
     }
 
     //Add 5-7 blue tang
     rng = Math.floor(Math.random() * 3) + 4;
     for (let i = 0; i < rng; i++) {
-        whenReady = await modelData.meshes.blueTang();
-        await whenReady.getModel();
+        ready = await modelData.meshes.blueTang();
+        await ready.getModel();
         blueTangCount++;
-        array.push(whenReady);
+        array.push(ready);
     }
 
-    whenReady = await modelData.meshes.bubble();
-    await whenReady.getModel();
-    array.push(whenReady);
+    ready = await modelData.meshes.bubble();
+    await ready.getModel();
+    array.push(ready);
 
     return array;
 }

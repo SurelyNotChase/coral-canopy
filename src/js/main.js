@@ -54,13 +54,13 @@ let activeDetection = false; //bool for when a color is being detected
 let eating = false;
 let eatingModel;
 
-let trackedColor = "cyan";
+let trackedColor;
 
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
-const option = 'variantB'
+const option = 'variantA'
 
 // TEST
 let rotX, rotY, rotZ;
@@ -70,12 +70,14 @@ let rotX, rotY, rotZ;
 //Runs at document load
 const init = async () => {
 
+    if(option == 'variantA') trackedColor = 'magenta';
+    else trackedColor = 'yellow';
+
     experience = game.assembleScene();
 
     controls = new OrbitControls(experience.camera, experience.renderer.domElement);
 
     let textures = await game.assemblePortal();
-    console.log(textures);
     experience.scene.add(textures[0], textures[1]);
 
     let coralRing = await utils.loadModelAsync('CoralExport_Final.gltf');
@@ -495,7 +497,6 @@ const populateScene = async () => {
 //Calls function to get animation, set up mixers and clips, basically get ready to call update for 'wiggling' animations
 const animateModels = async (models) => {
     let animations = await game.getAnimations(models, mixers);
-    console.log(animations);
     animations.forEach(object => {
         object.play();
     });
@@ -545,4 +546,4 @@ const runAnimation = () => {
     requestAnimationFrame(runAnimation);
 }
 
-export default { init, gameObjects, masterAnimations, pause }
+export default { init, gameObjects, masterAnimations, pause, option }
