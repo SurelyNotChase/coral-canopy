@@ -124,10 +124,8 @@ const resetCamera = (defaults = gameDefaults) => {
 }
 
 const assemblePortal = async () => {
-    if (main.option == 'variantB'){
-        backgroundVideo = document.getElementById('background2');
-    } else backgroundVideo = document.getElementById('background');
-
+   //variant === 'variantA' ? backgroundVideo = document.getElementById('background2') : backgroundVideo = document.getElementById('background');
+    backgroundVideo = document.querySelector('#background');
     portalVideos = loadPortalVideos();
 
     portalVideos.play();

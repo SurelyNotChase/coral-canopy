@@ -60,7 +60,7 @@ let trackedColor;
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
-const option = 'variantA'
+const option = 'variantB'
 
 // TEST
 let rotX, rotY, rotZ;

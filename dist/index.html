@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tracking.js/1.1.3/tracking-min.js"></script>
+    <script src="/index.ce16d0ee.js" defer=""></script>
+    
+</head>
+<style>
+    *{
+        margin:0px
+
+    }
+    body {
+        overflow: hidden; /* Hide scrollbars */
+        background-color: black;
+    }
+    #cams {
+        position: absolute; 
+
+    }
+    #instructions{
+        color:white;
+        list-style: none;
+        font-family: sans-serif;
+        font-size:24px;
+    }
+
+
+</style>
+<body>
+
+    <div id="cams">
+    <video id="webcam" autoplay="" width="640" height="480"></video>
+    <video id="webcam2" autoplay="" width="640" height="480"></video>
+        <ul id="instructions">
+            <li>Press 'V' to show or hide status </li>
+            <li>Press 'C' to re-center camera </li>
+            <li>Press 'E' to make 'activeDetection = true' </li>
+            <li>Press 'R' to make 'activeDetection = false' </li>
+
+        </ul>
+    </div>
+
+    <video id="blankPortal" loop="" crossorigin="anonymous" playsinline="" style="display:none" muted="">
+        <source src="/scene1_blankPortal.f7856c68.webm" type="video/webm">
+    </video>
+    <video id="openingPortal" loop="" crossorigin="anonymous" playsinline="" style="display:none" muted="">
+        <source src="/Ripple_Inverted.d460b19e.webm" type="video/webm">
+    </video>
+    <video id="spinningPortal" loop="" crossorigin="anonymous" playsinline="" style="display:none" muted="">
+        <source src="/Ripple_Inverted.d460b19e.webm" type="video/webm">
+    </video>
+    <video id="closingPortal" loop="" crossorigin="anonymous" playsinline="" style="display:none" muted="">
+        <source src="/scene1_closingPortal.d41e404e.webm" type="video/webm">
+    </video>
+    <video id="background" loop="" crossorigin="anonymous" playsinline="" style="display:none" muted="">
+        <source src="/BG2.64a7f895.mp4" type="video/mp4">
+    </video>
+    <!-- <video id="background2" loop crossOrigin="anonymous" playsinline style="display:none" muted>
+        <source src="../staticFiles/assets/textures/BG2.mp4" type="video/mp4">
+    </video> -->
+
+</body>
+
+</html>
