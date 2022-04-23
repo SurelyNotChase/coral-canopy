@@ -54,13 +54,13 @@ let activeDetection = false; //bool for when a color is being detected
 let eating = false;
 let eatingModel;
 
-let trackedColor;
+let trackedColor = 'green';
 
 //// ----- IMMUTABLES ----- ////
 const video = document.querySelector('#webcam');
 const video2 = document.querySelector('#webcam2');
 const instructions = 'Orbit Controls are enabled. Click to log current pose predictions.'
-const option = 'variantB'
+const option = 'variantA'
 
 // TEST
 let rotX, rotY, rotZ;
@@ -70,8 +70,8 @@ let rotX, rotY, rotZ;
 //Runs at document load
 const init = async () => {
 
-    if(option == 'variantA') trackedColor = 'magenta';
-    else trackedColor = 'yellow';
+    // if(option == 'variantA') trackedColor = 'magenta';
+    // else trackedColor = 'yellow';
 
     experience = game.assembleScene();
 
@@ -123,10 +123,21 @@ const init = async () => {
 //returns color tracker
 const setupColorTracker = (videoSource, index) => {
 
-    const myColors = [trackedColor];
-    const myColorTracker = tracker.getColorTracker(myColors);
+   
+    
+    tracking.ColorTracker.registerColor('green', function(r, g, b) {
+        //console.log(r,g,b)
+        if (r > 200 && g < 100 && b < 50) {
+            
+          return true;
+        }
+        return false;
+      });
 
-    //mount color events
+      const myColors = [trackedColor];
+      const myColorTracker = tracker.getColorTracker(myColors);
+    
+      //mount color events
     myColorTracker.on('track', function (event) {
 
         let detectedColors = event.data;
